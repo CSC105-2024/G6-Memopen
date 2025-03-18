@@ -8,7 +8,7 @@ function App() {
 
   return (
     <div>
-      pull test
+      editor test
     </div>
   )
 }
