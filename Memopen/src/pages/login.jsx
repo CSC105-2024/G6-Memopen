@@ -1,5 +1,4 @@
-import LoginBtn from "../components/buttons/LoginBtn";
-function Login({setIsLogin}){
+function Login(){
     return(
         <div>
             Login
