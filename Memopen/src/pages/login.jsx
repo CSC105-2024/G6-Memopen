@@ -3,8 +3,6 @@ function Login({setIsLogin}){
     return(
         <div>
             Login
-            <LoginBtn setIsLogin={setIsLogin}/>
-            
         </div>
     )
 }
