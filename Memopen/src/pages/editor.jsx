@@ -2,9 +2,23 @@ import ColorPicker from "react-pick-color";
 import { Link } from "react-router-dom";
 import { fabric } from "fabric";
 import { useEffect, useRef, useState } from "react";
-
+import WarningPopUp from "../components/editor_popup/WarningPopUp";
+import PostSucessPopUp from "../components/editor_popup/PostSucessPopUp";
 function Editor() {
-  const [isColorPickOpen, setIsColorPickOpen] = useState(false);
+  const Tagcolors = [
+    { value: "#ff0000" },
+    { value: "#ff8800" },
+    { value: "#ffff00" },
+    { value: "#008000" },
+    { value: "#0000ff" },
+    { value: "#800080" },
+  ];
+  const [isSavePop, setSavePop] = useState(false);
+  const [isBackHomePop, setBackHome] = useState(false);
+  const [tagColor , setTagColor] = useState("#ff0000");
+  const [isColorTagOpen , setIsColorTagOpen] = useState(false);
+  const [isColorTextPickOpen , setIsColorTextPickOpen] = useState(false); 
+  const [isColorHighlightPickOpen, setIsColorHighlightPickOpen] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
   const [textBackgroundColor, setTextBackgroundColor] = useState("");
   const [fontStyle, setFontStyle] = useState({
@@ -16,15 +30,28 @@ function Editor() {
   //useRef not re render it use current state
   const canvasRef = useRef(null); // ref of canvas element
   const fabricCanvasRef = useRef(null); // store fabric.js -> canvas Onject ->can edit
-  const colorPickerRef = useRef(null);
+  const colorPickerHighlightRef = useRef(null);
+  const colorPickerTextRef = useRef(null);
+  const colorTagRef = useRef(null);
 
   useEffect(() => {
+    const bgImageLink = "./src/assets/editorAssets/templateExample/template_1.png";
+    
     // useEffect run when component load
     fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
       width: 960,
       height: 540,
       backgroundColor: "#FFFFFF",
     });
+
+    fabric.Image.fromURL(bgImageLink , (bgImage) =>{
+      const canvasW = fabricCanvasRef.current.width;
+      const canvasH = fabricCanvasRef.current.height;
+      
+      bgImage.scaleToWidth(canvasW);
+      bgImage.scaleToHeight(canvasH);
+      fabricCanvasRef.current.setBackgroundImage(bgImage, fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current));
+    })
 
     const handleKeyDown = (e) => {
       if (e.key === "Delete" || e.key === "Backspace") {
@@ -36,36 +63,83 @@ function Editor() {
       }
     };
 
-    const handleClickOutsideColorPick = (e) => {
+    const handleClickOutsideColorHighlightPick = (e) => {
       if (
-        colorPickerRef.current &&
-        !colorPickerRef.current.contains(e.target)
+        colorPickerHighlightRef.current &&
+        !colorPickerHighlightRef.current.contains(e.target)
       ) {
-        setIsColorPickOpen(false);
+        setIsColorHighlightPickOpen(false);
       }
     };
+
+    const handleClickOutsideColorTextPick = (e) => {
+      if (
+        colorPickerTextRef.current &&
+        !colorPickerTextRef.current.contains(e.target)
+      ) {
+        setIsColorTextPickOpen(false);
+      }
+    };
+
+    const handleClickOutsideColorTag = (e) =>{
+      if (
+        colorTagRef.current &&
+        !colorTagRef.current.contains(e.target)
+      ) {
+        setIsColorTagOpen(false);
+      }
+    }
+
     window.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleClickOutsideColorPick);
+    document.addEventListener("mousedown", handleClickOutsideColorHighlightPick);
+    document.addEventListener("mousedown", handleClickOutsideColorTextPick);
+    document.addEventListener("mousedown", handleClickOutsideColorTag);
+
     return () => {
       //run when component remove from page
       window.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleClickOutsideColorPick); //removeEventlistener when navigate to diffrent page
+      document.removeEventListener("mousedown", handleClickOutsideColorHighlightPick); //removeEventlistener when navigate to diffrent page
+      document.removeEventListener("mousedown", handleClickOutsideColorTextPick); //removeEventlistener when navigate to diffrent page
+      document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
       fabricCanvasRef.current.dispose(); //clean up canvas
     };
   }, []);
 
   const addText = () => {
+    const defaultTextColor = "#000000";
+    const defaultTextBGColor = "rgba(0, 0, 0, 0)"
+    const defaultFontStyle = {
+      bold: false,
+      italic: false,
+      underline: false,
+    }
     const text = new fabric.Textbox("Text", {
       left: 100,
       top: 100,
-      fontSize: 24,
-      fill: textColor,
+      fontSize: 32,
+      fill: defaultTextColor,
       selectable: true,
-      textBackgroundColor: textBackgroundColor,
+      fontWeight: defaultFontStyle.bold ? "bold" : "normal",
+      fontStyle: defaultFontStyle.italic ? "italic" : "normal",
+      underline: defaultFontStyle.underline,
+      textBackgroundColor: defaultTextBGColor,
     });
     fabricCanvasRef.current.add(text);
-    fabricCanvasRef.current.setActiveObject(text); //selective text auto
+    fabricCanvasRef.current.setActiveObject(text);
+    fabricCanvasRef.current.renderAll();
+
+    setTextColor(defaultTextColor);
+    setTextBackgroundColor(defaultTextBGColor);
+    setFontStyle({
+      bold:false,
+      italic: false,
+      underline:false
+    })
+     //selective text auto
+    
+
   };
+  
 
   const addImage = (event) => {
     const file = event.target.files[0];
@@ -94,22 +168,77 @@ function Editor() {
     }
   };
 
+  const addFontStyle = (style) =>{
+    setFontStyle((prevState)=>{
+      const newStyle = {
+        ...prevState,
+        [style]: !prevState[style]
+      };
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if(activeTextObject && activeTextObject.type === "textbox" ){
+        activeTextObject.set({
+            fontWeight: newStyle.bold ? "bold" : "normal",
+            fontStyle: newStyle.italic ? "italic" : "normal",
+            underline: newStyle.underline,
+  
+        })
+        fabricCanvasRef.current.renderAll();
+      }
+      return newStyle;
+
+    })
+    
+    
+    return newStyle;
+  }
+
+  const dowloadCanvas = () =>{
+    const originalWidth = fabricCanvasRef.current.width;
+    const originalHeight = fabricCanvasRef.current.height;
+
+    fabricCanvasRef.current.setWidth(originalWidth *2);
+    fabricCanvasRef.current.setHeight(originalHeight *2);
+
+    fabricCanvasRef.current.setZoom(2);
+
+
+    const dataURL = fabricCanvasRef.current.toDataURL({
+      format: 'png',
+      multiplier: 2,
+    })
+
+    fabricCanvasRef.current.setWidth(originalWidth);
+    fabricCanvasRef.current.setHeight(originalHeight);
+    fabricCanvasRef.current.setZoom(1);
+
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'image.png';
+    link.click();
+  }
+
   return (
     <div className="bg-[url('./src/assets/editorAssets/editor_bg.png')] bg-cover bg-center min-h-screen">
       <div className="editor-content h-screen">
         <div className="editor-nav bg-black flex justify-between items-center px-7 py-5  ">
           <div className="editor-nav-left">
             <h3 className="HomeNavigate text-white text-3xl font-bold uppercase">
-              <Link to="/HomePage">Memopen</Link>
+              <button onClick={()=> setBackHome(true)}>Memopen</button>
             </h3>
+            {isBackHomePop && (
+                <WarningPopUp setBackHome={setBackHome} />
+              )}
           </div>
           <div className="editor-nav-right flex gap-5">
-            <button className="bg-[#00917C] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
+            <button onClick={dowloadCanvas} className="bg-[#00917C] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
               Dowload
             </button>
-            <button className="bg-[#00BE33] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
+            <button onClick={()=>setSavePop(true)} className="bg-[#00BE33] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
               Save
             </button>
+            {isSavePop && (
+              <PostSucessPopUp setSavePop={setSavePop}/>
+            )}
           </div>
         </div>
         <div className="area flex justify-center items-center flex-col ">
@@ -121,23 +250,25 @@ function Editor() {
               >
                 Add text
               </button>
-              <div className="font-style flex gap-6 bs">
-                <button>
-                  <div className="cursor-pointer text-white font-bold text-2xl">
+
+              <div className="font-style flex gap-6 ">
+                <button onClick={()=> addFontStyle("bold")}> 
+                  <div className={`font-bold hover:bg-[#999999]  cursor-pointer rounded-[10px] px-4 py-1.5 ${fontStyle.bold ? "bg-[#999999] border-[#999999] " : ""} text-white  text-2xl`}>
                     B
                   </div>
                 </button>
-                <button>
-                  <div className="cursor-pointer text-white italic text-2xl">
+                <button onClick={()=> addFontStyle("italic")}>
+                  <div className={` italic hover:bg-[#999999]  rounded-[10px] cursor-pointer px-5 py-1.5 ${fontStyle.italic ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl`}>
                     I
                   </div>
                 </button>
-                <button>
-                  <div className="cursor-pointer text-white font-bold underline text-2xl">
+                <button onClick={()=> addFontStyle("underline")}>
+                  <div className={`cursor-pointer hover:bg-[#999999]  rounded-[10px]  px-4 py-1.5 ${fontStyle.underline ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl underline`}>
                     U
                   </div>
                 </button>
               </div>
+
               <div className="textcoloredit flex items-center gap-6">
                 <div className="textcolorsection flex items-center gap-3">
                   <label>
@@ -145,15 +276,23 @@ function Editor() {
                       A
                     </div>
                   </label>
-                  <input
-                    className="w-10 h-10 cursor-pointer"
-                    type="color"
-                    value={textColor}
-                    onChange={(e) => {
-                      setTextColor(e.target.value);
-                      applyStyleToText("fill", e.target.value);
-                    }}
-                  />
+                  <div
+                    className="w-10 h-10 border border-white cursor-pointer"
+                    style={{ backgroundColor: textColor }}
+                    onClick={() => setIsColorTextPickOpen(true)}
+                  ></div>
+                  {isColorTextPickOpen && (
+                    <div className="absolute top-49 z-30" ref={colorPickerTextRef}>
+                      <ColorPicker
+                        color={textColor}
+                        onChange={(color) => {
+                          const rgbaColor = `rgba(${color.rgb.r},${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a}) `
+                          setTextColor(rgbaColor);
+                          applyStyleToText("fill", rgbaColor);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="texthighlightsection flex items-center gap-3">
@@ -163,34 +302,23 @@ function Editor() {
                     </div>
                   </label>
                   <div
-                    className="w-10 h-10 cursor-pointer"
+                    className="w-10 h-10 border border-white cursor-pointer"
                     style={{ backgroundColor: textBackgroundColor }}
-                    onClick={() => setIsColorPickOpen(true)}
+                    onClick={() => setIsColorHighlightPickOpen(true)}
                   ></div>
 
-                  {isColorPickOpen && (
-                    <div className="absolute top-49 z-30" ref={colorPickerRef}>
+                  {isColorHighlightPickOpen && (
+                    <div className="absolute top-49 z-30" ref={colorPickerHighlightRef}>
                       <ColorPicker
                         color={textBackgroundColor}
                         onChange={(color) => {
-                          setTextBackgroundColor(color.hex);
-                          applyStyleToText("textBackgroundColor", color.hex);
+                          const rgbaColor = `rgba(${color.rgb.r},${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a}) `
+                          setTextBackgroundColor(rgbaColor);
+                          applyStyleToText("textBackgroundColor", rgbaColor);
                         }}
                       />
                     </div>
                   )}
-                  {/*
-                               <input type="color" 
-                                className="w-10 h-10 cursor-pointer"
-                                value={textBackgroundColor}
-                                onChange={(e)=>{
-                                    setTextBackgroundColor(e.target.value);
-                                    applyStyleToText("textBackgroundColor", e.target.value);
-                                }}
-                                />
-                               
-                               
-                               */}
                 </div>
               </div>
 
@@ -214,21 +342,44 @@ function Editor() {
             <canvas ref={canvasRef} />
           </div>
           <div className="addTagBox rounded-[15px] bg-white w-[960px] px-10 py-3 flex gap-10 items-center">
-            <label className="text-[20px] font-bold">Add Tag</label>
-            <div className="editor-tag-input flex gap-3 items-center">
-              <input
-                className="w-10 h-10 rounded-full cursor-pointer border-none p-0 "
-                type="color"
-              />
-              <input
-                className="border border-black rounded-[20px] px-2.5 py-3.5 bg-white w-[700px] overflow-clip"
-                type="text"
-                placeholder="Enter new tag"
-              />
-            </div>
+            <label className="text-[18px] font-bold">Add Tag</label>
+            <div className="editor-tag-input flex gap-3 items-center relative">
+              <div
+                className="w-10 h-10 border  border-black cursor-pointer rounded-full"
+                style={{ backgroundColor: tagColor }}
+                onClick={() => setIsColorTagOpen(true)}
+              ></div>
+              {isColorTagOpen && (
+                <div
+                  ref={colorTagRef}
+                  className="tagcolor absolute top-[-60px]  mt-2 left-0 bg-black p-2 rounded-lg shadow-lg flex space-x-2 z-10"
+                >
+                  {Tagcolors.map((Tagcolors) => (
+                    <div
+                      key={Tagcolors.value}
+                      className="w-6 h-6 rounded-full cursor-pointer"
+                      style={{ backgroundColor: Tagcolors.value }}
+                      onClick={() => {
+                        setTagColor(Tagcolors.value);
+                        setIsColorTagOpen(false);
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              )}
+            <input
+              className="border border-black rounded-[20px] px-6 py-3.5 bg-white w-[700px] overflow-clip"
+              type="text"
+              placeholder="Enter new tag"
+            />
+          </div>
+
+            
+
           </div>
         </div>
       </div>
+
     </div>
   );
 }
