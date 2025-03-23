@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 function WarningPopUp({setBackHome}){
+    const warningHomeNavigate = useNavigate();
     return(
         <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
             <div className=" rounded-t-3xl relative flex flex-col px-20 py-13 bg-[#FF2929] w-full max-w-sm">
@@ -13,7 +15,7 @@ function WarningPopUp({setBackHome}){
                     </div>
                     <div className="flex justify-center gap-4">
                     <button className="text-[rgba(0, 0, 0, 0.47)] justify-center  rounded-[10px] bg-[#D9D9D9] px-10 py-3" onClick={()=>setBackHome(false)}>Cancel</button>
-                    <button className="text-white justify-center  rounded-[10px] bg-[#FF2929] px-6 py-3">Leave Page</button>
+                    <button className="text-white justify-center  rounded-[10px] bg-[#FF2929] px-6 py-3" onClick={()=>warningHomeNavigate("/HomePage")}>Leave Page</button>
                     </div>
                 </div>
             </div>

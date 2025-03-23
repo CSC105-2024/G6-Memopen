@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 function PostSucessPopUp({ setSavePop }) {
+    const editPopUpNavigateToHome = useNavigate();
   return (
     
         <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
@@ -12,7 +14,7 @@ function PostSucessPopUp({ setSavePop }) {
                         <p className="text-1xl text-center mt-3" >You successfully saved your work</p>
                     </div>
                     <div className="flex justify-center">
-                        <button className="text-white justify-center  rounded-[10px] bg-black px-12 py-3">OK</button>
+                        <button className="text-white justify-center  rounded-[10px] bg-black px-12 py-3" onClick={()=> editPopUpNavigateToHome("/HomePage")}>OK</button>
                     </div>
                 </div>
             </div>
