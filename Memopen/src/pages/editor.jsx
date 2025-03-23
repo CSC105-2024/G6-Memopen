@@ -1,10 +1,13 @@
 import ColorPicker from "react-pick-color";
 import { Link } from "react-router-dom";
 import { fabric } from "fabric";
+import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import WarningPopUp from "../components/editor_popup/WarningPopUp";
 import PostSucessPopUp from "../components/editor_popup/PostSucessPopUp";
 function Editor() {
+  const templateLocation = useLocation();
+  const { backgroundImageP } = templateLocation.state || {}
   const Tagcolors = [
     { value: "#ff0000" },
     { value: "#ff8800" },
@@ -35,7 +38,6 @@ function Editor() {
   const colorTagRef = useRef(null);
 
   useEffect(() => {
-    const bgImageLink = "./src/assets/editorAssets/templateExample/template_1.png";
     
     // useEffect run when component load
     fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
@@ -44,14 +46,16 @@ function Editor() {
       backgroundColor: "#FFFFFF",
     });
 
-    fabric.Image.fromURL(bgImageLink , (bgImage) =>{
-      const canvasW = fabricCanvasRef.current.width;
-      const canvasH = fabricCanvasRef.current.height;
-      
-      bgImage.scaleToWidth(canvasW);
-      bgImage.scaleToHeight(canvasH);
-      fabricCanvasRef.current.setBackgroundImage(bgImage, fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current));
-    })
+    if(backgroundImageP){
+      fabric.Image.fromURL(backgroundImageP , (bgImage) => {
+        const canvasW = fabricCanvasRef.current.width;
+        const canvasH = fabricCanvasRef.current.height;
+        bgImage.scaleToWidth(canvasW);
+        bgImage.scaleToHeight(canvasH);
+        fabricCanvasRef.current.setBackgroundImage(bgImage, fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current));
+      })
+    }
+
 
     const handleKeyDown = (e) => {
       if (e.key === "Delete" || e.key === "Backspace") {
@@ -103,7 +107,7 @@ function Editor() {
       document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
       fabricCanvasRef.current.dispose(); //clean up canvas
     };
-  }, []);
+  }, [backgroundImageP]);
 
   const addText = () => {
     const defaultTextColor = "#000000";

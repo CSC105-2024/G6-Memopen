@@ -1,25 +1,27 @@
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import cute1 from "../assets/img/1.png";
-import cute2 from "../assets/img/2.png";
-import cute3 from "../assets/img/3.png";
-import cute4 from "../assets/img/4.png";
+import cute1 from "/assets/img/1.png";
+import cute2 from "/assets/img/2.png";
+import cute3 from "/assets/img/3.png";
+import cute4 from "/assets/img/4.png";
 
-import nature1 from "../assets/img/5.png";
-import nature2 from "../assets/img/6.png";
-import nature3 from "../assets/img/7.png";
-import nature4 from "../assets/img/8.png";
+import nature1 from "/assets/img/5.png";
+import nature2 from "/assets/img/6.png";
+import nature3 from "/assets/img/7.png";
+import nature4 from "/assets/img/8.png";
 
-import festival1 from "../assets/img/9.png";
-import festival2 from "../assets/img/10.png";
-import festival3 from "../assets/img/11.png";
-import festival4 from "../assets/img/12.png";
+import festival1 from "/assets/img/9.png";
+import festival2 from "/assets/img/10.png";
+import festival3 from "/assets/img/11.png";
+import festival4 from "/assets/img/12.png";
 
-import vintage1 from "../assets/img/13.png";
-import vintage2 from "../assets/img/14.png";
-import vintage3 from "../assets/img/15.png";
-import vintage4 from "../assets/img/16.png";
+import vintage1 from "/assets/img/13.png";
+import vintage2 from "/assets/img/14.png";
+import vintage3 from "/assets/img/15.png";
+import vintage4 from "/assets/img/16.png";
+
+import { useNavigate } from "react-router-dom";
 
 const templates = {
   Cute: [cute1, cute2, cute3, cute4],
@@ -28,13 +30,16 @@ const templates = {
   Vintage: [vintage1, vintage2, vintage3, vintage4],
 };
 
-const allTemplates = ["./src/assets/img/blankCanvas.png", ...Object.values(templates).flat()];
+const allTemplates = ["/assets/img/blank.png", ...Object.values(templates).flat()];
 
 export default function TemplatePopup({ onChoose, onClose }) {
   const [category, setCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedId, setSelectedId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+ 
+
+  const edNavigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -48,6 +53,13 @@ export default function TemplatePopup({ onChoose, onClose }) {
   const totalPages = Math.ceil(categoryTemplates.length / itemsPerPage);
   const displayedTemplates = categoryTemplates.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
+  const handleChooseTemplate = () =>{
+    const selectedTemplate = displayedTemplates[selectedId];
+    if(selectedId !== null){
+        edNavigate('/editor', {state: {backgroundImageP: selectedTemplate}})
+        onChoose(selectedTemplate);
+    }
+  }
   return (
     <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white w-[90%] max-w-3xl rounded-lg shadow-2xl p-6 relative">
@@ -92,7 +104,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
         </div>
 
         <div className="flex justify-end">
-          <button className="bg-[#00917C] text-white px-6 py-2 rounded-lg hover:bg-[#007f68]" onClick={() => onChoose(selectedId)}>Choose</button>
+          <button className="bg-[#00917C] text-white px-6 py-2 rounded-lg hover:bg-[#007f68]" onClick={handleChooseTemplate}>Choose</button>
         </div>
       </div>
     </div>

@@ -43,6 +43,13 @@ function Home(){
     }
     return "#000000";
   };
+
+  const handleChooseTemplate = (template) => {
+    
+    console.log("Template chosen:", template);
+  };
+
+  
     return(
         <div className="flex">
         <Sidebar/>
@@ -59,7 +66,7 @@ function Home(){
         </button>
       </div>
 
-      {showPopup && <TemplatePopup onClose={() => navigate("?popup=false")} />}
+      {showPopup && <TemplatePopup onChoose={handleChooseTemplate} onClose={() => navigate("?popup=false")} />}
 
       {notes.length === 0 ? (
         <p className="text-gray-500 text-center mt-10">No notes yet</p>
