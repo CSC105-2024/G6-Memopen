@@ -98,7 +98,7 @@ function Register(){
             {/* Login Link */}
             <p className="text-gray-600 mt-4 text-center">
               Already have an account?{" "}
-              <button me="text-black font-bold cursor-pointer" onClick={()=> returnLoginPage("/")}>
+              <button className="text-black font-bold cursor-pointer" onClick={()=> returnLoginPage("/")}>
                 Login
               </button>
             </p>

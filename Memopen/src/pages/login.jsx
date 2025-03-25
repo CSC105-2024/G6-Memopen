@@ -4,7 +4,7 @@ import { useState } from "react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 function Login(){
-    const navigateToHome = useNavigate();
+    const navigateLogin = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
   const openEye = <FontAwesomeIcon icon={faEye} />;
@@ -57,16 +57,16 @@ function Login(){
             
 
             {/* login Button */}
-            <a href="/homepage">
-              <button type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer">
+            
+              <button onClick={()=> navigateLogin("Homepage")} type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer">
                 Login
               </button>
-            </a>
+            
 
             {/* register Link */}
             <p className="text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
-              <button onClick={()=>navigateToHome("/")} className="text-black font-bold cursor-pointer">
+              <button onClick={()=>navigateLogin("/register")} className="text-black font-bold cursor-pointer">
                 Register
               </button>
             </p>

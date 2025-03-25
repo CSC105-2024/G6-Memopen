@@ -193,7 +193,7 @@ function Editor() {
     })
     
     
-    return newStyle;
+    ;
   }
 
   const dowloadCanvas = () =>{
@@ -208,7 +208,7 @@ function Editor() {
 
     const dataURL = fabricCanvasRef.current.toDataURL({
       format: 'png',
-      multiplier: 2,
+      multiplier: 1,
     })
 
     fabricCanvasRef.current.setWidth(originalWidth);
@@ -234,10 +234,10 @@ function Editor() {
               )}
           </div>
           <div className="editor-nav-right flex gap-5">
-            <button onClick={dowloadCanvas} className="bg-[#00917C] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
+            <button onClick={dowloadCanvas} className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
               Dowload
             </button>
-            <button onClick={()=>setSavePop(true)} className="bg-[#00BE33] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
+            <button onClick={()=>setSavePop(true)} className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer">
               Save
             </button>
             {isSavePop && (
@@ -247,33 +247,33 @@ function Editor() {
         </div>
         <div className="area flex justify-center items-center flex-col ">
           <div className="canvas-box flex flex-col my-4 mx-10 max-w-[960px]">
-            <div className="canvas-head bg-black flex items-center p-3 justify-center md:justify-around">
+            <div className="canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3" >
               <button
                 onClick={addText}
-                className="addtext cursor-pointer  bg-[#D9D9D9] px-[23px] py-[10px] text-2xl rounded-[10px] font-semibold"
+                className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl text-[24px] rounded-[10px] font-semibold"
               >
                 Add text
               </button>
 
-              <div className="font-style flex gap-6 ">
+              <div className="font-style flex md:gap-5 gap-2 mx-2 ">
                 <button onClick={()=> addFontStyle("bold")}> 
-                  <div className={`font-bold hover:bg-[#999999]  cursor-pointer rounded-[10px] px-4 py-1.5 ${fontStyle.bold ? "bg-[#999999] border-[#999999] " : ""} text-white  text-2xl`}>
+                  <div className={`font-bold hover:bg-[#999999]  cursor-pointer rounded-[10px] px-2  md:px-4 py-1.5 ${fontStyle.bold ? "bg-[#999999] border-[#999999] " : ""} text-white  text-2xl`}>
                     B
                   </div>
                 </button>
                 <button onClick={()=> addFontStyle("italic")}>
-                  <div className={` italic hover:bg-[#999999]  rounded-[10px] cursor-pointer px-5 py-1.5 ${fontStyle.italic ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl`}>
+                  <div className={` italic hover:bg-[#999999]  rounded-[10px] cursor-pointer px-3  md:px-5  py-1.5 ${fontStyle.italic ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl`}>
                     I
                   </div>
                 </button>
                 <button onClick={()=> addFontStyle("underline")}>
-                  <div className={`cursor-pointer hover:bg-[#999999]  rounded-[10px]  px-4 py-1.5 ${fontStyle.underline ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl underline`}>
+                  <div className={`cursor-pointer hover:bg-[#999999]  rounded-[10px]  px-2  md:px-4  py-1.5 ${fontStyle.underline ? "bg-[#999999] border-[#999999]" : ""} text-white  text-2xl underline`}>
                     U
                   </div>
                 </button>
               </div>
 
-              <div className="textcoloredit flex items-center gap-6">
+              <div className="textcoloredit flex items-center md:gap-6 gap-3">
                 <div className="textcolorsection flex items-center gap-3">
                   <label>
                     <div className="text-white text-2xl underline font-semibold">
@@ -286,7 +286,7 @@ function Editor() {
                     onClick={() => setIsColorTextPickOpen(true)}
                   ></div>
                   {isColorTextPickOpen && (
-                    <div className="absolute top-49 z-30" ref={colorPickerTextRef}>
+                    <div className="absolute top-49 z-30 " ref={colorPickerTextRef}>
                       <ColorPicker
                         color={textColor}
                         onChange={(color) => {
@@ -327,7 +327,7 @@ function Editor() {
               </div>
 
               <div className="imgInput flex items-center gap-7">
-                <div className="w-[1px] bg-white h-[32px]"></div>
+                <div className="w-[1px] bg-white h-[32px] invisible md:visible"></div>
                 <button
                   className="cursor-pointer"
                   onClick={() => document.getElementById("imageInput").click()}
