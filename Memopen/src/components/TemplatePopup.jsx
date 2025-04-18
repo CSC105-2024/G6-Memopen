@@ -49,7 +49,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const itemsPerPage = isMobile ? 1 : category === "All" ? 6 : 4;
+  const itemsPerPage = isMobile ? 4 : category === "All" ? 6 : 4;
   const gridCols = isMobile
     ? "grid-cols-1"
     : category === "All"
@@ -79,7 +79,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
         <h2 className="text-xl font-bold mb-4">Choose your template</h2>
         <hr className="border-t-2 border-gray-300 my-4" />
 
-        <div className="overflow-x-auto flex gap-2 mb-4 mt-10">
+        <div className="overflow-x-auto justify-normal md:justify-center flex gap-2 mb-4 mt-10">
           {["All", "Cute", "Nature", "Festival", "Vintage"].map((tab) => (
             <button
               key={tab}
