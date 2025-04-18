@@ -31,6 +31,8 @@ function Editor() {
     underline: false,
   });
 
+  const [canvasWidth, setCanvasWidth] = useState(0);
+
   //useRef not re render it use current state
   const canvasRef = useRef(null); // ref of canvas element
   const fabricCanvasRef = useRef(null); // store fabric.js -> canvas Onject ->can edit
@@ -39,8 +41,8 @@ function Editor() {
   const colorTagRef = useRef(null);
 
   useEffect(() => {
-    const originalHeightRef = 540; //540
-    const originalWidthRef = 960; //972 -> 972*0 ->
+    const originalHeightRef = 450; //540 *1.2 -> 450
+    const originalWidthRef = 800; //960 *1.2 -> 800
     const resizeCanvas = () => {
       const containerWidth = Math.min(
         window.innerWidth * 0.75,
@@ -58,8 +60,11 @@ function Editor() {
         canvasRef.current.setWidth = scaleWidth;
         canvasRef.current.setHeight = scaleHeight;
         canvasRefSize.renderAll();
+        setCanvasWidth(scaleWidth);
       }
     };
+
+    
 
     // useEffect run when component load
     fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
@@ -338,7 +343,9 @@ function Editor() {
         </div>
         <div className="area flex justify-center items-center flex-col ">
           <div className="canvas-box flex flex-col my-4 mx-10 max-w-[960px]">
-            <div className="canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3">
+            <div className={`canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3 `}
+            style={{ width: `${canvasWidth}px` }}
+            >
               <button
                 onClick={addText}
                 className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl text-[15px] rounded-[10px] font-semibold"
