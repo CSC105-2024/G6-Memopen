@@ -39,8 +39,8 @@ function Editor() {
   const colorTagRef = useRef(null);
 
   useEffect(() => {
-    const originalHeightRef = 540;
-    const originalWidthRef = 960;
+    const originalHeightRef = 540; //540
+    const originalWidthRef = 960; //972 -> 972*0 ->
     const resizeCanvas = () => {
       const containerWidth = Math.min(
         window.innerWidth * 0.75,
@@ -80,6 +80,55 @@ function Editor() {
     }
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+
+    const handleStyleSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setFontStyle({
+          bold: activeTextObject.fontWeight === "bold",
+          italic: activeTextObject.fontStyle === "italic",
+          underline: activeTextObject.underline === true,
+        });
+      } else {
+        setFontStyle({ bold: false, italic: false, underline: false });
+      }
+    };
+
+    const handleColorSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextColor(activeTextObject.fill || "#000000");
+      } else {
+        setTextColor("#000000");
+      }
+    };
+
+    const handleHighlightSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextBackgroundColor(activeTextObject.textBackgroundColor);
+      } else {
+        setTextBackgroundColor("");
+      }
+    };
+
+    fabricCanvasRef.current.on("selection:created", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setFontStyle({ bold: false, italic: false, underline: false });
+    });
+
+    fabricCanvasRef.current.on("selection:created", handleColorSelection);
+    fabricCanvasRef.current.on("selection:updated", handleColorSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextColor("#000000");
+    });
+
+    fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextBackgroundColor("");
+    });
 
     const handleKeyDown = (e) => {
       if (e.key === "Delete" || e.key === "Backspace") {
@@ -125,6 +174,24 @@ function Editor() {
 
     return () => {
       //run when component remove from page
+      fabricCanvasRef.current.off("selection:created", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:cleared");
+
+      fabricCanvasRef.current.off("selection:created", handleColorSelection);
+      fabricCanvasRef.current.off("selection:updated", handleColorSelection);
+      fabricCanvasRef.current.off("selection:cleared");
+
+      fabricCanvasRef.current.off(
+        "selection:created",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off(
+        "selection:updated",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off("selection:cleared");
+
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener(
@@ -248,7 +315,7 @@ function Editor() {
       <div className="editor-content h-screen">
         <div className="editor-nav bg-black flex justify-between items-center px-7 py-5  ">
           <div className="editor-nav-left">
-            <h3 className="HomeNavigate text-white text-3xl font-bold uppercase">
+            <h3 className="HomeNavigate text-white text-2xl font-bold uppercase">
               <button onClick={() => setBackHome(true)}>Memopen</button>
             </h3>
             {isBackHomePop && <WarningPopUp setBackHome={setBackHome} />}
@@ -256,13 +323,13 @@ function Editor() {
           <div className="editor-nav-right flex gap-5">
             <button
               onClick={dowloadCanvas}
-              className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer"
+              className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-2xl cursor-pointer"
             >
               Dowload
             </button>
             <button
               onClick={() => setSavePop(true)}
-              className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-3xl cursor-pointer"
+              className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-2xl cursor-pointer"
             >
               Save
             </button>
@@ -274,7 +341,7 @@ function Editor() {
             <div className="canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3">
               <button
                 onClick={addText}
-                className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl text-[24px] rounded-[10px] font-semibold"
+                className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl text-[15px] rounded-[10px] font-semibold"
               >
                 Add text
               </button>
@@ -317,7 +384,7 @@ function Editor() {
                     </div>
                   </label>
                   <div
-                    className="w-10 h-10 border border-white cursor-pointer"
+                    className="textColorBox w-10 h-10 border border-white cursor-pointer"
                     style={{ backgroundColor: textColor }}
                     onClick={() => setIsColorTextPickOpen(true)}
                   ></div>
@@ -355,6 +422,28 @@ function Editor() {
                       className="absolute top-49 z-30"
                       ref={colorPickerHighlightRef}
                     >
+                      <div className="flex w-[278px]  justify-center gap-1">
+                        <button
+                          onClick={() => {
+                            const rgbaColor = `rgba(213,213,213,100) `;
+                            setTextBackgroundColor(rgbaColor);
+                            applyStyleToText("textBackgroundColor", rgbaColor);
+                          }}
+                          className="bg-white p-2 my-1 w-[50%]  rounded-sm shadow-md"
+                        >
+                          Fill color
+                        </button>
+                        <button
+                          onClick={() => {
+                            const rgbaColor = `rgba(0,0,0,0) `;
+                            setTextBackgroundColor(rgbaColor);
+                            applyStyleToText("textBackgroundColor", rgbaColor);
+                          }}
+                          className="bg-white w-[50%] p-2 my-1 rounded-sm shadow-md"
+                        >
+                          No color
+                        </button>
+                      </div>
                       <ColorPicker
                         color={textBackgroundColor}
                         onChange={(color) => {
@@ -369,7 +458,7 @@ function Editor() {
               </div>
 
               <div className="imgInput flex items-center gap-2 md:gap-7 ">
-                <div className="w-[1px] bg-white h-[32px]  justify-center invisible md:visible"></div>
+                <div className="w-[1px] bg-white h-[32px]  invisible md:visible"></div>
                 <button
                   className="cursor-pointer "
                   onClick={() => document.getElementById("imageInput").click()}
@@ -385,11 +474,12 @@ function Editor() {
                 />
               </div>
             </div>
-            <div className="w-[75vw] max-w-[960px] h-[42vw] overflow-hidden">
+            <div className="w-[75vw] max-w-[960px] max-h-[42vw] overflow-hidden">
               <canvas ref={canvasRef} />
             </div>
           </div>
-          <div className="addTagBox rounded-[15px] bg-white  w-[960px] px-10 py-3 flex gap-10 items-center ">
+
+          <div className="addTagBox rounded-[15px] bg-amber-300   px-10 py-3 flex gap-10 items-center ">
             <label className="text-[18px] font-bold">Add Tag</label>
             <div className="editor-tag-input flex gap-3 items-center relative">
               <div
@@ -416,7 +506,7 @@ function Editor() {
                 </div>
               )}
               <input
-                className="border border-black rounded-[20px] px-6 py-3.5 bg-white w-[700px] overflow-clip"
+                className="border border-black rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
                 type="text"
                 placeholder="Enter new tag"
               />
