@@ -320,7 +320,7 @@ function Editor() {
       <div className="editor-content h-screen">
         <div className="editor-nav bg-black flex justify-between items-center px-7 py-5  ">
           <div className="editor-nav-left">
-            <h3 className="HomeNavigate text-white text-2xl font-bold uppercase">
+            <h3 className="HomeNavigate text-white text-sm md:text-2xl  font-bold uppercase">
               <button onClick={() => setBackHome(true)}>Memopen</button>
             </h3>
             {isBackHomePop && <WarningPopUp setBackHome={setBackHome} />}
@@ -328,21 +328,22 @@ function Editor() {
           <div className="editor-nav-right flex gap-5">
             <button
               onClick={dowloadCanvas}
-              className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-2xl cursor-pointer"
+              className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-sm md:text-lg  cursor-pointer"
             >
               Dowload
             </button>
             <button
               onClick={() => setSavePop(true)}
-              className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-2xl cursor-pointer"
+              className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-sm md:text-lg  cursor-pointer"
             >
               Save
             </button>
             {isSavePop && <PostSucessPopUp setSavePop={setSavePop} />}
           </div>
         </div>
-        <div className="area flex justify-center items-center flex-col ">
-          <div className="canvas-box flex flex-col my-4 mx-10 max-w-[960px]">
+        <div className="area-container flex justify-center items-center h-[80vh] md:h-fit">
+        <div className="area flex justify-center items-center  flex-col ">
+          <div className="canvas-box flex flex-col items-center my-4 mx-10 max-w-[960px] ">
             <div className={`canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3 `}
             style={{ width: `${canvasWidth}px` }}
             >
@@ -481,12 +482,12 @@ function Editor() {
                 />
               </div>
             </div>
-            <div className="w-[75vw] max-w-[960px] max-h-[42vw] overflow-hidden">
+            <div className=" flex justify-center w-[75vw] max-w-[960px] max-h-[42vw] overflow-hidden item-center  ">
               <canvas ref={canvasRef} />
             </div>
           </div>
-
-          <div className="addTagBox rounded-[15px] bg-amber-300   px-10 py-3 flex gap-10 items-center ">
+          <div className=" addTagSection justify-center items-center">
+          <div className="addTagBox rounded-[15px] bg-white  px-10 py-3 flex gap-10 items-center ">
             <label className="text-[18px] font-bold">Add Tag</label>
             <div className="editor-tag-input flex gap-3 items-center relative">
               <div
@@ -519,7 +520,11 @@ function Editor() {
               />
             </div>
           </div>
+          </div>
+          
         </div>
+        </div>
+        
       </div>
     </div>
   );
