@@ -1,5 +1,5 @@
 import ColorPicker from "react-pick-color";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { fabric } from "fabric";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -39,6 +39,9 @@ function Editor() {
   const colorPickerHighlightRef = useRef(null);
   const colorPickerTextRef = useRef(null);
   const colorTagRef = useRef(null);
+  const { id } = useParams();
+  const location = useLocation();
+  const [tag,setTag] = useState(""); 
 
   useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
@@ -82,6 +85,12 @@ function Editor() {
           fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current)
         );
       });
+    }
+
+    const savedCanvas = JSON.parse(localStorage.getItem("canvases") || "[]")
+    const current = savedCanvas.find((c)=> c.id === id);
+    if(current && current.tag){
+      setTag(current.tag);
     }
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
@@ -210,8 +219,15 @@ function Editor() {
       document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
       fabricCanvasRef.current.dispose(); //clean up canvas
     };
-  }, [backgroundImageP]);
+  }, [backgroundImageP,id,location.state]);
 
+  const handleTagInput = (e) =>{
+    const newTag = e.target.value;
+    setTag(newTag);
+    const updatedTag = JSON.parse(localStorage.getItem("canvases")|| "[]").map((c)=>
+    c.id === id ? {...c, tag: newTag}: c);
+    localStorage.setItem("canvases", JSON.stringify(updatedTag));
+  }
   const addText = () => {
     const defaultTextColor = "#000000";
     const defaultTextBGColor = "rgba(0, 0, 0, 0)";
@@ -471,7 +487,7 @@ function Editor() {
                   className="cursor-pointer "
                   onClick={() => document.getElementById("imageInput").click()}
                 >
-                  <img src="./src/assets/editorAssets/imgInput.svg" />
+                  <img src=".\src\assets\editorAssets\imgInput.svg" />
                 </button>
                 <input
                   id="imageInput"
@@ -517,6 +533,8 @@ function Editor() {
                 className="border border-black rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
                 type="text"
                 placeholder="Enter new tag"
+                value ={tag}
+                onChange={handleTagInput}
               />
             </div>
           </div>

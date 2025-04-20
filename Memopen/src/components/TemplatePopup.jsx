@@ -36,6 +36,7 @@ const allTemplates = [
 ];
 
 export default function TemplatePopup({ onChoose, onClose }) {
+  const [canvases , setCanvases] = useState([]);
   const [category, setCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedId, setSelectedId] = useState(null);
@@ -44,6 +45,8 @@ export default function TemplatePopup({ onChoose, onClose }) {
   const edNavigate = useNavigate();
 
   useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("canvases")|| "[]")
+    setCanvases(saved)
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -66,8 +69,14 @@ export default function TemplatePopup({ onChoose, onClose }) {
   const handleChooseTemplate = () => {
     const selectedTemplate = displayedTemplates[selectedId];
     if (selectedId !== null) {
-      edNavigate("/editor", { state: { backgroundImageP: selectedTemplate } });
+      const newId = Date.now().toString();
+      const newCanvas = {id:newId, tag: "", json:null , thumbnail: null};
+      const updated = [...canvases , newCanvas];
+      localStorage.setItem("canvases", JSON.stringify(updated))
       onChoose(selectedTemplate);
+      console.log(canvases);
+      edNavigate(`/editor/${newId}`, { state: { backgroundImageP: selectedTemplate } });
+      
     }
   };
   return (
