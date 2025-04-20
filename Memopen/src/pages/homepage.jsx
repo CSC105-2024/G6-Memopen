@@ -9,35 +9,35 @@ function Home(){
   const location = useLocation();
   const showPopup = new URLSearchParams(location.search).get("popup") === "true";
 
-  const [notes, setNotes] = useState([]);
+  const [canvases, setCanvases] = useState([]);
   const [tags, setTags] = useState([]);
   const [hoverIndex, setHoverIndex] = useState(null);
 
   useEffect(() => {
-    let storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
+    const storedCanvases = localStorage.getItem("canvases");
+    if (storedCanvases) {
+      setCanvases(JSON.parse(storedCanvases));
     }
-    let storedTags = localStorage.getItem("tags");
-    if (storedTags) {
+    const storedTags = localStorage.getItem("tags");
+    if(storedTags){
       setTags(JSON.parse(storedTags));
     }
   }, []);
 
-  const saveNotesToStorage = (newNotes) => {
-    localStorage.setItem("notes", JSON.stringify(newNotes));
-    setNotes(newNotes);
+  const saveCanvasesToStorage = (newCanvas) => {
+    localStorage.setItem("canvases", JSON.stringify(newCanvas));
+    setNotes(newCanvas);
   };
 
   const handleDelete = (index) => {
-    let newNotes = [...notes];
-    newNotes.splice(index, 1);
-    saveNotesToStorage(newNotes);
+    const updated = [...canvases];
+    updated.splice(index, 1);
+    saveCanvasesToStorage(updated);
   };
 
-  const getTagColor = (noteName) => {
+  const getTagColor = (tagName) => {
     for (let tag of tags) {
-      if (tag.name === noteName) {
+      if (tag.name === tagName) {
         return tag.color;
       }
     }
@@ -68,20 +68,29 @@ function Home(){
 
       {showPopup && <TemplatePopup onChoose={handleChooseTemplate} onClose={() => navigate("?popup=false")} />}
 
-      {notes.length === 0 ? (
+      {canvases.length === 0 ? (
         <p className="text-gray-500 text-center mt-10">No notes yet</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-          {notes.map((note, index) => (
+          {canvases.map((canvas, index) => (
             <div
               key={index}
               className={`relative border p-4 rounded-lg transition duration-300 bg-white text-black ${hoverIndex === index ? "border-black bg-gray-100" : ""}`}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
+              
             >
-              <span className="cursor-text w-full">{note.text}</span>
+              {canvas.thumbnail ? (
+                <img src={canvas.thumbnail}
+                className="w-full h-32 object-cover rounded-md mb-2  "
+                onClick={()=>navigate(`/editor/${canvas.id}`)}
+                />
+              ):(
+                <span>no</span>
+              )}
+              
               <div className="flex items-center justify-between mt-2">
-                <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: getTagColor(note.text) }}></span>
+                <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: getTagColor(canvas.tag) }}></span>
                 <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(index)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>

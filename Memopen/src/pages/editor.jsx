@@ -1,5 +1,5 @@
 import ColorPicker from "react-pick-color";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { fabric } from "fabric";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ function Editor() {
     { value: "#0000ff" },
     { value: "#800080" },
   ];
+ 
   const [isSavePop, setSavePop] = useState(false);
   const [isBackHomePop, setBackHome] = useState(false);
   const [tagColor, setTagColor] = useState("#ff0000");
@@ -39,6 +40,9 @@ function Editor() {
   const colorPickerHighlightRef = useRef(null);
   const colorPickerTextRef = useRef(null);
   const colorTagRef = useRef(null);
+  const { id } = useParams();
+  const location = useLocation();
+  const [tag,setTag] = useState(""); 
 
   useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
@@ -72,6 +76,9 @@ function Editor() {
       height: originalWidthRef,
       backgroundColor: "#FFFFFF",
     });
+    
+   
+    
 
     if (backgroundImageP) {
       fabric.Image.fromURL(backgroundImageP, (bgImage) => {
@@ -83,6 +90,8 @@ function Editor() {
         );
       });
     }
+
+    
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
@@ -210,8 +219,15 @@ function Editor() {
       document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
       fabricCanvasRef.current.dispose(); //clean up canvas
     };
-  }, [backgroundImageP]);
+  }, [backgroundImageP,id,location.state]);
 
+  const handleTagInput = (e) =>{
+    const newTag = e.target.value;
+    setTag(newTag);
+    const updatedTag = JSON.parse(localStorage.getItem("canvases")|| "[]").map((c)=>
+    c.id === id ? {...c, tag: newTag}: c);
+    localStorage.setItem("canvases", JSON.stringify(updatedTag));
+  }
   const addText = () => {
     const defaultTextColor = "#000000";
     const defaultTextBGColor = "rgba(0, 0, 0, 0)";
@@ -315,8 +331,28 @@ function Editor() {
     link.click();
   };
 
+  
+  const saveCanvas = (canvasId, tagValue) => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const json = canvas.toJSON();
+    const thumbnail = canvas.toDataURL({ format: "jpeg", quality: 0.5 });
+    const saved = JSON.parse(localStorage.getItem("canvases") || "[]") || [];
+    let updated = saved.filter(Boolean).map((c) =>
+      c.id === canvasId ? { ...c, tag: tagValue, json, thumbnail } : c
+    );
+    if (!updated.some((c) => c.id === canvasId)) {
+      updated.push({ id: canvasId, tag: tagValue, json, thumbnail });
+    }
+    localStorage.setItem("canvases", JSON.stringify(updated));
+    alert("Saved");
+    
+  };
+
+
   return (
-    <div className="bg-[url('./src/assets/editorAssets/editor_bg.png')] bg-cover bg-center min-h-screen">
+    <div className="bg-[url('/assets/editorAssets/editor_bg.png')] bg-cover bg-center min-h-screen">
       <div className="editor-content h-screen">
         <div className="editor-nav bg-black flex justify-between items-center px-7 py-5  ">
           <div className="editor-nav-left">
@@ -338,7 +374,7 @@ function Editor() {
             >
               Save
             </button>
-            {isSavePop && <PostSucessPopUp setSavePop={setSavePop} />}
+            {isSavePop && <PostSucessPopUp saveCanvas={()=>saveCanvas(id,tag)}  setSavePop={setSavePop} />}
           </div>
         </div>
         <div className="area-container flex justify-center items-center h-[80vh] md:h-fit">
@@ -416,7 +452,7 @@ function Editor() {
                 <div className="texthighlightsection flex items-center gap-3">
                   <label>
                     <div>
-                      <img src="./src/assets/editorAssets/highlight.svg" />
+                      <img src="/assets/editorAssets/highlight.svg" />
                     </div>
                   </label>
                   <div
@@ -471,7 +507,7 @@ function Editor() {
                   className="cursor-pointer "
                   onClick={() => document.getElementById("imageInput").click()}
                 >
-                  <img src="./src/assets/editorAssets/imgInput.svg" />
+                  <img src="/assets/editorAssets/imgInput.svg" />
                 </button>
                 <input
                   id="imageInput"
@@ -517,6 +553,8 @@ function Editor() {
                 className="border border-black rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
                 type="text"
                 placeholder="Enter new tag"
+                value ={tag}
+                onChange={handleTagInput}
               />
             </div>
           </div>

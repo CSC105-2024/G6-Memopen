@@ -4,8 +4,8 @@ function WarningPopUp({setBackHome}){
     return(
         <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
             <div className=" rounded-t-3xl relative flex flex-col px-20 py-13 bg-[#FF2929] w-full max-w-sm">
-                    <button className="absolute left-[74%] top-[10px] " onClick={()=> setBackHome(false)}><img src=".\src\assets\PostSucessPopup\EditPopUpClose.svg"/></button>
-                    <img className="justify-center items-center" src=".\src\assets\PostSucessPopup\WarningPic.svg"/>
+                    <button className="absolute left-[74%] top-[10px] " onClick={()=> setBackHome(false)}><img src="\assets\PostSucessPopup\EditPopUpClose.svg"/></button>
+                    <img className="justify-center items-center" src="\assets\PostSucessPopup\WarningPic.svg"/>
             </div>
                 <div className=" rounded-b-3xl savePoPButtom bg-white flex flex-col gap-9 px-8 py-12 w-full max-w-sm">
                     <div className="editPopUpTextField">
