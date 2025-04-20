@@ -186,6 +186,17 @@ function Editor() {
     document.addEventListener("mousedown", handleClickOutsideColorTextPick);
     document.addEventListener("mousedown", handleClickOutsideColorTag);
 
+
+    const saved = JSON.parse(localStorage.getItem("canvases") || "[]" );
+    const found = saved.find((x)=> x.id === id);
+    if(found){
+      setTag(found.tag);
+      if(found.json){
+        fabricCanvasRef.current.loadFromJSON(found.json, ()=>{
+          fabricCanvasRef.current.renderAll();
+        })
+      }
+    }
     return () => {
       //run when component remove from page
       fabricCanvasRef.current.off("selection:created", handleStyleSelection);
@@ -346,7 +357,6 @@ function Editor() {
       updated.push({ id: canvasId, tag: tagValue, json, thumbnail });
     }
     localStorage.setItem("canvases", JSON.stringify(updated));
-    alert("Saved");
     
   };
 

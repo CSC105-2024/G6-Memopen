@@ -24,15 +24,11 @@ function Home(){
     }
   }, []);
 
-  const saveCanvasesToStorage = (newCanvas) => {
-    localStorage.setItem("canvases", JSON.stringify(newCanvas));
-    setNotes(newCanvas);
-  };
-
-  const handleDelete = (index) => {
-    const updated = [...canvases];
-    updated.splice(index, 1);
-    saveCanvasesToStorage(updated);
+  
+  const handleDelete = (id) => {
+    const filtered = canvases.filter((c)=> c.id !== id);
+    localStorage.setItem("canvases", JSON.stringify(filtered));
+    setCanvases(filtered);
   };
 
   const getTagColor = (tagName) => {
@@ -91,7 +87,7 @@ function Home(){
               
               <div className="flex items-center justify-between mt-2">
                 <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: getTagColor(canvas.tag) }}></span>
-                <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(index)}>
+                <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(canvas.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
