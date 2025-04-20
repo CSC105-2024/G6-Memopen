@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import TemplatePopup from "../components/TemplatePopup";
 import Sidebar from "../components/Sidebar";
 function Home(){
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const showPopup = new URLSearchParams(location.search).get("popup") === "true";
 
@@ -14,20 +14,20 @@ function Home(){
   const [hoverIndex, setHoverIndex] = useState(null);
 
   useEffect(() => {
-    let storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
-    }
+    const storedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
+    setNotes(storedNotes);
     let storedTags = localStorage.getItem("tags");
     if (storedTags) {
       setTags(JSON.parse(storedTags));
     }
   }, []);
 
-  const saveNotesToStorage = (newNotes) => {
+  {/*const saveNotesToStorage = (newNotes) => {
     localStorage.setItem("notes", JSON.stringify(newNotes));
     setNotes(newNotes);
-  };
+  }; */}
+
+  
 
   const handleDelete = (index) => {
     let newNotes = [...notes];
