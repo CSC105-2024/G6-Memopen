@@ -67,33 +67,36 @@ function Home(){
       {canvases.length === 0 ? (
         <p className="text-gray-500 text-center mt-10">No notes yet</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-          {canvases.map((canvas, index) => (
-            <div
-              key={index}
-              className={`relative border p-4 rounded-lg transition duration-300 bg-white text-black ${hoverIndex === index ? "border-black bg-gray-100" : ""}`}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
-              
-            >
-              {canvas.thumbnail ? (
-                <img src={canvas.thumbnail}
-                className="w-full h-32 object-cover rounded-md mb-2  "
-                onClick={()=>navigate(`/editor/${canvas.id}`)}
-                />
-              ):(
-                <span>no</span>
-              )}
-              
-              <div className="flex items-center justify-between mt-2">
-                <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: getTagColor(canvas.tag) }}></span>
-                <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(canvas.id)}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
+        <div className="flex justify-center items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 lg:gap-15">
+                      {canvases.map((canvas, index) => (
+                        <div
+                          key={index}
+                          className={`relative max-w-[450px]     border p-4 rounded-lg transition duration-300 bg-white text-black ${hoverIndex === index ? "border-black bg-gray-100" : ""}`}
+                          onMouseEnter={() => setHoverIndex(index)}
+                          onMouseLeave={() => setHoverIndex(null)}
+                          
+                        >
+                          {canvas.thumbnail ? (
+                            <img src={canvas.thumbnail}
+                            className="w-full h-[80] object-cover rounded-md mb-2  "
+                            onClick={()=>navigate(`/editor/${canvas.id}`)}
+                            />
+                          ):(
+                            <span>no</span>
+                          )}
+                          
+                          <div className="flex items-center justify-between mt-2">
+                            <span className="w-4 h-4 rounded-full inline-block" style={{ backgroundColor: getTagColor(canvas.tag) }}></span>
+                            <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(canvas.id)}>
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
             </div>
-          ))}
-        </div>
+        
       )}
     </div>
         </div>
