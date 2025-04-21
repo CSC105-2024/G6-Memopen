@@ -74,9 +74,10 @@ export default function TemplatePopup({ onChoose, onClose }) {
         id:newId, tag: "", json:null , thumbnail: selectedTemplate};
       const updated = [...canvases , newCanvas];
       localStorage.setItem("canvases", JSON.stringify(updated))
+      localStorage.setItem("eidtor_bg_img",selectedTemplate);
       onChoose(selectedTemplate);
       console.log(canvases);
-      edNavigate(`/editor/${newId}`, { state: { backgroundImageP: selectedTemplate } });
+      edNavigate(`/editor/${newId}`);
       
     }
   };

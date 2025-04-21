@@ -1,13 +1,16 @@
 import ColorPicker from "react-pick-color";
 import { Link, useParams } from "react-router-dom";
 import { fabric } from "fabric";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import WarningPopUp from "../components/editor_popup/WarningPopUp";
 import PostSucessPopUp from "../components/editor_popup/PostSucessPopUp";
 function Editor() {
   const templateLocation = useLocation();
-  const { backgroundImageP } = templateLocation.state || {};
+  //const  backgroundImageP  = templateLocation.state?.backgroundImageP;
+  const [backgroundImage, setBackgroundImage] = useState(null);
+  
   const Tagcolors = [
     { value: "#ff0000" },
     { value: "#ff8800" },
@@ -19,6 +22,7 @@ function Editor() {
  
   const [isSavePop, setSavePop] = useState(false);
   const [isBackHomePop, setBackHome] = useState(false);
+  const [firstEditCanvas, setFirstEditCanvas] = useState(null);
   const [tagColor, setTagColor] = useState("#ff0000");
   const [isColorTagOpen, setIsColorTagOpen] = useState(false);
   const [isColorTextPickOpen, setIsColorTextPickOpen] = useState(false);
@@ -33,6 +37,7 @@ function Editor() {
   });
 
   const [canvasWidth, setCanvasWidth] = useState(0);
+  const navigateBackHome= useNavigate();
 
   //useRef not re render it use current state
   const canvasRef = useRef(null); // ref of canvas element
@@ -77,9 +82,25 @@ function Editor() {
       backgroundColor: "#FFFFFF",
     });
     
+    resizeCanvas();
+    setFirstEditCanvas(fabricCanvasRef.current.toJSON());
    
-    
+    const bg_img = localStorage.getItem("eidtor_bg_img");
+    if (bg_img) {
+      setBackgroundImage(bg_img);
+      localStorage.removeItem("editor_bg_image"); // cleanup
+    }
 
+    if (backgroundImage) {
+      fabric.Image.fromURL(backgroundImage, (img) => {
+        img.scaleToWidth(originalWidthRef);
+        img.scaleToHeight(originalHeightRef);
+        fabricCanvasRef.current.setBackgroundImage(img, () => {
+        fabricCanvasRef.current.requestRenderAll();
+        });
+      });
+    }
+    /*
     if (backgroundImageP) {
       fabric.Image.fromURL(backgroundImageP, (bgImage) => {
         bgImage.scaleToWidth(originalWidthRef);
@@ -90,6 +111,7 @@ function Editor() {
         );
       });
     }
+    */
 
     
     resizeCanvas();
@@ -230,7 +252,7 @@ function Editor() {
       document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
       fabricCanvasRef.current.dispose(); //clean up canvas
     };
-  }, [backgroundImageP,id,location.state]);
+  }, [backgroundImage,id,location.state]);
 
   const handleTagInput = (e) =>{
     const newTag = e.target.value;
@@ -367,9 +389,12 @@ function Editor() {
         <div className="editor-nav bg-black flex justify-between items-center px-7 py-5  ">
           <div className="editor-nav-left">
             <h3 className="HomeNavigate text-white text-sm md:text-2xl  font-bold uppercase">
-              <button onClick={() => setBackHome(true)}>Memopen</button>
+              <button onClick={() => {
+                  setBackHome(true);
+                
+              }}>Memopen</button>
             </h3>
-            {isBackHomePop && <WarningPopUp setBackHome={setBackHome} />}
+            {isBackHomePop && <WarningPopUp setBackHome={setBackHome}/>}
           </div>
           <div className="editor-nav-right flex gap-5">
             <button
