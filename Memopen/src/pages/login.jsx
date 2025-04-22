@@ -20,16 +20,16 @@ function Login(){
           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white"></div>
         </div>
       </div>
-      <div className="flex flex-col md:w-1/2 md:items-center w-full justify-center  lg-m">
-        <div className="flex justify-center lg:mt-48 md:mt-36">
+      <div className="flex flex-col md:w-1/2 md:items-center w-full justify-center">
+        <div className="flex justify-center mt-16 xl:-mb-12 ">
           <img className="max-w-48 max-h-48" src="/src/assets/loginImg/Login_logo.png"></img>
         </div>
         <div className="md:flex-1 flex items-center justify-center 2xl:max-w-2xl">
-          <div className="w-full p-9 md:mb-36 lg:mb-48 2xl:mb-145 2xl:ml-4">
+          <div className="w-full p-9">
             <h1 className="text-2xl md:text-3xl 2xl:text-4xl font-bold mb-6">Login to your account</h1>
 
-            {/* usernamd*/}
-            <label className="block font-medium mb-1 ">
+            {/* username */}
+            <label className="block font-medium mb-1">
               Username <span className="text-red-500">*</span>
             </label>
             <input
@@ -48,7 +48,7 @@ function Login(){
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-10 right-3 2xl:top-10 cursor-pointer"
+                className="absolute top-10 right-3 2xl:top-12 cursor-pointer"
               >
                 {showPassword ? openEye : closeEye}
               </button>
@@ -56,14 +56,14 @@ function Login(){
 
             
 
-            {/* login Button */}
+            {/*LOGIN*/}
             
               <button onClick={()=> navigateLogin("Homepage")} type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer">
                 Login
               </button>
             
 
-            {/* register*/}
+            {/*REGISTER*/}
             <p className="text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
               <button onClick={()=>navigateLogin("/register")} className="text-black font-bold cursor-pointer">
