@@ -71,7 +71,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
     if (selectedId !== null) {
       const newId = Date.now().toString();
       const newCanvas = {
-        id:newId, tag: "", json:null , thumbnail: selectedTemplate};
+        id:newId, tag: "", tagColor: "", json:null , thumbnail: selectedTemplate};
       const updated = [...canvases , newCanvas];
       localStorage.setItem("canvases", JSON.stringify(updated))
       localStorage.setItem("eidtor_bg_img",selectedTemplate);

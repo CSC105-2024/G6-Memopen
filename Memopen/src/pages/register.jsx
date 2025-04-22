@@ -38,7 +38,7 @@ function Register(){
             <input
               type="text"
               placeholder="ex.mewInwZa007"
-              className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+              className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
             />
 
             {/* password */}
@@ -48,12 +48,12 @@ function Register(){
               </label>
               <input
                 type={showPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-10 2xl:top-12 right-3 cursor-pointer"
+                className="absolute top-10 md:top-11 right-3 2xl:top-11.5 cursor-pointer"
               >
                 {showPassword ? openEye : closeEye}
               </button>
@@ -66,12 +66,12 @@ function Register(){
               </label>
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-10 right-3 2xl:top-12 cursor-pointer "
+                className="absolute top-10 md:top-11 right-3 2xl:top-11.5 cursor-pointer "
               >
                 {showConfirmPassword ? openEye : closeEye}
               </button>
@@ -89,12 +89,12 @@ function Register(){
             </div>
 
             {/* Register Button */}
-           
-              <button type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer"onClick={()=> returnLoginPage("/")}>
+           <div className="flex justify-center">
+              <button type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer"onClick={()=> returnLoginPage("/")}>
                 Register
               </button>
             
-
+            </div>
             {/* Login Link */}
             <p className="text-gray-600 mt-4 text-center">
               Already have an account?{" "}

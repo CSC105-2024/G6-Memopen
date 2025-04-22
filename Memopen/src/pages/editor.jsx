@@ -23,7 +23,10 @@ function Editor() {
   const [isSavePop, setSavePop] = useState(false);
   const [isBackHomePop, setBackHome] = useState(false);
   const [firstEditCanvas, setFirstEditCanvas] = useState(null);
+
   const [tagColor, setTagColor] = useState("#ff0000");
+  const [tag,setTag] = useState(""); 
+
   const [isColorTagOpen, setIsColorTagOpen] = useState(false);
   const [isColorTextPickOpen, setIsColorTextPickOpen] = useState(false);
   const [isColorHighlightPickOpen, setIsColorHighlightPickOpen] =
@@ -47,7 +50,7 @@ function Editor() {
   const colorTagRef = useRef(null);
   const { id } = useParams();
   const location = useLocation();
-  const [tag,setTag] = useState(""); 
+  
 
   useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
@@ -255,11 +258,21 @@ function Editor() {
   }, [backgroundImage,id,location.state]);
 
   const handleTagInput = (e) =>{
-    const newTag = e.target.value;
-    setTag(newTag);
-    const updatedTag = JSON.parse(localStorage.getItem("canvases")|| "[]").map((c)=>
-    c.id === id ? {...c, tag: newTag}: c);
-    localStorage.setItem("canvases", JSON.stringify(updatedTag));
+      const newTag = e.target.value;
+      setTag(newTag);
+      const updatedTag = JSON.parse(localStorage.getItem("canvases")|| "[]").map((c)=>
+      c.id === id ? {...c, tag: newTag}: c);
+      localStorage.setItem("canvases", JSON.stringify(updatedTag));
+    
+  }
+  const handleTagColor = (color) =>{
+    setTagColor(color);
+    const updatedTagColor = JSON.parse(localStorage.getItem("canvases") || "[]").map((c)=>
+      c.id === id ? {...c, tagColor : color} : c
+    )
+    console.log(color);
+    localStorage.setItem("canvases",JSON.stringify(updatedTagColor));
+    
   }
   const addText = () => {
     const defaultTextColor = "#000000";
@@ -365,7 +378,7 @@ function Editor() {
   };
 
   
-  const saveCanvas = (canvasId, tagValue) => {
+  const saveCanvas = (canvasId, tagValue, tagColor) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
@@ -373,14 +386,32 @@ function Editor() {
     const thumbnail = canvas.toDataURL({ format: "jpeg", quality: 0.5 });
     const saved = JSON.parse(localStorage.getItem("canvases") || "[]") || [];
     let updated = saved.filter(Boolean).map((c) =>
-      c.id === canvasId ? { ...c, tag: tagValue, json, thumbnail } : c
+      c.id === canvasId ? { ...c, tag: tagValue,tagColor:tagColor, json, thumbnail } : c
     );
     if (!updated.some((c) => c.id === canvasId)) {
-      updated.push({ id: canvasId, tag: tagValue, json, thumbnail });
+      updated.push({ id: canvasId, tag: tagValue, tagColor:tagColor, json, thumbnail });
     }
     localStorage.setItem("canvases", JSON.stringify(updated));
     
   };
+  /*
+    const saveCanvas = (canvasId, tagValue, tagColor) => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const json = canvas.toJSON();
+    const thumbnail = canvas.toDataURL({ format: "jpeg", quality: 0.5 });
+    const saved = JSON.parse(localStorage.getItem("canvases") || "[]") || [];
+    let updated = saved.filter(Boolean).map((c) =>
+      c.id === canvasId ? { ...c, tag: tagValue,tagColor:tagColor, json, thumbnail } : c
+    );
+    if (!updated.some((c) => c.id === canvasId)) {
+      updated.push({ id: canvasId, tag: tagValue, tagColor:tagColor, json, thumbnail });
+    }
+    localStorage.setItem("canvases", JSON.stringify(updated));
+    
+  };
+  */
 
 
   return (
@@ -390,6 +421,9 @@ function Editor() {
           <div className="editor-nav-left">
             <h3 className="HomeNavigate text-white text-sm md:text-2xl  font-bold uppercase">
               <button onClick={() => {
+                  if(!tag.trim()){
+                    return alert("pls");
+                  }
                   setBackHome(true);
                 
               }}>Memopen</button>
@@ -404,12 +438,18 @@ function Editor() {
               Dowload
             </button>
             <button
-              onClick={() => setSavePop(true)}
+              onClick={() => {
+                  if(!tag.trim()){
+                    return alert("sss");
+                  }
+                  setSavePop(true)
+              }
+              }
               className="bg-[#00BE33] hover:bg-[#36b558] px-[26px] py-[16px] rounded-[10px] text-white text-sm md:text-lg  cursor-pointer"
             >
               Save
             </button>
-            {isSavePop && <PostSucessPopUp saveCanvas={()=>saveCanvas(id,tag)}  setSavePop={setSavePop} />}
+            {isSavePop && <PostSucessPopUp saveCanvas={()=>saveCanvas(id,tag,tagColor)}  setSavePop={setSavePop} />}
           </div>
         </div>
         <div className="area-container flex justify-center items-center h-[80vh] md:h-fit">
@@ -577,9 +617,10 @@ function Editor() {
                       className="w-6 h-6 rounded-full cursor-pointer"
                       style={{ backgroundColor: Tagcolors.value }}
                       onClick={() => {
-                        setTagColor(Tagcolors.value);
+                        handleTagColor(Tagcolors.value);
                         setIsColorTagOpen(false);
                       }}
+                      
                     ></div>
                   ))}
                 </div>

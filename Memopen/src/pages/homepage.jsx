@@ -8,7 +8,8 @@ import Sidebar from "../components/Sidebar";
 function Home() {
   const navigate = useNavigate();
   const location = useLocation();
-  const showPopup = new URLSearchParams(location.search).get("popup") === "true";
+  const showPopup =
+    new URLSearchParams(location.search).get("popup") === "true";
 
   const [canvases, setCanvases] = useState([]);
   const [tags, setTags] = useState([]);
@@ -29,15 +30,6 @@ function Home() {
     const filtered = canvases.filter((c) => c.id !== id);
     localStorage.setItem("canvases", JSON.stringify(filtered));
     setCanvases(filtered);
-  };
-
-  const getTagColor = (tagName) => {
-    for (let tag of tags) {
-      if (tag.name === tagName) {
-        return tag.color;
-      }
-    }
-    return "#000000";
   };
 
   const handleChooseTemplate = (template) => {
@@ -94,10 +86,13 @@ function Home() {
                   )}
 
                   <div className="flex items-center justify-between mt-2">
-                    <span
-                      className="w-4 h-4 rounded-full inline-block"
-                      style={{ backgroundColor: getTagColor(canvas.tag) }}
-                    ></span>
+                    <div className="flex gap-2 items-center">
+                      <span
+                        className="w-4 h-4 rounded-full inline-block border"
+                        style={{ backgroundColor: canvas.tagColor }}
+                      ></span>
+                      <span>{canvas.tag}</span>
+                    </div>
                     <button
                       className="text-red-500 hover:text-red-700"
                       onClick={() => handleDelete(canvas.id)}
