@@ -52,7 +52,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const itemsPerPage = isMobile ? 4 : category === "All" ? 6 : 4;
+  const itemsPerPage = isMobile ? 2 : category === "All" ? 6 : 4;
   const gridCols = isMobile
     ? "grid-cols-1"
     : category === "All"
