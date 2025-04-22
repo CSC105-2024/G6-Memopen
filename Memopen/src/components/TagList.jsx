@@ -21,7 +21,6 @@ const TagList = () => {
     <div className="bg-white p-4 rounded-lg shadow w-full">
       <h2 className="text-black text-lg font-semibold mb-4">My tags</h2>
 
-      {/* ส่วนที่มี scroll */}
       <div className="max-h-64 overflow-y-auto pr-2">
         {tags.length > 0 ? (
           tags.map((tag, index) => (
