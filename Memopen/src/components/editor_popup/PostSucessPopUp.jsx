@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 function PostSucessPopUp({ setSavePop , saveCanvas}) {
     const editPopUpNavigateToHome = useNavigate();
   return (
-    
+    <div>
+      <div className="fixed inset-0  bg-black/40  bg-opacity-50 z-40"></div>        
         <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
             <div className=" rounded-t-3xl relative flex flex-col px-20 py-13 bg-[#00D639] w-full max-w-sm">
                     <button className="absolute left-[74%] top-[10px] " onClick={()=> setSavePop(false)}><img src="\assets\PostSucessPopup\EditPopUpClose.svg"/></button>
@@ -22,7 +23,8 @@ function PostSucessPopUp({ setSavePop , saveCanvas}) {
                         } }>OK</button>
                     </div>
                 </div>
-            </div>
+        </div>
+    </div>
    
    
   );

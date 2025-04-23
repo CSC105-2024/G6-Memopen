@@ -82,7 +82,9 @@ export default function TemplatePopup({ onChoose, onClose }) {
     }
   };
   return (
-    <div className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50">
+    <div>
+      <div className="fixed inset-0  bg-black/40  bg-opacity-50 z-40"></div>
+      <div className="fixed inset-0  flex justify-center items-center z-50">
       <div className="bg-white w-[90%] max-w-3xl rounded-lg shadow-2xl p-6 relative">
         <button onClick={onClose} className="absolute top-5 right-8 text-3xl">
           ✖
@@ -170,6 +172,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

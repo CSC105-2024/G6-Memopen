@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 function WarningPopUp({setBackHome}){
     const warningHomeNavigate = useNavigate();
     return(
-        <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
+        <div>
+            <div className="fixed inset-0  bg-black/40  bg-opacity-50 z-40"></div>        
+            <div className="SavePopUp fixed inset-0 justify-center items-center  flex flex-col  z-100  ">
             <div className=" rounded-t-3xl relative flex flex-col px-20 py-13 bg-[#FF2929] w-full max-w-sm">
                     <button className="absolute left-[74%] top-[10px] " onClick={()=> setBackHome(false)}><img src="\assets\PostSucessPopup\EditPopUpClose.svg"/></button>
                     <img className="justify-center items-center" src="\assets\PostSucessPopup\WarningPic.svg"/>
@@ -19,6 +21,8 @@ function WarningPopUp({setBackHome}){
                     </div>
                 </div>
             </div>
+        </div>
+
     )
 }
 export default WarningPopUp;
