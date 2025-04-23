@@ -16,13 +16,13 @@ function Login(){
         MEMOPEN
       </h1>
       <div className="hidden relative md:block md:w-1/2 lg:w-1/2  ">
-      <div className="absolute inset-0 bg-[url('/src/assets/loginImg/Login_background.jpg')] bg-cover bg-center"> 
+      <div className="absolute inset-0 bg-[url('/assets/loginImg/Login_background.jpg')] bg-cover bg-center"> 
           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white"></div>
         </div>
       </div>
       <div className="flex flex-col md:w-1/2 md:items-center w-full justify-center">
         <div className="flex justify-center mt-16 xl:-mb-12 ">
-          <img className="max-w-48 max-h-48" src="/src/assets/loginImg/Login_logo.png"></img>
+          <img className="max-w-48 max-h-48" src="/assets/loginImg/Login_logo.png"></img>
         </div>
         <div className="md:flex-1 flex items-center justify-center 2xl:max-w-2xl">
           <div className="w-full p-9">
