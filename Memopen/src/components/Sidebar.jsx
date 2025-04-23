@@ -82,7 +82,7 @@ const Sidebar = () => {
 
             <div className="relative w-fit mx-auto">
               <img
-                src={image || "https://via.placeholder.com/100"}
+                src={ image|| "assets/profile_icon/profile_homePage.png"}
                 alt="Profile"
                 className="w-24 h-24 rounded-full border-2 border-gray-300 object-cover"
               />

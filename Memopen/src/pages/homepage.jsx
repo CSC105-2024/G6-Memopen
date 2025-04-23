@@ -39,28 +39,30 @@ function Home() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="flex justify-between items-center mt-15 mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold ml-5">
+      <div className="flex-1 overflow-y-auto  ">
+      <div className="top-nav-container fixed left-0 right-0 bg-white shadow z-10 px-4 sm:px-6 py-4">
+        <div className="topnav flex pt-1.5 sm:pt-1 justify-between items-center gap-4">
+          <h1 className="relative left-10 md:left-64  text-xl sm:text-3xl font-bold text-center sm:text-left">
             Recent notes
             <FontAwesomeIcon icon={faClockRotateLeft} className="ml-2 text-black" />
           </h1>
           <button
-            className="bg-[#00917C] text-white px-4 py-2 rounded-lg sm:px-6"
+            className="bg-[#00917C] text-white px-4 py-2 rounded-lg text-sm sm:text-base sm:px-6"
             onClick={() => navigate("?popup=true")}
           >
             <span className="sm:hidden">+</span>
             <span className="hidden sm:inline">+ Create new</span>
           </button>
         </div>
-
+      </div>
+        
         {showPopup && (
           <TemplatePopup
             onChoose={handleChooseTemplate}
             onClose={() => navigate("?popup=false")}
           />
         )}
-
+        <div className="recent-canvas pt-[90px] px-6 pb-[30px]">
         {canvases.length === 0 ? (
           <p className="text-gray-500 text-center mt-10">No notes yet</p>
         ) : (
@@ -105,6 +107,8 @@ function Home() {
             </div>
           </div>
         )}
+        </div>
+        
       </div>
     </div>
   );

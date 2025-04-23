@@ -535,12 +535,12 @@ function Editor() {
           <div className="area flex justify-center items-center  flex-col ">
             <div className="canvas-box flex flex-col items-center my-4 mx-10 max-w-[960px] ">
               <div
-                className={`canvas-head bg-black flex items-center p-3 justify-center md:justify-around gap-3 `}
+                className={`canvas-head   bg-black flex items-center p-3  md:justify-around gap-3 overflow-x-auto whitespace-nowrap `}
                 style={{ width: `${canvasWidth}px` }}
               >
                 <button
                   onClick={addText}
-                  className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl text-[15px] rounded-[10px] font-semibold"
+                  className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl rounded-[10px] font-semibold"
                 >
                   Add text
                 </button>
@@ -609,7 +609,7 @@ function Editor() {
                   <div className="texthighlightsection flex items-center gap-3">
                     <label>
                       <div>
-                        <img src="/assets/editorAssets/highlight.svg" />
+                        <img src="/assets/editorAssets/highlight.svg" className="w-8 h-8 " />
                       </div>
                     </label>
                     <div
@@ -672,7 +672,7 @@ function Editor() {
                       document.getElementById("imageInput").click()
                     }
                   >
-                    <img src="/assets/editorAssets/imgInput.svg" />
+                    <img src="/assets/editorAssets/imgInput.svg"   />
                   </button>
                   <input
                     id="imageInput"
@@ -687,9 +687,9 @@ function Editor() {
                 <canvas ref={canvasRef} />
               </div>
             </div>
-            <div className=" addTagSection justify-center items-center">
-              <div className="addTagBox rounded-[15px] bg-white  px-10 py-3 flex gap-10 items-center ">
-                <label className="text-[18px] font-bold">Add Tag</label>
+            <div className=" addTagSection justify-center items-center ">
+              <div className="addTagBox rounded-[15px] bg-white max-w-[800px]  px-3 md:px-10  py-3 flex gap-10 items-center ">
+                <label className="text-[18px] font-bold hidden md:block ">Add Tag</label>
                 <div className="editor-tag-input flex gap-3 items-center relative">
                   <div
                     className="w-10 h-10 border  border-black cursor-pointer rounded-full"
