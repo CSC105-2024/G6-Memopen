@@ -496,7 +496,7 @@ function Editor() {
                     return alert("pls fill tag");
                   }
                   if (unSavedTag) {                    
-                    setBackHome(true);
+                    setBackHome(true)
                   }
                   
                 }}
