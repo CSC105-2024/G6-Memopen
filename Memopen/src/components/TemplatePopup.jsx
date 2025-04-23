@@ -41,6 +41,9 @@ export default function TemplatePopup({ onChoose, onClose }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedId, setSelectedId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [canvasCount , setCanvasCount]= useState(()=>{
+    return parseInt(localStorage.getItem("canvasCount")) || 0;
+  });
 
   const edNavigate = useNavigate();
 
@@ -70,15 +73,20 @@ export default function TemplatePopup({ onChoose, onClose }) {
     const selectedTemplate = displayedTemplates[selectedId];
     if (selectedId !== null) {
       const newId = Date.now().toString();
+
+      const newCount = canvasCount+1;
+      const tagCreation = "note_" + newCount;
+      const tagColorCreation = "#ff0000";
       const newCanvas = {
-        id:newId, tag: "", tagColor: "", json:null , thumbnail: selectedTemplate};
+        id:newId, tag:  tagCreation, tagColor: tagColorCreation, json:null , thumbnail: selectedTemplate};
       const updated = [...canvases , newCanvas];
       localStorage.setItem("canvases", JSON.stringify(updated))
       localStorage.setItem("eidtor_bg_img",selectedTemplate);
       onChoose(selectedTemplate);
+      localStorage.setItem("canvasCount" , newCount.toString());
+      setCanvasCount(newCount);
       console.log(canvases);
       edNavigate(`/editor/${newId}`);
-      
     }
   };
   return (

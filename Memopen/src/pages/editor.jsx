@@ -105,7 +105,7 @@ function Editor() {
     });
 
     resizeCanvas();
-    setFirstEditCanvas(fabricCanvasRef.current.toJSON());
+    //setFirstEditCanvas(fabricCanvasRef.current.toJSON());
 
     const bg_img = localStorage.getItem("eidtor_bg_img");
     if (bg_img) {
