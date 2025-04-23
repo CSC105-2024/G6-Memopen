@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { fabric } from "fabric";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import WarningPopUp from "../components/editor_popup/WarningPopUp";
 import PostSucessPopUp from "../components/editor_popup/PostSucessPopUp";
 function Editor() {
@@ -41,6 +41,8 @@ function Editor() {
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const navigateBackHome= useNavigate();
+  const [originalTag , setOriginalTag] = useState("");
+  const [originalTagColor , setOriginalTagColor] = useState("#ff0000");
 
   //useRef not re render it use current state
   const canvasRef = useRef(null); // ref of canvas element
@@ -55,7 +57,7 @@ function Editor() {
   useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
     const originalWidthRef = 800; //960 *1.2 -> 800
-    const resizeCanvas = () => {
+    /*const resizeCanvas = () => {
       const containerWidth = Math.min(
         window.innerWidth * 0.75,
         originalWidthRef
@@ -74,7 +76,28 @@ function Editor() {
         canvasRefSize.renderAll();
         setCanvasWidth(scaleWidth);
       }
+    };*/
+
+    const resizeCanvas = () => {
+      const containerWidth = Math.min(
+        window.innerWidth * 0.75,
+        originalWidthRef
+      );
+      const scale = containerWidth / originalWidthRef;
+      const scaleWidth = originalWidthRef * scale;
+      const scaleHeight = originalHeightRef * scale;
+    
+      const canvasRefSize = fabricCanvasRef.current;
+      if (canvasRefSize) {
+        canvasRefSize.setWidth(scaleWidth);
+        canvasRefSize.setHeight(scaleHeight);
+        canvasRefSize.setZoom(scale);
+        canvasRefSize.renderAll();
+        setCanvasWidth(scaleWidth);
+      }
     };
+    
+    
 
     
 
@@ -215,7 +238,18 @@ function Editor() {
     const saved = JSON.parse(localStorage.getItem("canvases") || "[]" );
     const found = saved.find((x)=> x.id === id);
     if(found){
-      setTag(found.tag);
+      const tagValue = found.tag || "";
+      const tagColorValue = found.tagColor || "#FF0000";
+
+      setTag(tagValue);
+      setTagColor(tagColorValue);
+      setOriginalTag(tagValue);
+      setOriginalTagColor(tagColorValue);
+      
+      localStorage.setItem("original_tag", tagValue);
+      localStorage.setItem("original_tag_color", tagColorValue);
+      localStorage.setItem("current_canvas_id", found.id);
+
       if(found.json){
         fabricCanvasRef.current.loadFromJSON(found.json, ()=>{
           fabricCanvasRef.current.renderAll();
@@ -353,47 +387,68 @@ function Editor() {
     });
   };
 
-  const dowloadCanvas = () => {
-    const originalWidth = fabricCanvasRef.current.width;
-    const originalHeight = fabricCanvasRef.current.height;
-
-    fabricCanvasRef.current.setWidth(originalWidth * 2);
-    fabricCanvasRef.current.setHeight(originalHeight * 2);
-
-    fabricCanvasRef.current.setZoom(2);
-
-    const dataURL = fabricCanvasRef.current.toDataURL({
+  const downloadCanvas = () => {
+    const targetWidth = 1600;
+    const targetHeight = 900;
+    const currentCanvas = fabricCanvasRef.current;
+  
+    const scaleX = targetWidth / currentCanvas.getWidth();
+    const scaleY = targetHeight / currentCanvas.getHeight();
+    const scale = Math.min(scaleX, scaleY); // maintain aspect ratio
+  
+    const dataURL = currentCanvas.toDataURL({
       format: "png",
-      multiplier: 1,
+      multiplier: scale,
+      enableRetinaScaling: false,
     });
-
-    fabricCanvasRef.current.setWidth(originalWidth);
-    fabricCanvasRef.current.setHeight(originalHeight);
-    fabricCanvasRef.current.setZoom(1);
-
+  
     const link = document.createElement("a");
     link.href = dataURL;
-    link.download = "image.png";
+    link.download = "canvas.png";
     link.click();
   };
+  
+  
 
   
   const saveCanvas = (canvasId, tagValue, tagColor) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+  
+    const currentWidth = canvas.getWidth();
+    const currentHeight = canvas.getHeight();
+    
+    const active = canvas.getActiveObject();
+    canvas.discardActiveObject();
+    canvas.renderAll();
 
+    const thumbnailExportResolution = 2;
+   
+    const thumbnailCanvas = document.createElement('canvas');
+    const thumbnailContext = thumbnailCanvas.getContext('2d');
+    thumbnailCanvas.width = currentWidth;
+    thumbnailCanvas.height = currentHeight;
+    thumbnailContext.drawImage(canvas.lowerCanvasEl, 0, 0, currentWidth, currentHeight);
+  
+    const thumbnail = thumbnailCanvas.toDataURL({ format: "jpeg", quality: 0.5, multiplier: thumbnailExportResolution });
+    
+    if(active){
+      canvas.setActiveObject(active);
+      canvas.renderAll();
+    }
     const json = canvas.toJSON();
-    const thumbnail = canvas.toDataURL({ format: "jpeg", quality: 0.5 });
     const saved = JSON.parse(localStorage.getItem("canvases") || "[]") || [];
     let updated = saved.filter(Boolean).map((c) =>
-      c.id === canvasId ? { ...c, tag: tagValue,tagColor:tagColor, json, thumbnail } : c
+      c.id === canvasId ? { ...c, tag: tagValue, tagColor: tagColor, json, thumbnail } : c
     );
-    if (!updated.some((c) => c.id === canvasId)) {
-      updated.push({ id: canvasId, tag: tagValue, tagColor:tagColor, json, thumbnail });
-    }
-    localStorage.setItem("canvases", JSON.stringify(updated));
     
+    if (!updated.some((c) => c.id === canvasId)) {
+      updated.push({ id: canvasId, tag: tagValue, tagColor: tagColor, json, thumbnail });
+    }
+  
+    localStorage.setItem("canvases", JSON.stringify(updated));
   };
+  
   /*
     const saveCanvas = (canvasId, tagValue, tagColor) => {
     const canvas = fabricCanvasRef.current;
@@ -432,7 +487,7 @@ function Editor() {
           </div>
           <div className="editor-nav-right flex gap-5">
             <button
-              onClick={dowloadCanvas}
+              onClick={downloadCanvas}
               className="bg-[#00917C] hover:bg-[#007362] px-[26px] py-[16px] rounded-[10px] text-white text-sm md:text-lg  cursor-pointer"
             >
               Dowload
