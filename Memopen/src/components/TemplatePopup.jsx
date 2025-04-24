@@ -78,10 +78,20 @@ export default function TemplatePopup({ onChoose, onClose }) {
     if (selectedId !== null) {
       const newId = Date.now().toString();
 
+      const colorOptions = [
+        { value: "#ff0000" }, 
+        { value: "#ff8800" },
+        { value: "#ffff00" }, 
+        { value: "#008000" }, 
+        { value: "#0000ff" },
+        { value: "#800080" }, 
+      ];
+
       const getcanvasesSizeCount = canvases;
-      const canvasesSizeCount = getcanvasesSizeCount.length;
+      const canvasesSizeCount = getcanvasesSizeCount.length +1 ;
       const tagCreation = "note_" + canvasesSizeCount;
-      const tagColorCreation = "#ff0000";
+      const colorIndex =(getcanvasesSizeCount.length % colorOptions.length) //canvas.length = 0 -> 0%5=0 , 1%5=1 , 5%5 = 0 
+      const tagColorCreation = colorOptions[colorIndex].value;
       const newCanvas = {
         id:newId, tag:  tagCreation, tagColor: tagColorCreation, json:null , thumbnail: selectedTemplate};
       const updated = [...canvases , newCanvas];
