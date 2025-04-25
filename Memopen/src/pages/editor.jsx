@@ -535,12 +535,12 @@ function Editor() {
           <div className="area flex justify-center items-center  flex-col ">
             <div className="canvas-box flex flex-col items-center my-4 mx-10 max-w-[960px] ">
               <div
-                className={`canvas-head   bg-black flex items-center p-3  md:justify-around gap-3 overflow-x-auto whitespace-nowrap `}
+                className={` canvashead bg-black flex items-center p-3 justify-baseline sm:justify-around gap-3 overflow-x-auto whitespace-nowrap `}
                 style={{ width: `${canvasWidth}px` }}
               >
                 <button
                   onClick={addText}
-                  className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-2xl rounded-[10px] font-semibold"
+                  className="addtext cursor-pointer hover:bg-[#b3b3b3]  bg-[#D9D9D9] md:px-[23px] md:py-[10px] px-3 py-1 md:text-1xl rounded-[10px] font-semibold"
                 >
                   Add text
                 </button>
@@ -577,7 +577,7 @@ function Editor() {
                   </button>
                 </div>
 
-                <div className="textcoloredit flex items-center md:gap-6 gap-3">
+                <div className="textcoloredit flex items-center md:gap-6 gap-3 mr-10 sm:mr-0">
                   <div className="textcolorsection flex items-center gap-3">
                     <label>
                       <div className="text-white text-2xl underline font-semibold">
@@ -591,7 +591,7 @@ function Editor() {
                     ></div>
                     {isColorTextPickOpen && (
                       <div
-                        className="absolute top-49 z-30 "
+                        className="absolute md:top-50 sm:top-70 top-130 right-[10%] z-30 "
                         ref={colorPickerTextRef}
                       >
                         <ColorPicker
@@ -606,7 +606,7 @@ function Editor() {
                     )}
                   </div>
 
-                  <div className="texthighlightsection flex items-center gap-3">
+                  <div className="texthighlightsection flex-shrink-0 flex items-center gap-3">
                     <label>
                       <div>
                         <img src="/assets/editorAssets/highlight.svg" className="w-8 h-8 " />
@@ -620,7 +620,7 @@ function Editor() {
 
                     {isColorHighlightPickOpen && (
                       <div
-                        className="absolute top-49 z-30"
+                        className="absolute md:top-50 sm:top-70 top-130 right-[10%] z-30 "
                         ref={colorPickerHighlightRef}
                       >
                         <div className="flex w-[278px]  justify-center gap-1">
@@ -664,7 +664,7 @@ function Editor() {
                   </div>
                 </div>
 
-                <div className="imgInput flex items-center gap-2 md:gap-7 ">
+                <div className="imgInput flex items-center mr-10 md:mr-0 sm:mr-3 md:gap-5 ">
                   <div className="w-[1px] bg-white h-[32px]  invisible md:visible"></div>
                   <button
                     className="cursor-pointer flex-shrink-0"
@@ -715,7 +715,7 @@ function Editor() {
                     </div>
                   )}
                   <input
-                    className="border border-black rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
+                    className="border border-black max-w-[600px] rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
                     type="text"
                     placeholder="Enter new tag"
                     value={tag}
