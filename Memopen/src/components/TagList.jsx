@@ -43,7 +43,7 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
   }, []);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow w-full">
+    <div className="bg-white p-4 rounded-lg shadow w-full mb-4">
       <h2 className="text-black text-lg font-semibold mb-4">My tags</h2>
 
       <div className="max-h-64 overflow-y-auto pr-2">

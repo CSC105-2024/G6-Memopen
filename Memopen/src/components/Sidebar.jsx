@@ -8,11 +8,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TagList from "../components/TagList";
 
-const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
+const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
   const [username, setUsername] = useState("User");
   const [image, setImage] = useState(null);
   const [tags, setTags] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [canvases, setCanvases] = useState([]);
+  const [manualTag , setManualTag] = useState([]);
 
   useEffect(() => {
     setUsername(localStorage.getItem("username") || "Guest");
@@ -27,6 +29,12 @@ const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
         { name: "Default Tag", color: "gray" },
       ]
     );
+    const storedCanvas = (JSON.parse(localStorage.getItem("canvases")));
+    setCanvases(storedCanvas || []);
+
+    const storedManualTags = JSON.parse(localStorage.getItem("manualTags"))
+    setManualTag(setManualTag || []);
+
   }, []);
 
   const handleImageChange = (event) => {
@@ -46,9 +54,17 @@ const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
     localStorage.removeItem("username");
     localStorage.removeItem("userTags");
     localStorage.removeItem("profileImage");
+    localStorage.removeItem("canvases");
+    localStorage.removeItem("manualTags");
     setUsername("Guest");
     setTags([]);
     setImage(null);
+    setCanvases([]);
+    setManualTag([]);
+
+    if(onLogout){
+      onLogout();
+    }
   };
 
   return (
@@ -82,7 +98,7 @@ const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
 
             <div className="relative w-fit mx-auto">
               <img
-                src={ image|| "assets/profile_icon/profile_homePage.png"}
+                src={image || "assets/profile_icon/profile_homePage.png"}
                 alt="Profile"
                 className="w-24 h-24 rounded-full border-2 border-gray-300 object-cover"
               />
@@ -102,7 +118,11 @@ const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
             </h2>
 
             <div className="mt-6 w-full">
-              <TagList tags={tags} handleFilterClickAgain={handleFilterClickAgain} activeFilter={activeFilter}/>
+              <TagList
+                tags={tags}
+                handleFilterClickAgain={handleFilterClickAgain}
+                activeFilter={activeFilter}
+              />
             </div>
           </div>
 
@@ -120,4 +140,3 @@ const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
 };
 
 export default Sidebar;
-

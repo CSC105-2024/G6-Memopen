@@ -57,9 +57,14 @@ function Home() {
     }
   }
 
+  const hangleLogout = ()=>{
+    localStorage.removeItem("canvases");
+    setCanvases([]);
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeFilter={activeFilter} handleFilterClickAgain={handleFilterClickAgain} />
+      <Sidebar onLogout={hangleLogout} activeFilter={activeFilter} handleFilterClickAgain={handleFilterClickAgain} />
       <div className="flex-1 overflow-y-auto  ">
       <div className="top-nav-container fixed left-0 right-0 bg-white shadow z-10 px-4 sm:px-6 py-4">
         <div className="topnav flex pt-1.5 sm:pt-1 justify-between items-center gap-4">
