@@ -585,7 +585,7 @@ function Editor() {
                       </div>
                     </label>
                     <div
-                      className="textColorBox w-10 h-10 border border-white cursor-pointer"
+                      className="textColorBox flex-shrink-0 w-10 h-10 border border-white cursor-pointer"
                       style={{ backgroundColor: textColor }}
                       onClick={() => setIsColorTextPickOpen(true)}
                     ></div>
@@ -667,7 +667,7 @@ function Editor() {
                 <div className="imgInput flex items-center gap-2 md:gap-7 ">
                   <div className="w-[1px] bg-white h-[32px]  invisible md:visible"></div>
                   <button
-                    className="cursor-pointer "
+                    className="cursor-pointer flex-shrink-0"
                     onClick={() =>
                       document.getElementById("imageInput").click()
                     }
