@@ -14,6 +14,7 @@ function Home() {
   const [canvases, setCanvases] = useState([]);
   const [tags, setTags] = useState([]);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const [activeFilter , setActiveFilter] = useState(null);
 
   useEffect(() => {
     const storedCanvases = localStorage.getItem("canvases");
@@ -36,9 +37,29 @@ function Home() {
     console.log("Template chosen:", template);
   };
 
+  const filteredCanvas = canvases.filter((c)=>{
+    const filterTag = c.tag?.trim();
+    const filterColor = c.tagColor;
+
+    if(!activeFilter) return true; //if there are no active filter select
+    return (
+      (activeFilter.tag ? filterTag === activeFilter.tag : true) &&
+      (activeFilter.tagColor ? filterColor === activeFilter.tagColor : true)
+    )
+
+  })
+
+  const handleFilterClickAgain = (tag,color) =>{
+    if(activeFilter?.tag === tag && activeFilter?.tagColor === color){
+      setActiveFilter(null)
+    }else{
+      setActiveFilter({tag,tagColor: color});
+    }
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+      <Sidebar activeFilter={activeFilter} handleFilterClickAgain={handleFilterClickAgain} />
       <div className="flex-1 overflow-y-auto  ">
       <div className="top-nav-container fixed left-0 right-0 bg-white shadow z-10 px-4 sm:px-6 py-4">
         <div className="topnav flex pt-1.5 sm:pt-1 justify-between items-center gap-4">
@@ -68,7 +89,7 @@ function Home() {
         ) : (
           <div className="flex justify-center items-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 lg:gap-15">
-              {canvases.map((canvas, index) => (
+              {filteredCanvas.map((canvas, index) => (
                 <div
                   key={index}
                   className={`relative max-w-[450px] border p-4 rounded-lg transition duration-300 bg-white text-black ${

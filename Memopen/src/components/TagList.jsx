@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TagListPopup from "./TagListPopup";
 
-const TagList = () => {
+const TagList = ({handleFilterClickAgain, activeFilter}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -49,13 +49,24 @@ const TagList = () => {
       <div className="max-h-64 overflow-y-auto pr-2">
         {tags.length > 0 ? (
           tags.map((tag, index) => (
-            <div key={index} className="flex items-center p-2 border rounded-lg mb-2">
+            <button key={index} className="flex items-center p-2 border rounded-lg mb-2 w-full"
+            style={{
+              backgroundColor:
+              activeFilter?.tag === tag.name && activeFilter?.tagColor === tag.color ?
+              "#00917C" : "#FFFFFF",
+              color:
+              activeFilter?.tag === tag.name && activeFilter?.tagColor === tag.color
+              ? "#fff": "#000",
+            }}
+            
+            onClick={()=>handleFilterClickAgain(tag.name, tag.color)}
+            >
               <span
                 className="w-3 h-3 rounded-full mr-2"
                 style={{ backgroundColor: tag.color }}
               ></span>
               <span>{tag.name}</span>
-            </div>
+            </button>
           ))
         ) : (
           <p className="text-gray-500">No tags available</p>
@@ -66,7 +77,7 @@ const TagList = () => {
         className="mt-4 text-black font-semibold"
         onClick={() => navigate("?popup=taglist")}
       >
-        + add list
+        + Add list
       </button>
 
       {showPopup === "taglist" && (

@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TagList from "../components/TagList";
 
-const Sidebar = () => {
+const Sidebar = ({handleFilterClickAgain ,activeFilter}) => {
   const [username, setUsername] = useState("User");
   const [image, setImage] = useState(null);
   const [tags, setTags] = useState([]);
@@ -102,7 +102,7 @@ const Sidebar = () => {
             </h2>
 
             <div className="mt-6 w-full">
-              <TagList tags={tags} />
+              <TagList tags={tags} handleFilterClickAgain={handleFilterClickAgain} activeFilter={activeFilter}/>
             </div>
           </div>
 
