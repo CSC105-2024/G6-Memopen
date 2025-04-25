@@ -77,7 +77,7 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
         className="mt-4 text-black font-semibold"
         onClick={() => navigate("?popup=taglist")}
       >
-        + Add list
+        + Manage list
       </button>
 
       {showPopup === "taglist" && (

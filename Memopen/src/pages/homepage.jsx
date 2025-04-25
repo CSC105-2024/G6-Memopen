@@ -84,8 +84,10 @@ function Home() {
           />
         )}
         <div className="recent-canvas pt-[90px] px-6 pb-[30px]">
-        {canvases.length === 0 ? (
-          <p className="text-gray-500 text-center mt-10">No notes yet</p>
+        {filteredCanvas.length === 0 ? (
+          <p className="text-gray-500 text-center mt-10">{
+            activeFilter ? `No notes matches with this tag` : "No notes yet"
+          }</p>
         ) : (
           <div className="flex justify-center items-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 lg:gap-15">
