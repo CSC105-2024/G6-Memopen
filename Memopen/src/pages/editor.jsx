@@ -122,19 +122,6 @@ function Editor() {
         });
       });
     }
-    /*
-    if (backgroundImageP) {
-      fabric.Image.fromURL(backgroundImageP, (bgImage) => {
-        bgImage.scaleToWidth(originalWidthRef);
-        bgImage.scaleToHeight(originalHeightRef);
-        fabricCanvasRef.current.setBackgroundImage(
-          bgImage,
-          fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current)
-        );
-      });
-    }
-    */
-
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
