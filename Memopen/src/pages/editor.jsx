@@ -704,7 +704,7 @@ function Editor() {
               <div className=" flex justify-center w-[75vw] max-w-[960px] max-h-[42vw] overflow-hidden item-center  ">
                 <canvas ref={canvasRef} />
               </div>
-              <button className="bg-white p-3 rounded-[15px] m-2 " onClick={handleManualDelete} >Delete Object</button>
+              <button className="bg-white p-3 rounded-[15px] mt-4 text-sm " onClick={handleManualDelete} >Delete Object</button>
             </div>
             <div className=" addTagSection justify-center items-center ">
               <div className="addTagBox rounded-[15px] bg-white max-w-[800px]  px-3 md:px-10  py-3 flex gap-10 items-center ">
