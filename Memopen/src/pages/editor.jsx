@@ -221,6 +221,8 @@ function Editor() {
       }
     };
 
+    
+
     window.addEventListener("keydown", handleKeyDown);
     document.addEventListener(
       "mousedown",
@@ -298,6 +300,16 @@ function Editor() {
       localStorage.setItem("canvases", JSON.stringify(updatedTag));
       */
   };
+
+  const handleManualDelete = () =>{
+    const canvas = fabricCanvasRef.current;
+    const activeObject = canvas.getActiveObject();
+    if(activeObject){
+      canvas.remove(activeObject);
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
+    }
+  }
   const handleTagColor = (color) => {
     setTagColor(color);
     setUnsavedTag(true);
@@ -692,6 +704,7 @@ function Editor() {
               <div className=" flex justify-center w-[75vw] max-w-[960px] max-h-[42vw] overflow-hidden item-center  ">
                 <canvas ref={canvasRef} />
               </div>
+              <button className="bg-white p-3 rounded-[15px] m-2 " onClick={handleManualDelete} >Delete Object</button>
             </div>
             <div className=" addTagSection justify-center items-center ">
               <div className="addTagBox rounded-[15px] bg-white max-w-[800px]  px-3 md:px-10  py-3 flex gap-10 items-center ">
