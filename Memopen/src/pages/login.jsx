@@ -58,7 +58,7 @@ function Login(){
 
             {/*LOGIN*/}
             
-              <button onClick={()=> navigateLogin("Homepage")} type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer">
+              <button onClick={()=> navigateLogin("Homepage")} type="submit" className="w-full p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer">
                 Login
               </button>
             
