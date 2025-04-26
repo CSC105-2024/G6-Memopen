@@ -7,6 +7,7 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import TagList from "../components/TagList";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
   const [username, setUsername] = useState("User");
@@ -14,7 +15,8 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
   const [tags, setTags] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [canvases, setCanvases] = useState([]);
-  const [manualTag , setManualTag] = useState([]);
+  const [manualTag, setManualTag] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUsername(localStorage.getItem("username") || "Guest");
@@ -29,12 +31,11 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
         { name: "Default Tag", color: "gray" },
       ]
     );
-    const storedCanvas = (JSON.parse(localStorage.getItem("canvases")));
+    const storedCanvas = JSON.parse(localStorage.getItem("canvases"));
     setCanvases(storedCanvas || []);
 
-    const storedManualTags = JSON.parse(localStorage.getItem("manualTags"))
+    const storedManualTags = JSON.parse(localStorage.getItem("manualTags"));
     setManualTag(setManualTag || []);
-
   }, []);
 
   const handleImageChange = (event) => {
@@ -62,9 +63,10 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
     setCanvases([]);
     setManualTag([]);
 
-    if(onLogout){
+    if (onLogout) {
       onLogout();
     }
+    navigate("/");
   };
 
   return (
