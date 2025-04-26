@@ -24,7 +24,7 @@ function Editor() {
   const [isSavePop, setSavePop] = useState(false);
   const [isBackHomePop, setBackHome] = useState(false);
   const [firstEditCanvas, setFirstEditCanvas] = useState(null);
-
+  const [tagFieldBlank, setTagFieldBlank] = useState(false);
   const [tagColor, setTagColor] = useState("#ff0000");
   const [tag, setTag] = useState("");
 
@@ -288,6 +288,9 @@ function Editor() {
   const handleTagInput = (e) => {
     const newTag = e.target.value;
     setTag(newTag);
+    if (newTag.trim() !== "") {
+      setTagFieldBlank(false);
+    }
     setUnsavedTag(true);
     /*
       const updatedTag = JSON.parse(localStorage.getItem("canvases")|| "[]").map((c)=>
@@ -493,11 +496,10 @@ function Editor() {
               <button
                 onClick={() => {
                   if (!tag.trim()) {
-                    return alert("pls fill tag");
+                    setTagFieldBlank(true);
+                    return;
                   }
                   setBackHome(true);
-                  
-                  
                 }}
               >
                 Memopen
@@ -515,7 +517,8 @@ function Editor() {
             <button
               onClick={() => {
                 if (!tag.trim()) {
-                  return alert("sss");
+                  setTagFieldBlank(true);
+                  return;
                 }
                 setSavePop(true);
               }}
@@ -609,7 +612,10 @@ function Editor() {
                   <div className="texthighlightsection flex-shrink-0 flex items-center gap-3">
                     <label>
                       <div>
-                        <img src="/assets/editorAssets/highlight.svg" className="w-8 h-8 " />
+                        <img
+                          src="/assets/editorAssets/highlight.svg"
+                          className="w-8 h-8 "
+                        />
                       </div>
                     </label>
                     <div
@@ -672,7 +678,7 @@ function Editor() {
                       document.getElementById("imageInput").click()
                     }
                   >
-                    <img src="/assets/editorAssets/imgInput.svg"   />
+                    <img src="/assets/editorAssets/imgInput.svg" />
                   </button>
                   <input
                     id="imageInput"
@@ -689,7 +695,9 @@ function Editor() {
             </div>
             <div className=" addTagSection justify-center items-center ">
               <div className="addTagBox rounded-[15px] bg-white max-w-[800px]  px-3 md:px-10  py-3 flex gap-10 items-center ">
-                <label className="text-[18px] font-bold hidden md:block ">Add Tag</label>
+                <label className="text-[18px] font-bold hidden md:block ">
+                  Add Tag
+                </label>
                 <div className="editor-tag-input flex gap-3 items-center relative">
                   <div
                     className="w-10 h-10 border  border-black cursor-pointer rounded-full"
@@ -715,9 +723,17 @@ function Editor() {
                     </div>
                   )}
                   <input
-                    className="border border-black max-w-[600px] rounded-[20px] w-[40vw] px-6 py-3.5 bg-white  overflow-clip"
+                    className={`border max-w-[600px] rounded-[20px] w-[40vw] px-6 py-3.5 bg-white overflow-clip ${
+                      tagFieldBlank
+                        ? "border-red-500 placeholder-red-500"
+                        : "border-black"
+                    }`}
                     type="text"
-                    placeholder="Enter new tag"
+                    placeholder={
+                      tagFieldBlank
+                        ? "This field can't be empty"
+                        : "Enter the tag"
+                    }
                     value={tag}
                     onChange={handleTagInput}
                   />
