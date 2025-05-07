@@ -24,7 +24,7 @@ const editPost = async (postId:number, editContent: string) => {
             content: editContent,
         }
     })
-    return editPost;
+    return editedPost;
 }
 
 const deletePost = async (postId:number) => {
