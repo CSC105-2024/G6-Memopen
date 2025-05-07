@@ -104,7 +104,7 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
                 alt="Profile"
                 className="w-24 h-24 rounded-full border-2 border-gray-300 object-cover"
               />
-              <label className="absolute bottom-1 right-1 bg-[#A3A3A3] text-black p-2 rounded-full cursor-pointer">
+              <label className="absolute  bottom-1 right-1 bg-[#A3A3A3] text-black p-2 rounded-full cursor-pointer">
                 <FontAwesomeIcon icon={faCamera} className="w-4" />
                 <input
                   type="file"
