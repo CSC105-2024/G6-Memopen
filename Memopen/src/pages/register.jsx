@@ -17,13 +17,13 @@ function Register(){
         MEMOPEN
       </h1>
       <div className="hidden relative md:block md:w-1/2 lg:w-1/2  ">
-        <div className="absolute inset-0 bg-[url('/src/assets/loginImg/Login_background.jpg')] bg-cover bg-center">
+        <div className="absolute inset-0 bg-[url('/assets/loginImg/Login_background.jpg')] bg-cover bg-center">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white"></div>
         </div>
       </div>
       <div className="flex flex-col md:flex-row md:w-1/2 md:items-center w-full justify-center">
         <div className="md:hidden flex justify-center mt-16">
-          <img className="max-w-48 max-h-48" src="/src/assets/loginImg/Login_logo.png"></img>
+          <img className="max-w-48 max-h-48" src="/assets/loginImg/Login_logo.png"></img>
         </div>
         <div className="md:flex-1 flex items-center justify-center 2xl:max-w-2xl">
           <div className="w-full p-9">
@@ -38,7 +38,7 @@ function Register(){
             <input
               type="text"
               placeholder="ex.mewInwZa007"
-              className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+              className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
             />
 
             {/* password */}
@@ -48,12 +48,12 @@ function Register(){
               </label>
               <input
                 type={showPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-10 2xl:top-12 right-3 cursor-pointer"
+                className="absolute top-10 md:top-11 right-3 2xl:top-11.5 cursor-pointer"
               >
                 {showPassword ? openEye : closeEye}
               </button>
@@ -66,12 +66,12 @@ function Register(){
               </label>
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-10 right-3 2xl:top-12 cursor-pointer "
+                className="absolute top-10 md:top-11 right-3 2xl:top-11.5 cursor-pointer "
               >
                 {showConfirmPassword ? openEye : closeEye}
               </button>
@@ -89,16 +89,16 @@ function Register(){
             </div>
 
             {/* Register Button */}
-           
-              <button type="submit" className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 cursor-pointer"onClick={()=> returnLoginPage("/")}>
+           <div className="flex justify-center">
+              <button type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"onClick={()=> returnLoginPage("/")}>
                 Register
               </button>
             
-
+            </div>
             {/* Login Link */}
             <p className="text-gray-600 mt-4 text-center">
               Already have an account?{" "}
-              <button me="text-black font-bold cursor-pointer" onClick={()=> returnLoginPage("/")}>
+              <button className="text-black font-bold cursor-pointer" onClick={()=> returnLoginPage("/")}>
                 Login
               </button>
             </p>

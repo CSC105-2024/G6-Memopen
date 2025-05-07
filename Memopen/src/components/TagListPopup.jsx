@@ -1,4 +1,4 @@
-import React, { useState } from "react";    
+import React, { useState } from "react";
 import { X } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
@@ -19,20 +19,45 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
 
   const addTag = () => {
     if (newTag.trim()) {
-      setTags([...tags, { name: newTag, color: newColor }]);
+      const newTagObj = { name: newTag.trim(), color: newColor };
+      const updatedTags = [...tags, newTagObj];
+
+      setTags(updatedTags);
+
+      const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
+      localStorage.setItem("manualTags", JSON.stringify([...manualTags, newTagObj]));
+
       setNewTag("");
       setNewColor(colors[0].value);
     }
   };
 
   const removeTag = (index) => {
-    setTags(tags.filter((_, i) => i !== index));
+    const tagToRemove = tags[index];
+    const updatedTags = tags.filter((_, i) => i !== index);
+    setTags(updatedTags);
+
+    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
+    const updatedManual = manualTags.filter(
+      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
+    );
+    localStorage.setItem("manualTags", JSON.stringify(updatedManual));
   };
 
   const updateTag = (index, newName, newColor) => {
     const updatedTags = [...tags];
     updatedTags[index] = { name: newName, color: newColor };
     setTags(updatedTags);
+
+    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
+    const tagToUpdate = tags[index];
+
+    const updatedManual = manualTags.map((tag) =>
+      tag.name === tagToUpdate.name && tag.color === tagToUpdate.color
+        ? { name: newName, color: newColor }
+        : tag
+    );
+    localStorage.setItem("manualTags", JSON.stringify(updatedManual));
   };
 
   return (
@@ -48,14 +73,14 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
         <div className="space-y-3">
           {tags.map((tag, index) => (
             <div key={index} className="flex items-center justify-between p-2 border rounded-lg">
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 relative">
                 <div
                   className="w-4 h-4 rounded-full border cursor-pointer"
                   style={{ backgroundColor: tag.color }}
                   onClick={() => setColorPickerIndex(index)}
                 ></div>
                 {colorPickerIndex === index && (
-                  <div className="absolute top-8 bg-black p-2 rounded-lg shadow-lg flex space-x-2 z-10">
+                  <div className="absolute top-6 bg-black p-2 rounded-lg shadow-lg flex space-x-2 z-10">
                     {colors.map((color) => (
                       <div
                         key={color.value}
@@ -130,5 +155,3 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
 };
 
 export default TagListPopup;
-
-
