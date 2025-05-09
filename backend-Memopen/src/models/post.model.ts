@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { db } from "../index.ts";
 
 const getPost = async() => {
@@ -5,33 +6,44 @@ const getPost = async() => {
     return post
 };
 
-const addPost = async (newContent: string,userId: number) => {
+
+const addPost = async (
+    userId: number,
+    json:any,
+    tag:string,
+    tagColor: string,
+    thumbnail: string
+  ) => {
     const newPost = await db.post.create({
-        data: {
-            content: newContent,
-            userID: userId,
+      data: {
+        json,
+        tag,
+        tagColor,
+        thumbnail,
+        user: {
+          connect: { id: userId }
         }
+      }
     });
     return newPost;
-}
+  };
 
-const editPost = async (postId:number, editContent: string) => {
-    const editedPost = await db.post.update({
-        where: {
-            id:postId,
-        },
-        data: {
-            content: editContent,
-        }
+const editPost = async (id:string, data:Partial<{
+    json:any,
+    tag:string,
+    tagColor:string,
+    thumbnail:string,
+}>)=>{
+    const updatedPost = await db.post.update({
+        where:{id},
+        data
     })
-    return editedPost;
+    return updatedPost;
 }
 
-const deletePost = async (postId:number) => {
+const deletePost = async (id:string)=>{
     const deletedPost = await db.post.delete({
-        where:{
-            id: postId,
-        }
+        where:{id}
     })
     return deletedPost;
 }

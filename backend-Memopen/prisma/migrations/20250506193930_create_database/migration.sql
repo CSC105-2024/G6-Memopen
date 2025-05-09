@@ -9,25 +9,18 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Post" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "content" TEXT NOT NULL,
+    "json" JSON NOT NULL,
+    "tag" TEXT NOT NULL,
+    "tagColor"  TEXT NOT NULL,
+    "thumbnail" TEXT NOT NULL,
+    "createAt" 
     "userID" INTEGER NOT NULL,
     CONSTRAINT "Post_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "Tag" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "title" TEXT NOT NULL,
-    "color" TEXT NOT NULL
-);
 
--- CreateTable
-CREATE TABLE "_PostTags" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_PostTags_A_fkey" FOREIGN KEY ("A") REFERENCES "Post" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_PostTags_B_fkey" FOREIGN KEY ("B") REFERENCES "Tag" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
+
+
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
