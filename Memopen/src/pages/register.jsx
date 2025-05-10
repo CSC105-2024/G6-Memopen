@@ -6,11 +6,34 @@ import React from "react";
 function Register(){
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [username, setUsername] = useState("");
+  const [password,setPassword] = useState("");
+  const [confirmPassword , setConfirmPassword] = useState("");
   const openEye = <FontAwesomeIcon icon={faEye} />;
   const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;
-  
   const returnLoginPage  = useNavigate();
+  const handleRegistor = async ()=>{
+    if(password!= confirmPassword){
+      alert("Password do not match");
+      return;
+    }
+    const res = await fetch("http://localhost:3000/auth/register",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body: JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(res.ok){
+      localStorage.setItem("token",data.token);
+      returnLoginPage("/");
+    }else{
+      alert(data.message || "Registrarion failed");
+    }
+
+  }
+  
   return (
     <div className="flex min-h-screen min-w-screen bg-gradient-to-b  from-white via-white/40 to-[#B1B1B1] overflow-hidden md:bg-none ">
       <h1 className="absolute top-6 left-6 text-black md:text-white text-xl font-bold z-10">
@@ -36,6 +59,7 @@ function Register(){
               Username <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setUsername(e.target.value)}
               type="text"
               placeholder="ex.mewInwZa007"
               className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
@@ -47,6 +71,7 @@ function Register(){
                 Password <span className="text-red-500">*</span>
               </label>
               <input
+                onChange={(e)=>setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
                 className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
@@ -65,6 +90,7 @@ function Register(){
                 Comfirm Password <span className="text-red-500">*</span>
               </label>
               <input
+                onChange={(e)=>setConfirmPassword(e.target.value)}
                 type={showConfirmPassword ? "text" : "password"}
                 className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
               />
@@ -90,7 +116,9 @@ function Register(){
 
             {/* Register Button */}
            <div className="flex justify-center">
-              <button type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"onClick={()=> returnLoginPage("/")}>
+              <button
+              
+              type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"onClick={handleRegistor}>
                 Register
               </button>
             

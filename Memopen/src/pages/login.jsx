@@ -8,7 +8,41 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const navigateLogin = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [username,setUsername] = useState("");
+  const [password, setPassword] =  useState("");
 
+
+    const handleLogin = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+    
+        let data;
+        try {
+          data = await res.json(); 
+        } catch {
+          const text = await res.text(); t
+          alert(text || "Something went wrong");
+          return;
+        }
+    
+        if (res.ok) {
+          localStorage.setItem("token", data.token);
+          navigateLogin("/HomePage");
+        } else {
+          alert(data.message || "Login failed");
+        }
+      } catch (error) {
+        alert("Network error: " + error.message);
+      }
+    };
+    
+  
   const openEye = <FontAwesomeIcon icon={faEye} />;
   const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;
 
@@ -41,6 +75,7 @@ function Login() {
               Username <span className="text-red-500">*</span>
             </label>
             <input
+              onChange={(e)=>setUsername(e.target.value)}
               type="text"
               placeholder="ex.mewInwZa007"
               className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-4"
@@ -53,6 +88,7 @@ function Login() {
               </label>
               <input
                 type={showPassword ? "text" : "password"}
+                onChange={(e)=>setPassword(e.target.value)}
                 className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-12"
               />
               <button
@@ -66,7 +102,7 @@ function Login() {
 
             {/* Login Button */}
             <button
-              onClick={() => navigateLogin("Homepage")}
+              onClick={handleLogin}
               type="submit"
               className="w-full p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"
             >

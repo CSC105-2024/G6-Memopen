@@ -1,31 +1,26 @@
 import { db } from "../index.ts";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import {hash,compare} from 'bcrypt';
 
-const SECRET = "secret-key";
-
-export const registerUser = async (username:string, password:string , pfpURL?:string)=>{
-    const handlePassword = await bcrypt.hash(password,10);
-    const user = await db.user.create({
-        data:{
-            username,
-            password: handlePassword,
-            pfpURL,
-        }
+export const createUser = async (username:string, password:string)=>{
+    const hashedPassword = await hash(password,10);
+    return db.user.create({
+        data:{username,password:hashedPassword}
     })
-    return user;
 }
 
-export const loginUser = async (username:string , password:string)=>{
-    const user = await db.user.findUnique({
-        where:{username}
-    })
-    if(!user) return null;
+export const findUserByUsername = async (username:string)=>{
+    return db.user.findUnique(
+        {
+            where:{username}
+        }
+    )
+}
+export const validatePassword = async (input:string, hash:string)=>{
+    return compare(input,hash);
+}
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch) return null;
 
-    const token = jwt.sign({id:user.id , username: user.username}, SECRET, {expiresIn:"1d"})
-    //SECRET a string from env use to secure , the token will expire in 1 day  -> log in again 
-    return {user, token};
+export const getAllUser = async ()=>{
+    const user = await db.user.findMany();
+    return user;
 }

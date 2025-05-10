@@ -4,7 +4,7 @@ const postRouter = new Hono();
 
 postRouter.get('/',postController.getPost);
 postRouter.post('/', postController.createPost);
-postRouter.patch('/',postController.editPost);
+postRouter.patch('/:id',postController.editPost);
 postRouter.delete('/:id', postController.deletedPost);
 
 export { postRouter };

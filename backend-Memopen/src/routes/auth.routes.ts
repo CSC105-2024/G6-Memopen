@@ -1,8 +1,8 @@
 import { Hono } from "hono";
-import { register , login } from "../controllers/auth.controller.ts";
+import { getAllUsers, login, signup } from "../controllers/auth.controller.ts";
 
-const authRoutes = new Hono();
-authRoutes.post("/register",register);
-authRoutes.post("/login",login);
-
-export {authRoutes};
+const authRouter = new Hono();
+authRouter.post('/register',signup);
+authRouter.post('/login',login);
+authRouter.get('/',getAllUsers)
+export default authRouter;
