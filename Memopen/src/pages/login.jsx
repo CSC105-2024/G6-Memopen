@@ -19,20 +19,21 @@ function Login() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ username, password }),
+          credentials:"include",
+          body: JSON.stringify({ username, password }), //send the username and password in the request body
         });
     
         let data;
         try {
           data = await res.json(); 
         } catch {
-          const text = await res.text(); t
+          const text = await res.text(); 
           alert(text || "Something went wrong");
           return;
         }
     
         if (res.ok) {
-          localStorage.setItem("token", data.token);
+          //localStorage.setItem("token", data.token); -> no longer need as we use cookies
           navigateLogin("/HomePage");
         } else {
           alert(data.message || "Login failed");
@@ -42,6 +43,10 @@ function Login() {
       }
     };
     
+    /**
+     Token - after login, server create token -> sent to client
+     -> proof that the user is authenticated
+     */
   
   const openEye = <FontAwesomeIcon icon={faEye} />;
   const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;

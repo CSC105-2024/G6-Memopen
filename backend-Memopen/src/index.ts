@@ -4,11 +4,13 @@ import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
 import mainRouter from './routes/index.routes.ts';
 import authRouter from './routes/auth.routes.ts';
+import cookiesRouter from './routes/cookies.ts';
 const app = new Hono()
 
 app.use(
   cors({
-    origin: ['http://localhost:5173']
+    origin: ['http://localhost:5173'],
+    credentials:true, //allow cookies
   })
 )
 export const db = new PrismaClient()
@@ -35,5 +37,5 @@ db.$connect()
 		console.error("Error connecting to the database:", error);
 	});
 
-
+app.route('/cookies',cookiesRouter);
 app.route('/auth', authRouter);

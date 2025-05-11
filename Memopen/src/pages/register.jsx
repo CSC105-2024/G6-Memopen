@@ -22,11 +22,12 @@ function Register(){
       headers:{
         "Content-Type":"application/json",
       },
+      credentials:"include",
       body: JSON.stringify({username,password})
     });
     const data = await res.json();
     if(res.ok){
-      localStorage.setItem("token",data.token);
+      //localStorage.setItem("token",data.token);
       returnLoginPage("/");
     }else{
       alert(data.message || "Registrarion failed");
