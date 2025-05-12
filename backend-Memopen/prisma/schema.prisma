@@ -24,7 +24,8 @@ model User {
 
 model Post {
   id        Int     @id @default(autoincrement())
-  content   String
+  json      Json?
+  thumbnail String
   tags      Tag[] @relation("PostTags")
   user      User     @relation(fields: [userID], references: [id])
   userID    Int
@@ -32,7 +33,7 @@ model Post {
 
 model Tag {
   id Int @id @default(autoincrement())
-  title String
+  title String @unique
   color String 
   posts Post[] @relation("PostTags")
 }

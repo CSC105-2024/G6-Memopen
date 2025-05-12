@@ -23,11 +23,12 @@ model User {
 }
 
 model Post {
-  id      Int    @id @default(autoincrement())
-  content String
-  tags    Tag[]  @relation("PostTags")
-  user    User   @relation(fields: [userID], references: [id])
-  userID  Int
+  id        Int    @id @default(autoincrement())
+  json      Json?
+  thumbnail String
+  tags      Tag[]  @relation("PostTags")
+  user      User   @relation(fields: [userID], references: [id])
+  userID    Int
 }
 
 model Tag {

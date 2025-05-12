@@ -2256,19 +2256,20 @@ export namespace Prisma {
 
   export type PostMinAggregateOutputType = {
     id: number | null
-    content: string | null
+    thumbnail: string | null
     userID: number | null
   }
 
   export type PostMaxAggregateOutputType = {
     id: number | null
-    content: string | null
+    thumbnail: string | null
     userID: number | null
   }
 
   export type PostCountAggregateOutputType = {
     id: number
-    content: number
+    json: number
+    thumbnail: number
     userID: number
     _all: number
   }
@@ -2286,19 +2287,20 @@ export namespace Prisma {
 
   export type PostMinAggregateInputType = {
     id?: true
-    content?: true
+    thumbnail?: true
     userID?: true
   }
 
   export type PostMaxAggregateInputType = {
     id?: true
-    content?: true
+    thumbnail?: true
     userID?: true
   }
 
   export type PostCountAggregateInputType = {
     id?: true
-    content?: true
+    json?: true
+    thumbnail?: true
     userID?: true
     _all?: true
   }
@@ -2391,7 +2393,8 @@ export namespace Prisma {
 
   export type PostGroupByOutputType = {
     id: number
-    content: string
+    json: JsonValue | null
+    thumbnail: string
     userID: number
     _count: PostCountAggregateOutputType | null
     _avg: PostAvgAggregateOutputType | null
@@ -2416,7 +2419,8 @@ export namespace Prisma {
 
   export type PostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    content?: boolean
+    json?: boolean
+    thumbnail?: boolean
     userID?: boolean
     tags?: boolean | Post$tagsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2425,25 +2429,28 @@ export namespace Prisma {
 
   export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    content?: boolean
+    json?: boolean
+    thumbnail?: boolean
     userID?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    content?: boolean
+    json?: boolean
+    thumbnail?: boolean
     userID?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectScalar = {
     id?: boolean
-    content?: boolean
+    json?: boolean
+    thumbnail?: boolean
     userID?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "userID", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "json" | "thumbnail" | "userID", ExtArgs["result"]["post"]>
   export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tags?: boolean | Post$tagsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2464,7 +2471,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      content: string
+      json: Prisma.JsonValue | null
+      thumbnail: string
       userID: number
     }, ExtArgs["result"]["post"]>
     composites: {}
@@ -2892,7 +2900,8 @@ export namespace Prisma {
    */
   interface PostFieldRefs {
     readonly id: FieldRef<"Post", 'Int'>
-    readonly content: FieldRef<"Post", 'String'>
+    readonly json: FieldRef<"Post", 'Json'>
+    readonly thumbnail: FieldRef<"Post", 'String'>
     readonly userID: FieldRef<"Post", 'Int'>
   }
     
@@ -4429,7 +4438,8 @@ export namespace Prisma {
 
   export const PostScalarFieldEnum: {
     id: 'id',
-    content: 'content',
+    json: 'json',
+    thumbnail: 'thumbnail',
     userID: 'userID'
   };
 
@@ -4453,12 +4463,37 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const NullsOrder: {
     first: 'first',
     last: 'last'
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
+  };
+
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   /**
@@ -4477,6 +4512,20 @@ export namespace Prisma {
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -4547,7 +4596,8 @@ export namespace Prisma {
     OR?: PostWhereInput[]
     NOT?: PostWhereInput | PostWhereInput[]
     id?: IntFilter<"Post"> | number
-    content?: StringFilter<"Post"> | string
+    json?: JsonNullableFilter<"Post">
+    thumbnail?: StringFilter<"Post"> | string
     userID?: IntFilter<"Post"> | number
     tags?: TagListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -4555,7 +4605,8 @@ export namespace Prisma {
 
   export type PostOrderByWithRelationInput = {
     id?: SortOrder
-    content?: SortOrder
+    json?: SortOrderInput | SortOrder
+    thumbnail?: SortOrder
     userID?: SortOrder
     tags?: TagOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
@@ -4566,7 +4617,8 @@ export namespace Prisma {
     AND?: PostWhereInput | PostWhereInput[]
     OR?: PostWhereInput[]
     NOT?: PostWhereInput | PostWhereInput[]
-    content?: StringFilter<"Post"> | string
+    json?: JsonNullableFilter<"Post">
+    thumbnail?: StringFilter<"Post"> | string
     userID?: IntFilter<"Post"> | number
     tags?: TagListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -4574,7 +4626,8 @@ export namespace Prisma {
 
   export type PostOrderByWithAggregationInput = {
     id?: SortOrder
-    content?: SortOrder
+    json?: SortOrderInput | SortOrder
+    thumbnail?: SortOrder
     userID?: SortOrder
     _count?: PostCountOrderByAggregateInput
     _avg?: PostAvgOrderByAggregateInput
@@ -4588,7 +4641,8 @@ export namespace Prisma {
     OR?: PostScalarWhereWithAggregatesInput[]
     NOT?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Post"> | number
-    content?: StringWithAggregatesFilter<"Post"> | string
+    json?: JsonNullableWithAggregatesFilter<"Post">
+    thumbnail?: StringWithAggregatesFilter<"Post"> | string
     userID?: IntWithAggregatesFilter<"Post"> | number
   }
 
@@ -4690,44 +4744,51 @@ export namespace Prisma {
   }
 
   export type PostCreateInput = {
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     tags?: TagCreateNestedManyWithoutPostsInput
     user: UserCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateInput = {
     id?: number
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     userID: number
     tags?: TagUncheckedCreateNestedManyWithoutPostsInput
   }
 
   export type PostUpdateInput = {
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     tags?: TagUpdateManyWithoutPostsNestedInput
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     userID?: IntFieldUpdateOperationsInput | number
     tags?: TagUncheckedUpdateManyWithoutPostsNestedInput
   }
 
   export type PostCreateManyInput = {
     id?: number
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     userID: number
   }
 
   export type PostUpdateManyMutationInput = {
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
   }
 
   export type PostUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     userID?: IntFieldUpdateOperationsInput | number
   }
 
@@ -4906,6 +4967,24 @@ export namespace Prisma {
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type TagListRelationFilter = {
     every?: TagWhereInput
@@ -4924,7 +5003,8 @@ export namespace Prisma {
 
   export type PostCountOrderByAggregateInput = {
     id?: SortOrder
-    content?: SortOrder
+    json?: SortOrder
+    thumbnail?: SortOrder
     userID?: SortOrder
   }
 
@@ -4935,19 +5015,40 @@ export namespace Prisma {
 
   export type PostMaxOrderByAggregateInput = {
     id?: SortOrder
-    content?: SortOrder
+    thumbnail?: SortOrder
     userID?: SortOrder
   }
 
   export type PostMinOrderByAggregateInput = {
     id?: SortOrder
-    content?: SortOrder
+    thumbnail?: SortOrder
     userID?: SortOrder
   }
 
   export type PostSumOrderByAggregateInput = {
     id?: SortOrder
     userID?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type TagCountOrderByAggregateInput = {
@@ -5234,15 +5335,35 @@ export namespace Prisma {
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type PostCreateWithoutUserInput = {
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     tags?: TagCreateNestedManyWithoutPostsInput
   }
 
   export type PostUncheckedCreateWithoutUserInput = {
     id?: number
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     tags?: TagUncheckedCreateNestedManyWithoutPostsInput
   }
 
@@ -5276,7 +5397,8 @@ export namespace Prisma {
     OR?: PostScalarWhereInput[]
     NOT?: PostScalarWhereInput | PostScalarWhereInput[]
     id?: IntFilter<"Post"> | number
-    content?: StringFilter<"Post"> | string
+    json?: JsonNullableFilter<"Post">
+    thumbnail?: StringFilter<"Post"> | string
     userID?: IntFilter<"Post"> | number
   }
 
@@ -5364,13 +5486,15 @@ export namespace Prisma {
   }
 
   export type PostCreateWithoutTagsInput = {
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     user: UserCreateNestedOneWithoutPostsInput
   }
 
   export type PostUncheckedCreateWithoutTagsInput = {
     id?: number
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
     userID: number
   }
 
@@ -5397,23 +5521,27 @@ export namespace Prisma {
 
   export type PostCreateManyUserInput = {
     id?: number
-    content: string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail: string
   }
 
   export type PostUpdateWithoutUserInput = {
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     tags?: TagUpdateManyWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     tags?: TagUncheckedUpdateManyWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
   }
 
   export type TagUpdateWithoutPostsInput = {
@@ -5434,19 +5562,22 @@ export namespace Prisma {
   }
 
   export type PostUpdateWithoutTagsInput = {
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type PostUncheckedUpdateWithoutTagsInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     userID?: IntFieldUpdateOperationsInput | number
   }
 
   export type PostUncheckedUpdateManyWithoutTagsInput = {
     id?: IntFieldUpdateOperationsInput | number
-    content?: StringFieldUpdateOperationsInput | string
+    json?: NullableJsonNullValueInput | InputJsonValue
+    thumbnail?: StringFieldUpdateOperationsInput | string
     userID?: IntFieldUpdateOperationsInput | number
   }
 

@@ -2,8 +2,11 @@ import type { Tag } from "./tag.type.ts";
 
 export type Post = {
     id: number;
-    content: string;
+    json: any;
     tags: Tag[];
+    thumbnail: string;
+    tagName: string;
+    
 }
 
 export type CreatePostInput = {
@@ -13,5 +16,6 @@ export type CreatePostInput = {
 
 export type UpdatePostInput = {
     content?: string;
-    tags: Tag[];
-}
+    tags?: Tag[];
+    thumbnail?: string; 
+  };
