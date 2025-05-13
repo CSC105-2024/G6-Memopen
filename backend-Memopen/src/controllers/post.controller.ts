@@ -1,5 +1,7 @@
 import type { Context } from "hono";
+
 import * as postModel from "../models/post.model.ts"
+
 
 export const getPost = async (c:Context)=>{
     try{
@@ -19,6 +21,30 @@ export const getPost = async (c:Context)=>{
         )
     }
 }
+
+export const getPostsByTagIdController = async (c: Context) => {
+  try {
+    const tagIdParam = c.req.param("tagId");
+    const tagId = parseInt(tagIdParam, 10);
+
+    if (isNaN(tagId)) {
+      return c.json({
+        success: false,
+        message: "Invalid tag ID",
+      }, 400);
+    }
+    const tagWithPosts = await postModel.getPostsByTagId(tagId);
+    return c.json({
+      success: true,
+      data: tagWithPosts,
+    });
+  } catch (error) {
+    return c.json({
+      success: false,
+      message: "Internal Server Error",
+    }, 500);
+  }
+};
 
 export const createPost = async (c:Context)=>{
     try{

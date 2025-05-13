@@ -4,10 +4,23 @@ import { db } from "../index.ts"
 const GetAllTag = async() => {
     const tag = await db.tag.findMany({
       select: {
-        userId: true,
+        id: true,
+        title: true,
+        color: true,
+        userId: true
       }
     });
     return tag;
+};
+
+const getTagsByUserId = async (userId: number) => {
+  const tags = await db.tag.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  return tags;
 };
 
 const CreateTag = async (userId: number, title: string, color: string)=> {
@@ -23,5 +36,5 @@ const deleteTag = async (id: number)=> {
   });
   return deletedTag;
 }
-export {GetAllTag, CreateTag, deleteTag}
+export {GetAllTag,getTagsByUserId, CreateTag, deleteTag}
 

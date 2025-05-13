@@ -20,11 +20,32 @@ export const GetAllTag = async(c:Context)=> {
     }
 }
 
+export const getTagsByUserId = async (c:Context) => {
+    try {
+        const body = await c.req.json();
+        const {userId} = body
+        const tagsFromUser = await tagModel.getTagsByUserId( userId);
+        return c.json({
+            success:true,
+            data:tagsFromUser,
+            msg:'Sucessfully created tag'
+        })
+    } catch (e){
+        return c.json(
+            {
+                success:false,
+                data:null,
+                msg:`Internal Server Error: ${e}`    
+            },500
+        )
+    }
+}
+
 export const CreateTag = async(c:Context) => {
     try {
         const body = await c.req.json();
-        const { title, color } = body;
-        const newTag = await tagModel.CreateTag(title,color)
+        const { userId, title, color } = body;
+        const newTag = await tagModel.CreateTag(userId,title,color)
         return c.json({
             success:true,
             data:newTag,

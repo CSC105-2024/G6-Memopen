@@ -6,6 +6,18 @@ const getPost = async() => {
     return post
 };
 
+const getPostsByTagId = async (tagId: number) => {
+  const tagWithPosts = await db.tag.findUnique({
+    where: { id: tagId },
+  });
+
+  if (!tagWithPosts) {
+    throw new Error("Tag not found");
+  }
+
+  return tagWithPosts
+};
+
 const addPost = async (data: {
   userId: number;
   json: any;
@@ -71,4 +83,4 @@ const deletePost = async (id:string)=>{
     return deletedPost;
 }
 
-export { getPost, addPost, editPost, deletePost }
+export { getPost, addPost, editPost, deletePost, getPostsByTagId }
