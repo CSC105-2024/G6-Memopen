@@ -34,6 +34,12 @@ function Login() {
     
         if (res.ok) {
           //localStorage.setItem("token", data.token); -> no longer need as we use cookies
+          console.log("response", data);
+          const token = data.token;
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const userId = payload.userId;
+          console.log(userId);
+          localStorage.setItem("userId", userId);
           navigateLogin("/HomePage");
         } else {
           alert(data.message || "Login failed");

@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { db } from "../index.ts";
+import { use } from "hono/jsx";
 
 const getPost = async() => {
     const post = await db.post.findMany();
@@ -14,6 +15,14 @@ const addPost = async (
     tagColor: string,
     thumbnail: string
   ) => {
+    const user = await db.user.findUnique({
+      where:{
+        id:userId,
+      }
+    })
+    if(!user){
+      throw new Error("user not found ")
+    }
     const newPost = await db.post.create({
       data: {
         json,

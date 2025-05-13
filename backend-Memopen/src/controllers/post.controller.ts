@@ -24,7 +24,7 @@ export const createPost = async (c:Context)=>{
     try{
         const body = await c.req.json();
         const {userId, json,tag,tagColor,thumbnail} = body;
-        const newPost = await postModel.addPost(userId, json, tag,tagColor,thumbnail);
+        const newPost = await postModel.addPost(userId, json,tag,tagColor,thumbnail);
         return c.json({
             success:true,
             data:newPost,

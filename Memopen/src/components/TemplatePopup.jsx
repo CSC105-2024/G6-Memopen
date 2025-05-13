@@ -72,8 +72,62 @@ export default function TemplatePopup({ onChoose, onClose }) {
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
+  let colorIndex = 0; // Declare at the top of your file
 
-  const handleChooseTemplate = () => {
+  const handleChooseTemplate = async () => {
+    const selectedTemplate = displayedTemplates[selectedId];
+    if (selectedId !== null) {
+      const newId = Date.now().toString();
+
+      const colorOptions = [
+        { value: "#ff0000" },
+        { value: "#ff8800" },
+        { value: "#ffff00" },
+        { value: "#008000" },
+        { value: "#0000ff" },
+        { value: "#800080" },
+      ];
+
+      const tagCreation = "note";
+      const tagColorCreation = colorOptions[colorIndex].value;
+      colorIndex = (colorIndex + 1) % colorOptions.length; // update for next call
+
+      const userId = parseInt(localStorage.getItem("userId"));
+      localStorage.setItem("eidtor_bg_img", selectedTemplate);
+
+      try {
+        const res = await fetch("http://localhost:3000/post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId,
+            tag: tagCreation,
+            tagColor: tagColorCreation,
+            thumbnail: selectedTemplate,
+            json: null
+          })
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Failed to create post:", errorText);
+          return;
+        }
+
+        const data = await res.json();
+        setCanvases(data);
+        edNavigate(`/editor/${data.userId}`);
+      } catch (error) {
+        console.error("Network error", error);
+      }
+    }
+  };
+
+
+  /**
+   const handleChooseTemplate = () => {
     const selectedTemplate = displayedTemplates[selectedId];
     if (selectedId !== null) {
       const newId = Date.now().toString();
@@ -104,6 +158,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
       edNavigate(`/editor/${newId}`);
     }
   };
+   */
   return (
     <div>
       <div className="fixed inset-0  bg-black/40  bg-opacity-50 z-40"></div>

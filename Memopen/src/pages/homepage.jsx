@@ -16,11 +16,31 @@ function Home() {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [activeFilter , setActiveFilter] = useState(null);
 
+  const fetchCanvases = async () =>{
+      const res = await fetch("http://localhost:3000/post",{
+        credentials:"include"
+      })
+      if(res.ok){
+        const data = await res.json();
+        console.log(data);
+        setCanvases(data.data);
+        console.log(canvases);
+      }else{
+        console.error("failed to fetch canvases");
+      }
+      
+    }
+
   useEffect(() => {
-    const storedCanvases = localStorage.getItem("canvases");
+    fetchCanvases();
+    /**
+     * 
+     * const storedCanvases = localStorage.getItem("canvases");
     if (storedCanvases) {
       setCanvases(JSON.parse(storedCanvases));
     }
+     * 
+     */
     const storedTags = localStorage.getItem("tags");
     if (storedTags) {
       setTags(JSON.parse(storedTags));
