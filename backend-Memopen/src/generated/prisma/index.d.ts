@@ -2105,6 +2105,7 @@ export namespace Prisma {
     tag: string | null
     tagColor: string | null
     thumbnail: string | null
+    backgroundImg: string | null
     createAt: Date | null
   }
 
@@ -2114,6 +2115,7 @@ export namespace Prisma {
     tag: string | null
     tagColor: string | null
     thumbnail: string | null
+    backgroundImg: string | null
     createAt: Date | null
   }
 
@@ -2124,6 +2126,7 @@ export namespace Prisma {
     tag: number
     tagColor: number
     thumbnail: number
+    backgroundImg: number
     createAt: number
     _all: number
   }
@@ -2143,6 +2146,7 @@ export namespace Prisma {
     tag?: true
     tagColor?: true
     thumbnail?: true
+    backgroundImg?: true
     createAt?: true
   }
 
@@ -2152,6 +2156,7 @@ export namespace Prisma {
     tag?: true
     tagColor?: true
     thumbnail?: true
+    backgroundImg?: true
     createAt?: true
   }
 
@@ -2162,6 +2167,7 @@ export namespace Prisma {
     tag?: true
     tagColor?: true
     thumbnail?: true
+    backgroundImg?: true
     createAt?: true
     _all?: true
   }
@@ -2259,6 +2265,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg: string | null
     createAt: Date
     _count: PostCountAggregateOutputType | null
     _avg: PostAvgAggregateOutputType | null
@@ -2288,6 +2295,7 @@ export namespace Prisma {
     tag?: boolean
     tagColor?: boolean
     thumbnail?: boolean
+    backgroundImg?: boolean
     createAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
@@ -2299,6 +2307,7 @@ export namespace Prisma {
     tag?: boolean
     tagColor?: boolean
     thumbnail?: boolean
+    backgroundImg?: boolean
     createAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
@@ -2310,6 +2319,7 @@ export namespace Prisma {
     tag?: boolean
     tagColor?: boolean
     thumbnail?: boolean
+    backgroundImg?: boolean
     createAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["post"]>
@@ -2321,10 +2331,11 @@ export namespace Prisma {
     tag?: boolean
     tagColor?: boolean
     thumbnail?: boolean
+    backgroundImg?: boolean
     createAt?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "json" | "tag" | "tagColor" | "thumbnail" | "createAt", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "json" | "tag" | "tagColor" | "thumbnail" | "backgroundImg" | "createAt", ExtArgs["result"]["post"]>
   export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2347,6 +2358,7 @@ export namespace Prisma {
       tag: string
       tagColor: string
       thumbnail: string
+      backgroundImg: string | null
       createAt: Date
     }, ExtArgs["result"]["post"]>
     composites: {}
@@ -2778,6 +2790,7 @@ export namespace Prisma {
     readonly tag: FieldRef<"Post", 'String'>
     readonly tagColor: FieldRef<"Post", 'String'>
     readonly thumbnail: FieldRef<"Post", 'String'>
+    readonly backgroundImg: FieldRef<"Post", 'String'>
     readonly createAt: FieldRef<"Post", 'DateTime'>
   }
     
@@ -3219,6 +3232,7 @@ export namespace Prisma {
     tag: 'tag',
     tagColor: 'tagColor',
     thumbnail: 'thumbnail',
+    backgroundImg: 'backgroundImg',
     createAt: 'createAt'
   };
 
@@ -3378,6 +3392,7 @@ export namespace Prisma {
     tag?: StringFilter<"Post"> | string
     tagColor?: StringFilter<"Post"> | string
     thumbnail?: StringFilter<"Post"> | string
+    backgroundImg?: StringNullableFilter<"Post"> | string | null
     createAt?: DateTimeFilter<"Post"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -3389,6 +3404,7 @@ export namespace Prisma {
     tag?: SortOrder
     tagColor?: SortOrder
     thumbnail?: SortOrder
+    backgroundImg?: SortOrderInput | SortOrder
     createAt?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -3403,6 +3419,7 @@ export namespace Prisma {
     tag?: StringFilter<"Post"> | string
     tagColor?: StringFilter<"Post"> | string
     thumbnail?: StringFilter<"Post"> | string
+    backgroundImg?: StringNullableFilter<"Post"> | string | null
     createAt?: DateTimeFilter<"Post"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -3414,6 +3431,7 @@ export namespace Prisma {
     tag?: SortOrder
     tagColor?: SortOrder
     thumbnail?: SortOrder
+    backgroundImg?: SortOrderInput | SortOrder
     createAt?: SortOrder
     _count?: PostCountOrderByAggregateInput
     _avg?: PostAvgOrderByAggregateInput
@@ -3432,6 +3450,7 @@ export namespace Prisma {
     tag?: StringWithAggregatesFilter<"Post"> | string
     tagColor?: StringWithAggregatesFilter<"Post"> | string
     thumbnail?: StringWithAggregatesFilter<"Post"> | string
+    backgroundImg?: StringNullableWithAggregatesFilter<"Post"> | string | null
     createAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
 
@@ -3491,6 +3510,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
     user: UserCreateNestedOneWithoutPostsInput
   }
@@ -3502,6 +3522,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
   }
 
@@ -3511,6 +3532,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPostsNestedInput
   }
@@ -3522,6 +3544,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3532,6 +3555,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
   }
 
@@ -3541,6 +3565,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3551,6 +3576,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3728,6 +3754,7 @@ export namespace Prisma {
     tag?: SortOrder
     tagColor?: SortOrder
     thumbnail?: SortOrder
+    backgroundImg?: SortOrder
     createAt?: SortOrder
   }
 
@@ -3741,6 +3768,7 @@ export namespace Prisma {
     tag?: SortOrder
     tagColor?: SortOrder
     thumbnail?: SortOrder
+    backgroundImg?: SortOrder
     createAt?: SortOrder
   }
 
@@ -3750,6 +3778,7 @@ export namespace Prisma {
     tag?: SortOrder
     tagColor?: SortOrder
     thumbnail?: SortOrder
+    backgroundImg?: SortOrder
     createAt?: SortOrder
   }
 
@@ -4028,6 +4057,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
   }
 
@@ -4037,6 +4067,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
   }
 
@@ -4075,6 +4106,7 @@ export namespace Prisma {
     tag?: StringFilter<"Post"> | string
     tagColor?: StringFilter<"Post"> | string
     thumbnail?: StringFilter<"Post"> | string
+    backgroundImg?: StringNullableFilter<"Post"> | string | null
     createAt?: DateTimeFilter<"Post"> | Date | string
   }
 
@@ -4126,6 +4158,7 @@ export namespace Prisma {
     tag: string
     tagColor: string
     thumbnail: string
+    backgroundImg?: string | null
     createAt?: Date | string
   }
 
@@ -4135,6 +4168,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4144,6 +4178,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4153,6 +4188,7 @@ export namespace Prisma {
     tag?: StringFieldUpdateOperationsInput | string
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
+    backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -131,6 +131,7 @@ exports.Prisma.PostScalarFieldEnum = {
   tag: 'tag',
   tagColor: 'tagColor',
   thumbnail: 'thumbnail',
+  backgroundImg: 'backgroundImg',
   createAt: 'createAt'
 };
 

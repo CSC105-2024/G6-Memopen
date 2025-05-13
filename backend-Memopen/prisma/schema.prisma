@@ -29,6 +29,7 @@ model Post {
   tag String
   tagColor String
   thumbnail String
+  backgroundImg String?
   createAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id])
 }

@@ -446,7 +446,6 @@ function Editor() {
 
     const json = canvas.toJSON();
 
-    // Make sure you're sending the updated data to the backend
     try {
       const userId = parseInt(localStorage.getItem("userId"));
       const res = await fetch(`http://localhost:3000/post/${canvasId}`, {
@@ -459,7 +458,7 @@ function Editor() {
           tagColor: tagColor,
           json,
           thumbnail,
-          userId
+          userId,
         })
       });
 

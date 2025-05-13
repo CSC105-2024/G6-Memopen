@@ -106,6 +106,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
             tag: tagCreation,
             tagColor: tagColorCreation,
             thumbnail: selectedTemplate,
+            backgroundImg: selectedTemplate,
             json: null
           })
         });
@@ -117,7 +118,6 @@ export default function TemplatePopup({ onChoose, onClose }) {
         }
 
         const data = await res.json();
-        const postId = data.data.id;
         setCanvases(data);
         edNavigate(`/editor/${data.data.id}`);
       } catch (error) {

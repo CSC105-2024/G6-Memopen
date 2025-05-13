@@ -23,8 +23,8 @@ export const getPost = async (c:Context)=>{
 export const createPost = async (c:Context)=>{
     try{
         const body = await c.req.json();
-        const {userId, json,tag,tagColor,thumbnail} = body;
-        const newPost = await postModel.addPost(userId, json,tag,tagColor,thumbnail);
+        const {userId, json,tag,tagColor,thumbnail,backgroundImg} = body;
+        const newPost = await postModel.addPost(userId, json,tag,tagColor,thumbnail,backgroundImg);
         return c.json({
             success:true,
             data:newPost,

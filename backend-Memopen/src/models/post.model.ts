@@ -20,7 +20,8 @@ const addPost = async (
     json:any,
     tag:string,
     tagColor: string,
-    thumbnail: string
+    thumbnail: string,
+    backgroundImg:string
   ) => {
     const user = await db.user.findUnique({
       where:{
@@ -36,6 +37,7 @@ const addPost = async (
         tag,
         tagColor,
         thumbnail,
+        backgroundImg,
         user: {
           connect: { id: userId }
         }
