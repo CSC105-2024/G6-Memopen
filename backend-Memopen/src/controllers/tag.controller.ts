@@ -20,26 +20,36 @@ export const GetAllTag = async(c:Context)=> {
     }
 }
 
-export const getTagsByUserId = async (c:Context) => {
+export const getTagsByUserId = async (c: Context) => {
     try {
-        const body = await c.req.json();
-        const {userId} = body;
-        const tagsFromUser = await tagModel.getTagsByUserId( userId);
+        const body = await c.req.json().catch(() => null);
+
+        const rawUserId = body?.userId;
+        const userId = Number(rawUserId);
+
+        if (!userId || isNaN(userId)) {
+            return c.json({
+                success: false,
+                data: null,
+                msg: 'Invalid or missing userId in request body'
+            }, 400);
+        }
+
+        const tagsFromUser = await tagModel.getTagsByUserId(userId);
+
         return c.json({
-            success:true,
-            data:tagsFromUser,
-            msg:'Sucessfully created tag'
-        })
-    } catch (e){
-        return c.json(
-            {
-                success:false,
-                data:null,
-                msg:`Internal Server Error: ${e}`    
-            },500
-        )
+            success: true,
+            data: tagsFromUser,
+            msg: 'Successfully got tags'
+        });
+    } catch (e) {
+        return c.json({
+            success: false,
+            data: null,
+            msg: `Internal Server Error: ${e}`
+        }, 500);
     }
-}
+};
 
 export const CreateTag = async(c:Context) => {
     try {

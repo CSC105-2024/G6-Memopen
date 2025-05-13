@@ -17,7 +17,7 @@ const getTagsByUserId = async (userId: number) => {
   const tags = await db.tag.findMany({
     where: {
       userId: userId,
-    },
+    }, 
   });
 
   return tags;
