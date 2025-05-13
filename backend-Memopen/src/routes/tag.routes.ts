@@ -7,4 +7,4 @@ tagRouter.get('/',tagController.GetAllTag);
 tagRouter.post('/',tagController.CreateTag);
 tagRouter.delete('/:id',tagController.DeleteTag);
 
-export {tagRouter};
+export default tagRouter ;

@@ -7,4 +7,4 @@ postRouter.post('/', postController.createPost);
 postRouter.patch('/:id',postController.editPost);
 postRouter.delete('/:id', postController.deletedPost);
 
-export { postRouter };
+export default postRouter ;
