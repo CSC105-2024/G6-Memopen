@@ -9,6 +9,7 @@ const getPost = async() => {
 const getPostsByTagId = async (tagId: number) => {
   const tagWithPosts = await db.tag.findUnique({
     where: { id: tagId },
+    include: { posts: true },
   });
 
   if (!tagWithPosts) {

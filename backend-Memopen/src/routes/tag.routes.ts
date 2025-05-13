@@ -4,6 +4,7 @@ import * as tagController from '../controllers/tag.controller.ts';
 const tagRouter = new Hono();
 
 tagRouter.get('/',tagController.GetAllTag);
+tagRouter.get("/user/:userId", tagController.getTagsByUserId);
 tagRouter.post('/',tagController.CreateTag);
 tagRouter.delete('/:id',tagController.DeleteTag);
 

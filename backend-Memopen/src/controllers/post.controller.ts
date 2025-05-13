@@ -22,7 +22,7 @@ export const getPost = async (c:Context)=>{
     }
 }
 
-export const getPostsByTagIdController = async (c: Context) => {
+export const getPostsByTagId = async (c: Context) => {
   try {
     const tagIdParam = c.req.param("tagId");
     const tagId = parseInt(tagIdParam, 10);
