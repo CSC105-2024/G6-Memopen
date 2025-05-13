@@ -11,13 +11,13 @@ function Home() {
   const showPopup =
     new URLSearchParams(location.search).get("popup") === "true";
 
-  const [canvases, setCanvases] = useState([]);
+  const [canvases, setCanvases] = useState([]); //
   const [tags, setTags] = useState([]);
   const [hoverIndex, setHoverIndex] = useState(null);
   const [activeFilter , setActiveFilter] = useState(null);
 
   useEffect(() => {
-    const storedCanvases = localStorage.getItem("canvases");
+    const storedCanvases = localStorage.getItem("canvases"); //kk
     if (storedCanvases) {
       setCanvases(JSON.parse(storedCanvases));
     }
@@ -30,7 +30,7 @@ function Home() {
   const handleDelete = (id) => {
     const filtered = canvases.filter((c) => c.id !== id);
     localStorage.setItem("canvases", JSON.stringify(filtered));
-    setCanvases(filtered);
+    setCanvases(filtered); //dete 
   };
 
   const handleChooseTemplate = (template) => {

@@ -3,37 +3,76 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const RegisterSchema = z.object({
+      username: z.string().min(1,"Username is required."),
+      password: z
+      .string()
+      .min(8,"Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter.")
+      .regex(/[a-z]/, "Password must contain at least 1 lowercase letter.")
+      .regex(/[0-9]/, "Password must contain at least 1 number."),
+      confirmPassword: z.string().min(1, "Please confirm your password."),
+    }).refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+});
+
+
 function Register(){
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password,setPassword] = useState("");
-  const [confirmPassword , setConfirmPassword] = useState("");
-  const openEye = <FontAwesomeIcon icon={faEye} />;
-  const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;
   const returnLoginPage  = useNavigate();
-  const handleRegistor = async ()=>{
-    if(password!= confirmPassword){
-      alert("Password do not match");
-      return;
-    }
-    const res = await fetch("http://localhost:3000/auth/register",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
+  /*const [username, setUsername] = useState("");
+  const [password,setPassword] = useState("");
+  const [confirmPassword , setConfirmPassword] = useState("");*/
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(RegisterSchema),
+  });  
+  const handleRegister = async (formData)=>{
+  try {
+    const res = await fetch("http://localhost:3000/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      credentials:"include",
-      body: JSON.stringify({username,password})
+      credentials: "include",
+      body: JSON.stringify({
+        username: formData.username,
+        password: formData.password,
+      }),
     });
-    const data = await res.json();
-    if(res.ok){
-      //localStorage.setItem("token",data.token);
-      returnLoginPage("/");
-    }else{
-      alert(data.message || "Registrarion failed");
-    }
+
+
+      let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    const text = await res.text();
+    alert(text || "Server did not return valid JSON");
+    return;
+  }
+
+  if (res.ok) {
+    returnLoginPage("/"); // Redirect to login
+  } else {
+    alert(data.msg || "Registration failed");
+  }
+} catch (error) {
+  alert("Network error: " + error.message);
+}
 
   }
+  const openEye = <FontAwesomeIcon icon={faEye} />;
+  const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;
+  
   
   return (
     <div className="flex min-h-screen min-w-screen bg-gradient-to-b  from-white via-white/40 to-[#B1B1B1] overflow-hidden md:bg-none ">
@@ -50,7 +89,7 @@ function Register(){
           <img className="max-w-48 max-h-48" src="/assets/loginImg/Login_logo.png"></img>
         </div>
         <div className="md:flex-1 flex items-center justify-center 2xl:max-w-2xl">
-          <div className="w-full p-9">
+          <form onSubmit={handleSubmit(handleRegister)} className="w-full p-9" noValidate>
             <h1 className="text-2xl md:text-3xl 2xl:text-4xl font-bold mb-6">
               Register your account
             </h1>
@@ -60,11 +99,14 @@ function Register(){
               Username <span className="text-red-500">*</span>
             </label>
             <input
-              onChange={(e)=>setUsername(e.target.value)}
+              {...register("username")}
               type="text"
               placeholder="ex.mewInwZa007"
               className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
             />
+            {errors.username && (
+              <p className="text-red-500 text-sm mb-4">{errors.username.message}</p>
+            )}
 
             {/* password */}
             <div className="relative">
@@ -72,10 +114,13 @@ function Register(){
                 Password <span className="text-red-500">*</span>
               </label>
               <input
-                onChange={(e)=>setPassword(e.target.value)}
+                {...register("password")}
                 type={showPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-1"
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mb-4">{errors.password.message}</p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -91,10 +136,13 @@ function Register(){
                 Comfirm Password <span className="text-red-500">*</span>
               </label>
               <input
-                onChange={(e)=>setConfirmPassword(e.target.value)}
+                {...register("confirmPassword")}
                 type={showConfirmPassword ? "text" : "password"}
-                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-4"
+                className="bg-white w-full p-3 md:p-4 !2xl:p-5 border rounded-2xl mb-1"
               />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mb-4">{errors.confirmPassword.message}</p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -119,7 +167,7 @@ function Register(){
            <div className="flex justify-center">
               <button
               
-              type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"onClick={handleRegistor}>
+              type="submit" className="w-96 flex-center p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer">
                 Register
               </button>
             
@@ -131,7 +179,7 @@ function Register(){
                 Login
               </button>
             </p>
-          </div>
+          </form>
         </div>
       </div>
     </div>

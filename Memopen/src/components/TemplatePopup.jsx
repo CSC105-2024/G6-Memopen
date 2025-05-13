@@ -92,9 +92,11 @@ export default function TemplatePopup({ onChoose, onClose }) {
       const tagCreation = "note_" + canvasesSizeCount;
       const colorIndex =(getcanvasesSizeCount.length % colorOptions.length) //canvas.length = 0 -> 0%5=0 , 1%5=1 , 5%5 = 0 
       const tagColorCreation = colorOptions[colorIndex].value;
-      const newCanvas = {
+      const newCanvas = { //** POST
         id:newId, tag:  tagCreation, tagColor: tagColorCreation, json:null , thumbnail: selectedTemplate};
-      const updated = [...canvases , newCanvas];
+      
+      //uwu
+        const updated = [...canvases , newCanvas];
       localStorage.setItem("canvases", JSON.stringify(updated))
       localStorage.setItem("eidtor_bg_img",selectedTemplate);
       onChoose(selectedTemplate);
