@@ -19,6 +19,7 @@ const addPost = async (data: {
     where: {
       title: tagName,
       color: tagColor,
+      userId: userId
     },
   });
 
@@ -27,6 +28,7 @@ const addPost = async (data: {
       data: {
         title: tagName,
         color: tagColor,
+        userId: userId
       },
     });
   }

@@ -135,6 +135,7 @@ exports.Prisma.PostScalarFieldEnum = {
 
 exports.Prisma.TagScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   title: 'title',
   color: 'color'
 };

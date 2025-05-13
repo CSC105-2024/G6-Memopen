@@ -2,13 +2,17 @@ import { db } from "../index.ts"
 
 
 const GetAllTag = async() => {
-    const tag = await db.tag.findMany();
+    const tag = await db.tag.findMany({
+      select: {
+        userId: true,
+      }
+    });
     return tag;
 };
 
-const CreateTag = async (title: string, color: string)=> {
+const CreateTag = async (userId: number, title: string, color: string)=> {
     const tag = await db.tag.create({
-      data: { title, color },
+      data: { userId, title, color },
     });
     return tag;
 };
