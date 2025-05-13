@@ -47,11 +47,23 @@ function Home() {
     }
   }, []);
 
-  const handleDelete = (id) => {
-    const filtered = canvases.filter((c) => c.id !== id);
-    localStorage.setItem("canvases", JSON.stringify(filtered));
-    setCanvases(filtered);
-  };
+  const handleDelete = async (id) => {
+  try {
+    const res = await fetch(`http://localhost:3000/post/${id}`, {
+      method: "DELETE"
+    });
+
+    if (res.ok) {
+      setCanvases((prev) => prev.filter((c) => c.id !== id));
+    } else {
+      const error = await res.text();
+      console.error("Delete failed:", error);
+    }
+  } catch (e) {
+    console.error("Error deleting post:", e);
+  }
+};
+
 
   const handleChooseTemplate = (template) => {
     console.log("Template chosen:", template);
