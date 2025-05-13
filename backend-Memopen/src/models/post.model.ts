@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { db } from "../index.ts";
 
+
 const getPost = async() => {
     const post = await db.post.findMany();
     return post

@@ -22,6 +22,7 @@ import vintage3 from "/assets/img/15.png";
 import vintage4 from "/assets/img/16.png";
 
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const templates = {
   Cute: [cute1, cute2, cute3, cute4],
