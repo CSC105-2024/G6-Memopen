@@ -5,6 +5,9 @@ import { serve } from '@hono/node-server';
 import mainRouter from './routes/index.routes.ts';
 import authRouter from './routes/auth.routes.ts';
 import cookiesRouter from './routes/cookies.ts';
+import { postRouter } from './routes/post.routes.ts';
+import { tagRouter } from './routes/tag.routes.ts';
+
 const app = new Hono()
 
 app.use(
@@ -18,8 +21,6 @@ app.route("/",mainRouter);
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
-
-
 
 serve({
   fetch: app.fetch,
@@ -39,3 +40,5 @@ db.$connect()
 
 app.route('/cookies',cookiesRouter);
 app.route('/auth', authRouter);
+app.route('/post', postRouter);
+app.route('/tag', tagRouter);

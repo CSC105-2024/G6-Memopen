@@ -1,10 +1,10 @@
+import type { Tag } from "./tag.type.ts";
 
 export type Post = {
-    id: string;
-    userId: number;
+    id: number;
     json: any;
-    tag:string;
+    tag: Tag[];
     tagColor: string;
-    thumbnail:string;
-
+    tagName: string;
+    thumbnail: string;
 }

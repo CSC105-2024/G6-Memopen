@@ -6,31 +6,52 @@ const getPost = async() => {
     return post
 };
 
+const addPost = async (data: {
+  userId: number;
+  json: any;
+  tagName: string;
+  tagColor: string;
+  thumbnail: string;
+}) => {
+  const { userId, json, tagName, tagColor, thumbnail } = data;
 
-const addPost = async (
-    userId: number,
-    json:any,
-    tag:string,
-    tagColor: string,
-    thumbnail: string
-  ) => {
-    const newPost = await db.post.create({
+  let tag = await db.tag.findFirst({
+    where: {
+      title: tagName,
+      color: tagColor,
+    },
+  });
+
+  if (!tag) {
+    tag = await db.tag.create({
       data: {
-        json,
-        tag,
-        tagColor,
-        thumbnail,
-        user: {
-          connect: { id: userId }
-        }
-      }
+        title: tagName,
+        color: tagColor,
+      },
     });
-    return newPost;
-  };
+  }
+
+  const post = await db.post.create({
+    data: {
+      user: { connect: { id: userId } },
+      json,
+      tagColor,
+      thumbnail,
+      tag: {
+        connect: [{ id: tag.id }],
+      },
+    },
+    include: {
+      tag: true,
+    },
+  });
+
+  return post;
+};
 
 const editPost = async (id:string, data:Partial<{
     json:any,
-    tag:string,
+    tagName: string,
     tagColor:string,
     thumbnail:string,
 }>)=>{

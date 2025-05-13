@@ -128,10 +128,15 @@ exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   json: 'json',
-  tag: 'tag',
   tagColor: 'tagColor',
   thumbnail: 'thumbnail',
   createAt: 'createAt'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  color: 'color'
 };
 
 exports.Prisma.SortOrder = {
@@ -163,7 +168,8 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Post: 'Post'
+  Post: 'Post',
+  Tag: 'Tag'
 };
 
 /**
