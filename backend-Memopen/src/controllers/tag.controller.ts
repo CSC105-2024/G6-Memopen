@@ -23,7 +23,7 @@ export const GetAllTag = async(c:Context)=> {
 export const getTagsByUserId = async (c:Context) => {
     try {
         const body = await c.req.json();
-        const {userId} = body
+        const {userId} = body;
         const tagsFromUser = await tagModel.getTagsByUserId( userId);
         return c.json({
             success:true,
