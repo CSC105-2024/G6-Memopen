@@ -94,6 +94,9 @@ function Home() {
     setCanvases([]);
   }
 
+  
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar onLogout={hangleLogout} activeFilter={activeFilter} handleFilterClickAgain={handleFilterClickAgain} />

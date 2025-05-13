@@ -40,6 +40,7 @@ function Login() {
           const userId = payload.userId;
           console.log(userId);
           localStorage.setItem("userId", userId);
+          localStorage.setItem("username", username);
           navigateLogin("/HomePage");
         } else {
           alert(data.message || "Login failed");

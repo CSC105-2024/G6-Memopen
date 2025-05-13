@@ -17,7 +17,7 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
   const [canvases, setCanvases] = useState([]);
   const [manualTag, setManualTag] = useState([]);
   const navigate = useNavigate();
-
+  const lOGINusername = localStorage.getItem("username");
   useEffect(() => {
     setUsername(localStorage.getItem("username") || "Guest");
 
@@ -116,7 +116,7 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
             </div>
 
             <h2 className="text-white text-lg mt-4 text-center">
-              Welcome back, <span className="font-bold">{username}</span>
+              Welcome back, <span className="font-bold">{lOGINusername}</span>
             </h2>
 
             <div className="mt-6 w-full">
