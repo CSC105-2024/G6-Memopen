@@ -5,8 +5,8 @@ import { serve } from '@hono/node-server';
 import mainRouter from './routes/index.routes.ts';
 import authRouter from './routes/auth.routes.ts';
 import cookiesRouter from './routes/cookies.ts';
-import { postRouter } from './routes/post.routes.ts';
-import { tagRouter } from './routes/tag.routes.ts';
+import postRouter from './routes/post.routes.ts';
+import tagRouter from './routes/tag.routes.ts';
 
 const app = new Hono()
 
