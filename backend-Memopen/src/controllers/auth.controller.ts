@@ -52,7 +52,12 @@ export const login = async (c:Context)=>{
         const token = generateToken(user);
         return c.json({
             success:true,
-            token
+            token,
+            user:{
+                id:user.id,
+                username:user.username,
+                pfpURL:user.pfpURL || null
+            }
         })
     }catch(e){
         console.error(e);
@@ -79,4 +84,27 @@ export const getAllUsers = async (c: Context) => {
             msg: "Failed to fetch users"
         }, 500);
     }
+};
+
+
+
+export const updateProfileImage = async (c: Context) => {
+  const userId = Number(c.req.param("id")); // get user id from URL param
+  const formData = await c.req.formData();
+  const image = formData.get("image");
+
+  if (!image || typeof image === "string") {
+    return c.json({ success: false, msg: "No valid image provided" }, 400);
+  }
+
+  const arrayBuffer = await image.arrayBuffer();
+  const base64Image = Buffer.from(arrayBuffer).toString("base64");
+
+  const updatedUser = await authModel.updateUserProfileImage(userId, base64Image);
+
+  return c.json({
+    success: true,
+    msg: "Profile image updated",
+    data: updatedUser,
+  });
 };

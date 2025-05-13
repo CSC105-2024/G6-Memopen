@@ -41,6 +41,9 @@ function Login() {
           console.log(userId);
           localStorage.setItem("userId", userId);
           localStorage.setItem("username", username);
+          if (data.user.pfpURL) {
+          localStorage.setItem("profileImage", `data:image/jpeg;base64,${data.user.pfpURL}`);
+          }
           navigateLogin("/HomePage");
         } else {
           alert(data.message || "Login failed");

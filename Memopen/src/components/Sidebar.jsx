@@ -38,7 +38,37 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
     setManualTag(setManualTag || []);
   }, []);
 
-  const handleImageChange = (event) => {
+  const handleImageChange = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const userId = localStorage.getItem("userId");
+    const res = await fetch(`http://localhost:3000/auth/profile-image/${userId}`, {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      const base64 = `data:image/jpeg;base64,${result.data.pfpURL}`;
+      setImage(base64);
+      localStorage.setItem("profileImage", base64);
+    } else {
+      console.error(result.msg);
+    }
+  } catch (e) {
+    console.error("Image upload error", e);
+  }
+};
+
+
+  /**
+   * const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -50,6 +80,8 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
       reader.readAsDataURL(file);
     }
   };
+   * 
+   */
 
   const handleLogout = () => {
     localStorage.removeItem("username");
