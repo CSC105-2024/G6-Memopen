@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { postRouter } from "./post.routes.ts";
+import postRouter  from "./post.routes.ts";
 
 const mainRouter = new Hono();
 
