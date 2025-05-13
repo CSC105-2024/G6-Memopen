@@ -408,7 +408,7 @@ function Editor() {
     link.click();
   };
 
-  const saveCanvas = (canvasId, tagValue, tagColor) => {
+ const saveCanvas = async (canvasId, tagValue, tagColor) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
@@ -443,29 +443,63 @@ function Editor() {
       canvas.setActiveObject(active);
       canvas.renderAll();
     }
+
     const json = canvas.toJSON();
-    const saved = JSON.parse(localStorage.getItem("canvases") || "[]") || [];
-    let updated = saved
-      .filter(Boolean)
-      .map((c) =>
-        c.id === canvasId
-          ? { ...c, tag: tagValue, tagColor: tagColor, json, thumbnail }
-          : c
-      );
 
-    if (!updated.some((c) => c.id === canvasId)) {
-      updated.push({
-        id: canvasId,
-        tag: tagValue,
-        tagColor: tagColor,
-        json,
-        thumbnail,
+    // Make sure you're sending the updated data to the backend
+    try {
+      const userId = parseInt(localStorage.getItem("userId"));
+      const res = await fetch(`http://localhost:3000/post/${canvasId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tag: tagValue,
+          tagColor: tagColor,
+          json,
+          thumbnail,
+          userId
+        })
       });
-    }
 
-    localStorage.setItem("canvases", JSON.stringify(updated));
-    setUnsavedTag(false);
-  };
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to save canvas:", errorText);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Canvas updated successfully:", data);
+
+      // Update local storage with the new data
+      const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
+      let updated = saved
+        .filter(Boolean)
+        .map((c) =>
+          c.id === canvasId
+            ? { ...c, tag: tagValue, tagColor: tagColor, json, thumbnail }
+            : c
+        );
+
+      if (!updated.some((c) => c.id === canvasId)) {
+        updated.push({
+          id: canvasId,
+          tag: tagValue,
+          tagColor: tagColor,
+          json,
+          thumbnail,
+        });
+      }
+
+      localStorage.setItem("canvases", JSON.stringify(updated));
+      setUnsavedTag(false);
+
+    } catch (error) {
+      console.error("Error while saving canvas:", error);
+    }
+};
+
 
   /*
     const saveCanvas = (canvasId, tagValue, tagColor) => {

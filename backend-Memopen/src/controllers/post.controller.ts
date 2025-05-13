@@ -41,26 +41,29 @@ export const createPost = async (c:Context)=>{
     }
 }
 
+export const editPost = async (c: Context) => {
+  try {
+    const postId = String(c.req.param("id"));
 
-export const editPost = async (c:Context)=>{
-    try{
-        const postId = String(c.req.param("id"));
-        const {content} = await c.req.json();
-        const updatedPost = await postModel.editPost(postId, content);
-        return c.json({
-            sucess:true,
-            data:updatedPost,
-            msg:"Post edited successfully"
-        })
+    const body = await c.req.json(); 
 
-    }catch(e){
-        return c.json({
-            success:false,
-            data:null,
-            msg:`Internal server Error ${e}`
-        },500)
-    }
-}
+    const updatedPost = await postModel.editPost(postId, body);
+
+    return c.json({
+      success: true,
+      data: updatedPost,
+      msg: "Post edited successfully"
+    });
+
+  } catch (e) {
+    return c.json({
+      success: false,
+      data: null,
+      msg: `Internal server Error: ${e instanceof Error ? e.message : e}`
+    }, 500);
+  }
+};
+
 
 export const deletedPost =  async (c:Context) =>{
     try{
