@@ -1,11 +1,18 @@
 import { Prisma } from "@prisma/client";
 import { db } from "../index.ts";
-import { use } from "hono/jsx";
 
-const getPost = async() => {
-    const post = await db.post.findMany();
-    return post
+const getPost = async (userId: number) => {
+  const posts = await db.post.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createAt: 'desc',
+    },
+  });
+  return posts;
 };
+
 
 
 const addPost = async (

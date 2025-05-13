@@ -117,8 +117,9 @@ export default function TemplatePopup({ onChoose, onClose }) {
         }
 
         const data = await res.json();
+        const postId = data.data.id;
         setCanvases(data);
-        edNavigate(`/editor/${data.userId}`);
+        edNavigate(`/editor/${data.data.id}`);
       } catch (error) {
         console.error("Network error", error);
       }
