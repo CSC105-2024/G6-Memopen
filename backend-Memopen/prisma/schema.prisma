@@ -31,5 +31,13 @@ model Post {
   thumbnail String
   createAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id])
+  Tag Tag[]
 }
 
+model Tag {
+  id        Int     @id @default(autoincrement())
+  name      String
+  color     String
+  posts     Post[]
+  
+}
