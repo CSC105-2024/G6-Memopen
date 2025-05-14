@@ -1,18 +1,32 @@
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const LoginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
 function Login() {
   const navigateLogin = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [username,setUsername] = useState("");
-  const [password, setPassword] =  useState("");
+  const [serverError, setServerError] = useState(""); 
 
+const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
+  });
 
-    const handleLogin = async () => {
+    const handleLogin = async ({ username, password }) => {
+      setServerError("");
       try {
         const res = await fetch("http://localhost:3000/auth/login", {
           method: "POST",
@@ -28,28 +42,18 @@ function Login() {
           data = await res.json(); 
         } catch {
           const text = await res.text(); 
-          alert(text || "Something went wrong");
+          setServerError(text || "Something went wrong");
           return;
         }
     
         if (res.ok) {
           //localStorage.setItem("token", data.token); -> no longer need as we use cookies
-          console.log("response", data);
-          const token = data.token;
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const userId = payload.userId;
-          console.log(userId);
-          localStorage.setItem("userId", userId);
-          localStorage.setItem("username", username);
-          if (data.user.pfpURL) {
-          localStorage.setItem("profileImage", `data:image/jpeg;base64,${data.user.pfpURL}`);
-          }
           navigateLogin("/HomePage");
         } else {
-          alert(data.message || "Login failed");
+          setServerError(data.message || "Login failed");
         }
       } catch (error) {
-        alert("Network error: " + error.message);
+        setServerError("Network error: " + error.message);
       }
     };
     
@@ -77,24 +81,38 @@ function Login() {
 
       {/* Right Side Login Box */}
       <div className="flex flex-col justify-center items-center md:w-1/2 w-full max-h-[700px] my-auto">
-        <div className="flex justify-center mt-16 xl:-mb-12">
-          <img className="max-w-48 max-h-48" src="/assets/loginImg/Login_logo.png" alt="Login Logo" />
-        </div>
-
-        <div className="flex items-center justify-center w-full h-full 2xl:max-w-2xl">
+        <form
+          onSubmit={handleSubmit(handleLogin)}
+          className="flex items-center justify-center w-full h-full 2xl:max-w-2xl"
+        >
           <div className="w-full p-9 max-w-md">
-            <h1 className="text-2xl md:text-3xl text-center 2xl:text-4xl font-bold mb-6">Login to your account</h1>
+            <div className="flex justify-center mt-16 xl:-mb-12">
+              <img
+                className="max-w-48 max-h-48 mb-16"
+                src="/assets/loginImg/Login_logo.png"
+                alt="Login Logo"
+              />
+            </div>
+
+            <h1 className="text-2xl md:text-3xl text-center 2xl:text-4xl font-bold mb-6">
+              Login to your account
+            </h1>
 
             {/* Username */}
             <label className="block font-medium mb-1">
               Username <span className="text-red-500">*</span>
             </label>
             <input
-              onChange={(e)=>setUsername(e.target.value)}
+              {...register("username")}
               type="text"
               placeholder="ex.mewInwZa007"
-              className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-4"
+              className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-1"
             />
+            {errors.username && (
+              <p className="text-red-500 text-sm mb-4">
+                {errors.username.message}
+              </p>
+            )}
 
             {/* Password */}
             <div className="relative">
@@ -102,9 +120,9 @@ function Login() {
                 Password <span className="text-red-500">*</span>
               </label>
               <input
+                {...register("password")}
                 type={showPassword ? "text" : "password"}
-                onChange={(e)=>setPassword(e.target.value)}
-                className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-12"
+                className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-1"
               />
               <button
                 type="button"
@@ -113,13 +131,21 @@ function Login() {
               >
                 {showPassword ? openEye : closeEye}
               </button>
+              {errors.password && (
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.password.message}
+                </p>
+              )}
+
+              {serverError && (
+                <p className="text-red-500 text-sm mb-4">{serverError}</p>
+              )}
             </div>
 
-            {/* Login Button */}
+            {/* Submit */}
             <button
-              onClick={handleLogin}
               type="submit"
-              className="w-full p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer"
+              className="w-full p-3 bg-black text-white rounded-2xl hover:bg-gray-800 cursor-pointer mt-5"
             >
               Login
             </button>
@@ -135,7 +161,7 @@ function Login() {
               </button>
             </p>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
