@@ -75,56 +75,64 @@ export default function TemplatePopup({ onChoose, onClose }) {
   let colorIndex = 0; // Declare at the top of your file
 
   const handleChooseTemplate = async () => {
-    const selectedTemplate = displayedTemplates[selectedId];
-    if (selectedId !== null) {
-      const newId = Date.now().toString();
+  const selectedTemplate = displayedTemplates[selectedId];
+  if (selectedId !== null) {
+    const newId = Date.now().toString();
 
-      const colorOptions = [
-        { value: "#ff0000" },
-        { value: "#ff8800" },
-        { value: "#ffff00" },
-        { value: "#008000" },
-        { value: "#0000ff" },
-        { value: "#800080" },
-      ];
+    const colorOptions = [
+      { value: "#ff0000" },
+      { value: "#ff8800" },
+      { value: "#ffff00" },
+      { value: "#008000" },
+      { value: "#0000ff" },
+      { value: "#800080" },
+    ];
 
-      const tagCreation = "note";
-      const tagColorCreation = colorOptions[colorIndex].value;
-      colorIndex = (colorIndex + 1) % colorOptions.length; // update for next call
+    const tagCreation = "note";
+    const tagColorCreation = colorOptions[colorIndex].value;
+    colorIndex = (colorIndex + 1) % colorOptions.length;
 
-      const userId = parseInt(localStorage.getItem("userId"));
-      localStorage.setItem("eidtor_bg_img", selectedTemplate);
+    const userId = parseInt(localStorage.getItem("userId"));
+    localStorage.setItem("eidtor_bg_img", selectedTemplate);
 
-      try {
-        const res = await fetch("http://localhost:3000/post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            userId,
-            tag: tagCreation,
-            tagColor: tagColorCreation,
-            thumbnail: selectedTemplate,
-            backgroundImg: selectedTemplate,
-            json: null
-          })
-        });
+  
+    const initialJson = {
+      version: "5.2.4",
+      objects: [],
+      backgroundImage: selectedTemplate,
+    };
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Failed to create post:", errorText);
-          return;
-        }
+    try {
+      const res = await fetch("http://localhost:3000/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId,
+          tag: tagCreation,
+          tagColor: tagColorCreation,
+          thumbnail: selectedTemplate,
+          backgroundImg: selectedTemplate,
+          json: initialJson
+        })
+      });
 
-        const data = await res.json();
-        setCanvases(data);
-        edNavigate(`/editor/${data.data.id}`);
-      } catch (error) {
-        console.error("Network error", error);
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to create post:", errorText);
+        return;
       }
+
+      const data = await res.json();
+      setCanvases(data);
+      edNavigate(`/editor/${data.data.id}`);
+    } catch (error) {
+      console.error("Network error", error);
     }
-  };
+  }
+};
+
 
 
   /**

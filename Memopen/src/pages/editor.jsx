@@ -408,7 +408,7 @@ function Editor() {
     link.click();
   };
 
- const saveCanvas = async (canvasId, tagValue, tagColor) => {
+ const saveCanvas = async (canvasId, tagValue, tagColor,backgroundImage) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
@@ -456,6 +456,7 @@ function Editor() {
         body: JSON.stringify({
           tag: tagValue,
           tagColor: tagColor,
+          
           json,
           thumbnail,
           userId,
