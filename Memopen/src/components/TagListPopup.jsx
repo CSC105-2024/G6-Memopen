@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +17,7 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
   const [newColor, setNewColor] = useState(colors[0].value);
   const [colorPickerIndex, setColorPickerIndex] = useState(null);
 
-  const addTag = () => {
+  /*const addTag = () => {
     if (newTag.trim()) {
       const newTagObj = { name: newTag.trim(), color: newColor };
       const updatedTags = [...tags, newTagObj];
@@ -30,8 +30,90 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
       setNewTag("");
       setNewColor(colors[0].value);
     }
+  };*/
+const addTag = async () => {
+  if (newTag.trim()) {
+    const newTagObj = { title: newTag.trim(), color: newColor, userId: 1 }; 
+
+    const res = await fetch('http://localhost:3000/tag', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTagObj),
+    });
+
+    const createdTag = await res.json();
+    console.log("Created Tag:", createdTag);
+    setTags((prevTags) => [...prevTags, createdTag]);
+
+    setNewTag("");
+    setNewColor(colors[0].value);
+  }
+};
+
+useEffect(() => {
+  const fetchTags = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/tag');
+      const data = await res.json();
+      console.log('Fetched data:', data); 
+
+      if (Array.isArray(data)) {
+        setTags(data);
+      } else {
+        console.error('Expected an array but got:', data);
+      }
+    } catch (err) {
+      console.error('Error fetching tags:', err);
+    }
   };
 
+  fetchTags();
+}, []);
+
+useEffect(() => {
+  const fetchTags = async () => {
+    const res = await fetch('http://localhost:3000/tag');
+    const data = await res.json();
+
+    // Normalize to use `title` just in case
+    const normalized = data.map(tag => ({
+      ...tag,
+      title: tag.title || tag.name, // fallback
+    }));
+
+    setTags(normalized);
+  };
+
+  fetchTags();
+}, []);
+
+const removeTag = async (id) => {
+  await fetch(`http://localhost:3000/tag/${id}`, { method: 'DELETE' });
+  setTags(tags.filter(tag => tag.id !== id));
+};
+
+const updateTag = async (id, newTitle, newColor) => {
+  const res = await fetch(`http://localhost:3000/tag/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: newTitle,
+      color: newColor,
+    }),
+  });
+
+  if (res.ok) {
+    const updatedTag = await res.json();
+    setTags((prev) =>
+      prev.map((tag) => (tag.id === id ? updatedTag : tag))
+    );
+  } else {
+    console.error('Failed to update tag');
+  }
+};
+/*
   const removeTag = (index) => {
     const tagToRemove = tags[index];
     const updatedTags = tags.filter((_, i) => i !== index);
@@ -59,7 +141,7 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
     );
     localStorage.setItem("manualTags", JSON.stringify(updatedManual));
   };
-
+*/
   return (
     <div className="fixed inset-0 bg-gray-200 bg-opacity-10 flex justify-end sm:justify-center">
       <div className="bg-white h-full w-80 sm:w-96 p-6 shadow-lg sm:rounded-lg overflow-y-auto">
@@ -72,7 +154,7 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
 
         <div className="space-y-3">
           {tags.map((tag, index) => (
-            <div key={index} className="flex items-center justify-between p-2 border rounded-lg">
+            <div key={tag.id} className="flex items-center justify-between p-2 border rounded-lg">
               <div className="flex space-x-2 relative">
                 <div
                   className="w-4 h-4 rounded-full border cursor-pointer"
@@ -87,7 +169,7 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
                         className="w-4 h-4 rounded-full cursor-pointer"
                         style={{ backgroundColor: color.value }}
                         onClick={() => {
-                          updateTag(index, tag.name, color.value);
+                          updateTag(tag.id, tag.title, color.value);
                           setColorPickerIndex(null);
                         }}
                       ></div>
@@ -97,11 +179,11 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
               </div>
               <input
                 type="text"
-                value={tag.name}
-                onChange={(e) => updateTag(index, e.target.value, tag.color)}
+                value={tag.title}
+                onChange={(e) => updateTag(tag.id, e.target.value, tag.color)}
                 className="p-1 flex-grow bg-transparent border-none outline-none w-[60%] text-sm"
               />
-              <button onClick={() => removeTag(index)} className="text-red-500">
+              <button onClick={() => removeTag(tag.id)} className="text-red-500">
                 <FontAwesomeIcon icon={faTrash} style={{ color: "#ff0000" }} size="sm" />
               </button>
             </div>

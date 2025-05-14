@@ -10,9 +10,9 @@ import tagRouter from './routes/tag.routes.ts';
 
 const app = new Hono()
 
-app.use(
+app.use('*',
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5174'],
     credentials:true, //allow cookies
   })
 )

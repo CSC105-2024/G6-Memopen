@@ -22,7 +22,6 @@ import vintage3 from "/assets/img/15.png";
 import vintage4 from "/assets/img/16.png";
 
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 
 const templates = {
   Cute: [cute1, cute2, cute3, cute4],
@@ -93,11 +92,9 @@ export default function TemplatePopup({ onChoose, onClose }) {
       const tagCreation = "note_" + canvasesSizeCount;
       const colorIndex =(getcanvasesSizeCount.length % colorOptions.length) //canvas.length = 0 -> 0%5=0 , 1%5=1 , 5%5 = 0 
       const tagColorCreation = colorOptions[colorIndex].value;
-      const newCanvas = { //** POST
+      const newCanvas = {
         id:newId, tag:  tagCreation, tagColor: tagColorCreation, json:null , thumbnail: selectedTemplate};
-      
-      //uwu
-        const updated = [...canvases , newCanvas];
+      const updated = [...canvases , newCanvas];
       localStorage.setItem("canvases", JSON.stringify(updated))
       localStorage.setItem("eidtor_bg_img",selectedTemplate);
       onChoose(selectedTemplate);

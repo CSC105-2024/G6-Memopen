@@ -9,32 +9,21 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
   const showPopup = queryParams.get("popup");
 
   const [tags, setTags] = useState([]);
-
-  const syncTag = () => {
-    const savedCanvas = JSON.parse(localStorage.getItem("canvases")) || [];
-    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
-
-    const tagSet = new Set();
-    savedCanvas.forEach((canvas) => {
-      if (canvas.tag && canvas.tag.trim() && canvas.tagColor) {
-        const tagKey = `${canvas.tag.trim()}-${canvas.tagColor}`;
-        tagSet.add(tagKey);
-      }
-    });
-
-    manualTags.forEach((tag) => {
-      const tagKey = `${tag.name}-${tag.color}`;
-      tagSet.add(tagKey);
-    });
-
-    const allTags = Array.from(tagSet).map((tagKey) => {
-      const [name, color] = tagKey.split("-");
-      return { name, color };
-    });
+  const userId = localStorage.getItem("userId");
+  const syncTag = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/tags/user/${userId}`);
+    if (!response.ok) throw new Error('Failed to fetch tags');
+    
+    const data = await response.json();
+    const allTags = data.map(tag => ({ name: tag.title, color: tag.color }));
 
     setTags(allTags);
-    localStorage.setItem("tags", JSON.stringify(allTags));
-  };
+    localStorage.setItem("tags", JSON.stringify(allTags)); // Optional caching
+  } catch (error) {
+    console.error("Error syncing tags from backend:", error);
+  }
+};
 
   useEffect(() => {
     syncTag();
@@ -42,30 +31,35 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
     return () => clearInterval(interval);
   }, []);
 
-  return (
+return (
     <div className="bg-white p-4 rounded-lg shadow w-full mb-4">
       <h2 className="text-black text-lg font-semibold mb-4">My tags</h2>
 
       <div className="max-h-64 overflow-y-auto pr-2">
         {tags.length > 0 ? (
           tags.map((tag, index) => (
-            <button key={index} className="flex items-center p-2 border rounded-lg mb-2 w-full"
-            style={{
-              backgroundColor:
-              activeFilter?.tag === tag.name && activeFilter?.tagColor === tag.color ?
-              "#00917C" : "#FFFFFF",
-              color:
-              activeFilter?.tag === tag.name && activeFilter?.tagColor === tag.color
-              ? "#fff": "#000",
-            }}
-            
-            onClick={()=>handleFilterClickAgain(tag.name, tag.color)}
+            <button
+              key={tag.title}
+              className="flex items-center p-2 border rounded-lg mb-2 w-full"
+              style={{
+                backgroundColor:
+                  activeFilter?.tag === tag.title &&
+                  activeFilter?.tagColor === tag.color
+                    ? "#00917C"
+                    : "#FFFFFF",
+                color:
+                  activeFilter?.tag === tag.title &&
+                  activeFilter?.tagColor === tag.color
+                    ? "#fff"
+                    : "#000",
+              }}
+              onClick={() => handleFilterClickAgain(tag.title, tag.color)}
             >
               <span
                 className="w-3 h-3 rounded-full mr-2"
                 style={{ backgroundColor: tag.color }}
               ></span>
-              <span>{tag.name}</span>
+              <span>{tag.title}</span>
             </button>
           ))
         ) : (
@@ -84,7 +78,10 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
         <TagListPopup
           tags={tags}
           setTags={setTags}
-          onClose={() => navigate("?")}
+          onClose={() => {
+            navigate("?");
+            syncTag(); 
+          }}
         />
       )}
     </div>
