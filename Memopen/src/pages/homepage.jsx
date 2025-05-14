@@ -30,6 +30,24 @@ function Home() {
       }
       
     }
+    /**
+     * 
+     * const fetchCanvases = async () =>{
+      const res = await fetch("http://localhost:3000/post",{
+        credentials:"include"
+      })
+      if(res.ok){
+        const data = await res.json();
+        console.log(data);
+        setCanvases(data.data);
+        console.log(canvases);
+      }else{
+        console.error("failed to fetch canvases");
+      }
+      
+    }
+     * 
+     */
 
   useEffect(() => {
     fetchCanvases();
@@ -47,14 +65,21 @@ function Home() {
     }
   }, []);
 
-  const handleDelete = async (id) => {
+const handleDelete = async (id, tag, tagColor) => {
   try {
+    // First, delete the canvas
     const res = await fetch(`http://localhost:3000/post/${id}`, {
       method: "DELETE"
     });
 
     if (res.ok) {
       setCanvases((prev) => prev.filter((c) => c.id !== id));
+      const remainingCanvases = canvases.filter((canvas) => canvas.tag === tag && canvas.tagColor === tagColor);
+      if (remainingCanvases.length === 0) {
+        const updatedTags = tags.filter((t) => t.name !== tag || t.color !== tagColor);
+        setTags(updatedTags);
+        localStorage.setItem("tags", JSON.stringify(updatedTags));
+      }
     } else {
       const error = await res.text();
       console.error("Delete failed:", error);
@@ -63,6 +88,35 @@ function Home() {
     console.error("Error deleting post:", e);
   }
 };
+
+/**const handleDelete = async (id, tag, tagColor) => {
+  try {
+    const res = await fetch(`http://localhost:3000/post/${id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      setCanvases((prev) => prev.filter((c) => c.id !== id));
+      if (tag) {
+        const updatedTags = tags.filter(
+          (t) => !(t.name === tag && t.color === tagColor)
+        );
+        setTags(updatedTags);
+        const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
+        const updatedManualTags = manualTags.filter(
+          (t) => !(t.name === tag && t.color === tagColor)
+        );
+        localStorage.setItem("manualTags", JSON.stringify(updatedManualTags));
+      }
+    } else {
+      const error = await res.text();
+      console.error("Delete failed:", error);
+    }
+  } catch (e) {
+    console.error("Error deleting post:", e);
+  }
+}; */
+
 
 
   const handleChooseTemplate = (template) => {
@@ -160,7 +214,7 @@ function Home() {
                     </div>
                     <button
                       className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(canvas.id)}
+                      onClick={() => handleDelete(canvas.id, canvas.tag, canvas.tagColor)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>

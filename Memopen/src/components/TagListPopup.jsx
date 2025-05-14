@@ -12,10 +12,28 @@ const colors = [
   { value: "#800080" },
 ];
 
-const TagListPopup = ({ tags, setTags, onClose }) => {
+const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
   const [newTag, setNewTag] = useState("");
   const [newColor, setNewColor] = useState(colors[0].value);
   const [colorPickerIndex, setColorPickerIndex] = useState(null);
+
+  const handleTagRemoval = (tagToRemove) => {
+    const updatedTags = tags.filter(
+      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
+    );
+    setTags(updatedTags);
+
+    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
+    const updatedManual = manualTags.filter(
+      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
+    );
+    localStorage.setItem("manualTags", JSON.stringify(updatedManual));
+
+    const updatedCanvases = canvases.filter(
+      (canvas) => canvas.tag !== tagToRemove.name || canvas.tagColor !== tagToRemove.color
+    );
+    setCanvases(updatedCanvases);
+  };
 
   const addTag = () => {
     if (newTag.trim()) {
@@ -34,14 +52,7 @@ const TagListPopup = ({ tags, setTags, onClose }) => {
 
   const removeTag = (index) => {
     const tagToRemove = tags[index];
-    const updatedTags = tags.filter((_, i) => i !== index);
-    setTags(updatedTags);
-
-    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
-    const updatedManual = manualTags.filter(
-      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
-    );
-    localStorage.setItem("manualTags", JSON.stringify(updatedManual));
+    handleTagRemoval(tagToRemove); // Remove the tag and associated canvases
   };
 
   const updateTag = (index, newName, newColor) => {
