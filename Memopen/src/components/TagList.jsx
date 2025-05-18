@@ -9,8 +9,9 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
   const showPopup = queryParams.get("popup");
 
   const [tags, setTags] = useState([]);
-
-  const syncTag = () => {
+  /**
+   * 
+   * const syncTag = () => {
     const savedCanvas = JSON.parse(localStorage.getItem("canvases")) || [];
     const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
 
@@ -35,10 +36,36 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
     setTags(allTags);
     localStorage.setItem("tags", JSON.stringify(allTags));
   };
+   * 
+   */
+  const fetchTags = async ()=>{
+    const res = await fetch("http://localhost:3000/post",{
+        method: "GET",
+        credentials:"include"
+      })
+      if(res.ok){
+        const data = await res.json();
+        const canvases = data.data;
+        const tagMap = new Map();
+        canvases.forEach((canvas)=>{
+          if(canvas.tag && canvas.tag.trim() && canvas.tagColor){
+            tagMap.set(canvas.tag.trim(), canvas.tagColor);
+          }
+        })
+        const uniqueTags = Array.from(tagMap.entries()).map(([name, color]) => ({
+          name,
+          color,
+        }));
+        setTags(uniqueTags);
+
+      }else{
+         console.error("failed to fetch canvases");
+      }
+  }
 
   useEffect(() => {
-    syncTag();
-    const interval = setInterval(syncTag, 500);
+    fetchTags();
+    const interval = setInterval(fetchTags, 500);
     return () => clearInterval(interval);
   }, []);
 
