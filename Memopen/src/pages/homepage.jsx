@@ -70,8 +70,11 @@ const handleDelete = async (id, tag, tagColor) => {
   try {
     // First, delete the canvas
     const res = await fetch(`http://localhost:3000/post/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials:"include"
+      
     });
+    
 
     if (res.ok) {
       setCanvases((prev) => prev.filter((c) => c.id !== id));

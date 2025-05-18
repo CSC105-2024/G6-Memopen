@@ -450,6 +450,7 @@ function Editor() {
       const userId = parseInt(localStorage.getItem("userId"));
       const res = await fetch(`http://localhost:3000/post/${canvasId}`, {
         method: "PATCH",
+        credentials:"include",
         headers: {
           "Content-Type": "application/json",
         },
