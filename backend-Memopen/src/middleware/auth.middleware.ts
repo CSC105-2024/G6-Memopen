@@ -2,7 +2,7 @@ import type { MiddlewareHandler } from 'hono';
 import { getCookie } from 'hono/cookie';
 
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  const userId = await getCookie(c, 'userId');  // Use getCookie helper here
+  const userId = await getCookie(c, 'userId');  
 
   if (!userId) {
     return c.json({ success: false, msg: 'Unauthorized' }, 401);

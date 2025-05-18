@@ -51,11 +51,11 @@ export const login = async (c: Context) => {
     const token = generateToken(user);
 
    await setCookie(c, 'userId', String(user.id), {
-  httpOnly: true,
-  secure: false,  // true in production with HTTPS
-  sameSite: 'Lax',
-  path: '/',
-  maxAge: 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        secure: false,  
+        sameSite: 'Lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, 
 });
     return c.json({
       success: true,
@@ -93,7 +93,7 @@ export const getAllUsers = async (c: Context) => {
 
 
 export const updateProfileImage = async (c: Context) => {
-  const userId = Number(c.req.param("id")); // get user id from URL param
+  const userId = Number(c.req.param("id")); 
   const formData = await c.req.formData();
   const image = formData.get("image");
 
