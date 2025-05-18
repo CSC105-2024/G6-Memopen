@@ -408,7 +408,7 @@ function Editor() {
     link.click();
   };
 
- const saveCanvas = async (canvasId, tagValue, tagColor,backgroundImage) => {
+ const saveCanvas = async (canvasId, tagValue, tagColor) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
@@ -450,13 +450,14 @@ function Editor() {
       const userId = parseInt(localStorage.getItem("userId"));
       const res = await fetch(`http://localhost:3000/post/${canvasId}`, {
         method: "PATCH",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           tag: tagValue,
           tagColor: tagColor,
-          
+
           json,
           thumbnail,
           userId,

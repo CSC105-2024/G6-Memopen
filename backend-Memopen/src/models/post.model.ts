@@ -4,7 +4,7 @@ import { db } from "../index.ts";
 const getPost = async (userId: number) => {
   const posts = await db.post.findMany({
     where: {
-      userId,
+      userId: Number(userId),
     },
     orderBy: {
       createAt: 'desc',

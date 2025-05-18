@@ -16,20 +16,34 @@ function Home() {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [activeFilter , setActiveFilter] = useState(null);
 
-  const fetchCanvases = async () =>{
-      const res = await fetch("http://localhost:3000/post",{
-        credentials:"include"
-      })
-      if(res.ok){
-        const data = await res.json();
-        console.log(data);
-        setCanvases(data.data);
-        console.log(canvases);
-      }else{
-        console.error("failed to fetch canvases");
-      }
-      
+const fetchCanvases = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
     }
+
+    const res = await fetch("http://localhost:3000/post", {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setCanvases(data.data);
+    } else {
+      const errorText = await res.text();
+      console.error("Fetch failed with status:", res.status, errorText);
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+};
+
+
     /**
      * 
      * const fetchCanvases = async () =>{
@@ -51,14 +65,6 @@ function Home() {
 
   useEffect(() => {
     fetchCanvases();
-    /**
-     * 
-     * const storedCanvases = localStorage.getItem("canvases");
-    if (storedCanvases) {
-      setCanvases(JSON.parse(storedCanvases));
-    }
-     * 
-     */
     const storedTags = localStorage.getItem("tags");
     if (storedTags) {
       setTags(JSON.parse(storedTags));
@@ -69,17 +75,24 @@ const handleDelete = async (id, tag, tagColor) => {
   try {
     // First, delete the canvas
     const res = await fetch(`http://localhost:3000/post/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials: 'include',
     });
 
     if (res.ok) {
-      setCanvases((prev) => prev.filter((c) => c.id !== id));
-      const remainingCanvases = canvases.filter((canvas) => canvas.tag === tag && canvas.tagColor === tagColor);
-      if (remainingCanvases.length === 0) {
+    setCanvases((prev) => {
+      const updated = prev.filter((c) => c.id !== id);
+      const remaining = updated.filter((canvas) => canvas.tag === tag && canvas.tagColor === tagColor);
+
+      if (remaining.length === 0) {
         const updatedTags = tags.filter((t) => t.name !== tag || t.color !== tagColor);
         setTags(updatedTags);
         localStorage.setItem("tags", JSON.stringify(updatedTags));
       }
+
+      return updated;
+});
+
     } else {
       const error = await res.text();
       console.error("Delete failed:", error);

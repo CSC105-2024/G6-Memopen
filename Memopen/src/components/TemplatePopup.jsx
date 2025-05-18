@@ -105,6 +105,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
     try {
       const res = await fetch("http://localhost:3000/post", {
         method: "POST",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json"
         },

@@ -16,10 +16,10 @@ function Login() {
       try {
         const res = await fetch("http://localhost:3000/auth/login", {
           method: "POST",
+          credentials:"include",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials:"include",
           body: JSON.stringify({ username, password }), //send the username and password in the request body
         });
     
@@ -36,6 +36,7 @@ function Login() {
           //localStorage.setItem("token", data.token); -> no longer need as we use cookies
           console.log("response", data);
           const token = data.token;
+          localStorage.setItem("token", data.token);
           const payload = JSON.parse(atob(token.split('.')[1]));
           const userId = payload.userId;
           console.log(userId);

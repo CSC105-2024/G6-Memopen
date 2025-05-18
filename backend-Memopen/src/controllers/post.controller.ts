@@ -1,9 +1,17 @@
 import type { Context } from "hono";
 import * as postModel from "../models/post.model.ts"
-
+import { getSignedCookie } from "hono/cookie";
+const secret = process.env.JWT_SECRET;
+if (!secret) {
+  throw new Error("JWT_SECRET not set in environment variables");
+}
 export const getPost = async (c:Context)=>{
     try{
-        const posts = await postModel.getPost();
+        const userId = (await getSignedCookie(c, "userId", secret));
+        if (!userId) {
+      return c.json({ success: false, data: null, msg: "No userId cookie found" }, 401);
+    }
+        const posts = await postModel.getPost(Number(userId));
         return c.json({
             success:true,
             data:posts,

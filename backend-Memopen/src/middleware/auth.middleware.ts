@@ -1,15 +1,22 @@
-// middleware/auth.middleware.ts
-import type { MiddlewareHandler } from 'hono';
-import { getSignedCookie } from 'hono/cookie';
-
+import { verifyToken } from "../utils/token.ts";
+import type { MiddlewareHandler } from "hono";
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  const userId = await getSignedCookie(c, 'userId');
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return c.json({ success: false, msg: "Unauthorized: Missing Bearer token" }, 401);
+    }
 
-  if (!userId) {
-    return c.json({ success: false, msg: 'Unauthorized' }, 401);
+    const token = authHeader.split(" ")[1];
+    const payload = verifyToken(token);
+    if (!payload) {
+      return c.json({ success: false, msg: "Unauthorized: Invalid token" }, 401);
+    }
+
+    c.set("userId", payload.userId);
+    await next();
+  } catch (error) {
+    console.error("Error in authMiddleware:", error);
+    return c.json({ success: false, msg: "Internal Server Error" }, 500);
   }
-
-  // Attach to context for later access
-  c.set('userId', Number(userId));
-  await next();
 };
