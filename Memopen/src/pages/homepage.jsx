@@ -18,6 +18,7 @@ function Home() {
 
   const fetchCanvases = async () =>{
       const res = await fetch("http://localhost:3000/post",{
+        method: "GET",
         credentials:"include"
       })
       if(res.ok){

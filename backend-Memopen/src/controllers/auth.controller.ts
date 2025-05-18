@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import * as authModel from '../models/user.model.ts';
 import { generateToken } from "../utils/token.ts";
+import { setCookie } from 'hono/cookie';
 
 type AuthBody = {
     username:string
@@ -32,41 +33,44 @@ export const signup = async (c:Context)=>{
     }
 }
 
-export const login = async (c:Context)=>{
-    try{
-        const {username,password}= await c.req.json<AuthBody>()
-        const user = await authModel.findUserByUsername(username);
-        if(!user){
-            return c.json({
-                success:false,
-                msg:"Invalid credentials"
-            },401)
-        }
-        const isValid = await authModel.validatePassword(password,user.password)
-        if(!isValid){
-            return c.json({
-                sucess:false,
-                msg:"Invalid credentials"
-            },401)
-        }
-        const token = generateToken(user);
-        return c.json({
-            success:true,
-            token,
-            user:{
-                id:user.id,
-                username:user.username,
-                pfpURL:user.pfpURL || null
-            }
-        })
-    }catch(e){
-        console.error(e);
-        return c.json({
-            sucess:false,
-            msg:"Failed to login"
-        },500)
+export const login = async (c: Context) => {
+  try {
+    const { username, password } = await c.req.json();
+
+    const user = await authModel.findUserByUsername(username);
+
+    if (!user) {
+      return c.json({ success: false, msg: "Invalid credentials" }, 401);
     }
-}
+
+    const isValid = await authModel.validatePassword(password, user.password);
+    if (!isValid) {
+      return c.json({ success: false, msg: "Invalid credentials" }, 401);
+    }
+
+    const token = generateToken(user);
+
+   await setCookie(c, 'userId', String(user.id), {
+  httpOnly: true,
+  secure: false,  // true in production with HTTPS
+  sameSite: 'Lax',
+  path: '/',
+  maxAge: 60 * 60 * 24 * 7, // 7 days
+});
+    return c.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        pfpURL: user.pfpURL || null,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return c.json({ success: false, msg: "Failed to login" }, 500);
+  }
+};
 
 
 export const getAllUsers = async (c: Context) => {

@@ -1,24 +1,33 @@
 import type { Context } from "hono";
 import * as postModel from "../models/post.model.ts"
 
-export const getPost = async (c:Context)=>{
-    try{
-        const posts = await postModel.getPost();
-        return c.json({
-            success:true,
-            data:posts,
-            msg:'SucessFully get all post'
-        })
-    }catch(e){
-        return c.json(
-            {
-                success:false,
-                data:null,
-                msg:`Internal Server Error: ${e}`
-            },500
-        )
+export const getPost = async (c: Context) => {
+  try {
+    const userId = c.get('userId'); 
+
+    if (!userId) {
+      return c.json({ success: false, msg: 'Unauthorized' }, 401);
     }
-}
+
+    const posts = await postModel.getPost(userId);
+
+    return c.json({
+      success: true,
+      data: posts,
+      msg: 'Successfully fetched user posts',
+    });
+  } catch (e) {
+    return c.json(
+      {
+        success: false,
+        data: null,
+        msg: `Internal Server Error: ${e}`,
+      },
+      500
+    );
+  }
+};
+
 
 export const createPost = async (c:Context)=>{
     try{
