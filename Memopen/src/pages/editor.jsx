@@ -289,6 +289,7 @@ function Editor() {
     };
 
     resizeCanvas();
+    
 
     // Fetch canvas data from backend
     const fetchCanvasData = async () => {
@@ -716,7 +717,6 @@ function Editor() {
           }),
         });
       } else {
-        // PATCH existing canvas (no backgroundImage update)
         res = await fetch(`http://localhost:3000/post/${canvasId}`, {
           method: "PATCH",
           credentials: "include",

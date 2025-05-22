@@ -76,11 +76,15 @@ export default function TemplatePopup({ onChoose, onClose }) {
 
 
 
-
+/**
+ * 
+ *
+ * 
+ */
 const handleChooseTemplate = async () => {
   const selectedTemplate = displayedTemplates[selectedId];
-  localStorage.setItem("eidtor_bg_img",selectedTemplate);
   if (selectedId !== null) {
+    const newId = Date.now().toString();
     try {
       const colorOptions = [
         { value: "#ff0000" },
@@ -107,48 +111,12 @@ const handleChooseTemplate = async () => {
         backgroundImg: selectedTemplate,
       };
 
-      // Send POST to backend to create new canvas
-      const res = await fetch("http://localhost:3000/post", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          tag: tagCreation,
-          tagColor: tagColorCreation,
-          backgroundImg: selectedTemplate,
-          json: initialJson,
-          thumbnail: selectedTemplate,  
-        }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Failed to create new canvas", errorText);
-        return;
-      }
-
-      const newCanvas = await res.json();
-      const newId = newCanvas.data.id; 
-
-      // Save marker in localStorage if needed
-      localStorage.setItem("unsaved_new_canvasId", newId);
-      localStorage.setItem("current_canvas_id", newId);
-      
-      const saved = JSON.parse(localStorage.getItem("canvases") || "[]").filter(Boolean);
-      saved.push({
-        id: newId,
-        tag: tagCreation,
-        tagColor: tagColorCreation,
-        backgroundImg: selectedTemplate,
-        thumbnail: selectedTemplate,
-        json: initialJson,
-      });
-      localStorage.setItem("canvases", JSON.stringify(saved));
-      localStorage.setItem(`canvas_json_${newId}`, JSON.stringify(initialJson));
-      // Navigate to real canvas editor page
+    localStorage.setItem("unsaved_new_canvasId", newId);
+    localStorage.setItem("current_canvas_id", newId);
+    localStorage.setItem("eidtor_bg_img", selectedTemplate);
+    localStorage.setItem("eidtor_tag", tagCreation);
+    localStorage.setItem("eidtor_tag_color", tagColorCreation);
+    localStorage.setItem(`canvas_json_${newId}`, JSON.stringify(initialJson));
       edNavigate(`/editor/${newId}`);
 
     } catch (error) {
