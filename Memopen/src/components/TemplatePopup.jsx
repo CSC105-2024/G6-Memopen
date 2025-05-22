@@ -113,9 +113,9 @@ const handleChooseTemplate = async () => {
 
     localStorage.setItem("unsaved_new_canvasId", newId);
     localStorage.setItem("current_canvas_id", newId);
-    localStorage.setItem("eidtor_bg_img", selectedTemplate);
-    localStorage.setItem("eidtor_tag", tagCreation);
-    localStorage.setItem("eidtor_tag_color", tagColorCreation);
+    localStorage.setItem("editor_bg_img", selectedTemplate);
+    localStorage.setItem("editor_tag", tagCreation);
+    localStorage.setItem("editor_tag_color", tagColorCreation);
     localStorage.setItem(`canvas_json_${newId}`, JSON.stringify(initialJson));
       edNavigate(`/editor/${newId}`);
 

@@ -262,10 +262,12 @@ function Editor() {
 
   useEffect(() => {
     // Initialize fabric canvas
+    
     fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
       width: originalWidthRef,
       height: originalHeightRef,
       backgroundColor: "#FFFFFF",
+      
     });
 
     // Resize canvas function
@@ -289,8 +291,6 @@ function Editor() {
     };
 
     resizeCanvas();
-    
-
     // Fetch canvas data from backend
     const fetchCanvasData = async () => {
       try {
@@ -312,8 +312,8 @@ function Editor() {
         localStorage.setItem("current_canvas_id", id);
 
         if (json) {
-    fabricCanvasRef.current.loadFromJSON(json, () => {
-    fabricCanvasRef.current.renderAll();
+        fabricCanvasRef.current.loadFromJSON(json, () => {
+        fabricCanvasRef.current.renderAll();
 
       if (json.backgroundImg) {
         fabric.Image.fromURL(json.backgroundImg, (img) => {
@@ -326,8 +326,6 @@ function Editor() {
       }
     });
 }
-
-
         if (backgroundImage) {
           setBackgroundImage(backgroundImage);
           fabric.Image.fromURL(backgroundImage, (img) => {
@@ -338,41 +336,61 @@ function Editor() {
             });
           });
         }
-      } catch (err) {
-        console.error("Error loading canvas from backend", err);
-        // fallback to localStorage
-        const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
-        const found = saved.find((x) => x.id === id);
-        if (found) {
-          setTag(found.tag || "");
-          setTagColor(found.tagColor || "#FF0000");
-          setOriginalTag(found.tag || "");
-          setOriginalTagColor(found.tagColor || "#FF0000");
+      }catch (err) {
+      console.error("Error loading canvas from backend", err);
+      const localJson = localStorage.getItem(`canvas_json_${id}`);
+      const localTag = localStorage.getItem("editor_tag");
+      const localTagColor = localStorage.getItem("editor_tag_color");
+      const localBgImg = localStorage.getItem("editor_bg_img");
 
-          localStorage.setItem("original_tag", found.tag || "");
-          localStorage.setItem(
-            "original_tag_color",
-            found.tagColor || "#FF0000"
-          );
-          localStorage.setItem("current_canvas_id", found.id);
+      if (localJson) {
+        try {
+          const parsedJson = JSON.parse(localJson);
 
-          if (found.json) {
-            fabricCanvasRef.current.loadFromJSON(found.json, () => {
-              fabricCanvasRef.current.renderAll();
-            });
+          setTag(localTag || "");
+          setTagColor(localTagColor || "#FF0000");
+          setOriginalTag(localTag || "");
+          setOriginalTagColor(localTagColor || "#FF0000");
+          localStorage.setItem("original_tag", localTag || "");
+          localStorage.setItem("original_tag_color", localTagColor || "#FF0000");
+          localStorage.setItem("current_canvas_id", id);
+
+          fabricCanvasRef.current.loadFromJSON(parsedJson, () => {
+            fabricCanvasRef.current.renderAll();
+
+            if (parsedJson.backgroundImg) {
+              fabric.Image.fromURL(parsedJson.backgroundImg, (img) => {
+                img.scaleToWidth(originalWidthRef);
+                img.scaleToHeight(originalHeightRef);
+                fabricCanvasRef.current.setBackgroundImage(img, () => {
+                  fabricCanvasRef.current.requestRenderAll();
+                });
+              });
+            }
+          });
+
+          if (localBgImg) {
+            setBackgroundImage(localBgImg);
           }
+
+          return;
+        } catch (jsonError) {
+          console.error("Failed to parse local canvas JSON", jsonError);
         }
       }
+
+}
+
     };
 
     if (id !== "new") {
       fetchCanvasData();
     } else {
       // If new canvas, check for background image from localStorage
-      const bg_img = localStorage.getItem("eidtor_bg_img");
+      const bg_img = localStorage.getItem("editor_bg_img");
       if (bg_img) {
         setBackgroundImage(bg_img);
-        localStorage.removeItem("eidtor_bg_img");
+        localStorage.removeItem("editor_bg_img");
         fabric.Image.fromURL(bg_img, (img) => {
           img.scaleToWidth(originalWidthRef);
           img.scaleToHeight(originalHeightRef);
