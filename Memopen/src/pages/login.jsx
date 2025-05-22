@@ -62,7 +62,7 @@ function Login() {
   const closeEye = <FontAwesomeIcon icon={faEyeSlash} />;
 
   return (
-    <div className="flex min-h-screen w-full bg-gradient-to-b from-white via-white/40 to-[#B1B1B1] overflow-hidden md:bg-none">
+    <div className="flex min-h-screen bg-gradient-to-b from-white via-white/40 to-[#B1B1B1] overflow-hidden md:bg-none">
       {/* Top Left Logo */}
       <h1 className="absolute top-6 left-6 text-black md:text-white text-xl font-bold z-10">
         MEMOPEN
