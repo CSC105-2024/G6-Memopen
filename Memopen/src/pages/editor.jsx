@@ -53,7 +53,7 @@ function Editor() {
   const colorTagRef = useRef(null);
   const { id } = useParams();
   const location = useLocation();
-/**
+  /**
  * 
  * useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
@@ -257,67 +257,65 @@ function Editor() {
  * 
  */
 
+  const originalWidthRef = 800; // you had these reversed in your snippet, fixed here
+  const originalHeightRef = 450;
 
+  useEffect(() => {
+    // Initialize fabric canvas
+    fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
+      width: originalWidthRef,
+      height: originalHeightRef,
+      backgroundColor: "#FFFFFF",
+    });
 
-const originalWidthRef = 800;  // you had these reversed in your snippet, fixed here
-const originalHeightRef = 450;
+    // Resize canvas function
+    const resizeCanvas = () => {
+      const containerWidth = Math.min(
+        window.innerWidth * 0.75,
+        originalWidthRef
+      );
+      const scale = containerWidth / originalWidthRef;
+      const scaleWidth = originalWidthRef * scale;
+      const scaleHeight = originalHeightRef * scale;
 
-useEffect(() => {
-  // Initialize fabric canvas
-  fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
-    width: originalWidthRef,
-    height: originalHeightRef,
-    backgroundColor: "#FFFFFF",
-  });
-
-  // Resize canvas function
-  const resizeCanvas = () => {
-    const containerWidth = Math.min(window.innerWidth * 0.75, originalWidthRef);
-    const scale = containerWidth / originalWidthRef;
-    const scaleWidth = originalWidthRef * scale;
-    const scaleHeight = originalHeightRef * scale;
-
-    const canvasInstance = fabricCanvasRef.current;
-    if (canvasInstance) {
-      canvasInstance.setWidth(scaleWidth);
-      canvasInstance.setHeight(scaleHeight);
-      canvasInstance.setZoom(scale);
-      canvasInstance.renderAll();
-      setCanvasWidth(scaleWidth);
-    }
-  };
-
-  resizeCanvas();
-
-  // Fetch canvas data from backend
-  const fetchCanvasData = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/post/${id}`, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to fetch canvas");
-
-      const data = await res.json();
-      const { json, tag, tagColor, backgroundImage } = data.data || {};
-
-      setTag(tag || "");
-      setTagColor(tagColor || "#FF0000");
-      setOriginalTag(tag || "");
-      setOriginalTagColor(tagColor || "#FF0000");
-
-      localStorage.setItem("original_tag", tag || "");
-      localStorage.setItem("original_tag_color", tagColor || "#FF0000");
-      localStorage.setItem("current_canvas_id", id);
-
-      if (json) {
-        fabricCanvasRef.current.loadFromJSON(json, () => {
-          fabricCanvasRef.current.renderAll();
-        });
+      const canvasInstance = fabricCanvasRef.current;
+      if (canvasInstance) {
+        canvasInstance.setWidth(scaleWidth);
+        canvasInstance.setHeight(scaleHeight);
+        canvasInstance.setZoom(scale);
+        canvasInstance.renderAll();
+        setCanvasWidth(scaleWidth);
       }
+    };
 
-      if (backgroundImage) {
-        setBackgroundImage(backgroundImage);
-        fabric.Image.fromURL(backgroundImage, (img) => {
+    resizeCanvas();
+
+    // Fetch canvas data from backend
+    const fetchCanvasData = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/post/${id}`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to fetch canvas");
+
+        const data = await res.json();
+        const { json, tag, tagColor, backgroundImage } = data.data || {};
+
+        setTag(tag || "");
+        setTagColor(tagColor || "#FF0000");
+        setOriginalTag(tag || "");
+        setOriginalTagColor(tagColor || "#FF0000");
+
+        localStorage.setItem("original_tag", tag || "");
+        localStorage.setItem("original_tag_color", tagColor || "#FF0000");
+        localStorage.setItem("current_canvas_id", id);
+
+        if (json) {
+    fabricCanvasRef.current.loadFromJSON(json, () => {
+    fabricCanvasRef.current.renderAll();
+
+      if (json.backgroundImg) {
+        fabric.Image.fromURL(json.backgroundImg, (img) => {
           img.scaleToWidth(originalWidthRef);
           img.scaleToHeight(originalHeightRef);
           fabricCanvasRef.current.setBackgroundImage(img, () => {
@@ -325,169 +323,197 @@ useEffect(() => {
           });
         });
       }
-    } catch (err) {
-      console.error("Error loading canvas from backend", err);
-      // fallback to localStorage
-      const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
-      const found = saved.find((x) => x.id === id);
-      if (found) {
-        setTag(found.tag || "");
-        setTagColor(found.tagColor || "#FF0000");
-        setOriginalTag(found.tag || "");
-        setOriginalTagColor(found.tagColor || "#FF0000");
+    });
+}
 
-        localStorage.setItem("original_tag", found.tag || "");
-        localStorage.setItem("original_tag_color", found.tagColor || "#FF0000");
-        localStorage.setItem("current_canvas_id", found.id);
 
-        if (found.json) {
-          fabricCanvasRef.current.loadFromJSON(found.json, () => {
-            fabricCanvasRef.current.renderAll();
+        if (backgroundImage) {
+          setBackgroundImage(backgroundImage);
+          fabric.Image.fromURL(backgroundImage, (img) => {
+            img.scaleToWidth(originalWidthRef);
+            img.scaleToHeight(originalHeightRef);
+            fabricCanvasRef.current.setBackgroundImage(img, () => {
+              fabricCanvasRef.current.requestRenderAll();
+            });
           });
         }
-      }
-    }
-  };
+      } catch (err) {
+        console.error("Error loading canvas from backend", err);
+        // fallback to localStorage
+        const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
+        const found = saved.find((x) => x.id === id);
+        if (found) {
+          setTag(found.tag || "");
+          setTagColor(found.tagColor || "#FF0000");
+          setOriginalTag(found.tag || "");
+          setOriginalTagColor(found.tagColor || "#FF0000");
 
-  if (id !== "new") {
-    fetchCanvasData();
-  } else {
-    // If new canvas, check for background image from localStorage
-    const bg_img = localStorage.getItem("eidtor_bg_img");
-    if (bg_img) {
-      setBackgroundImage(bg_img);
-      localStorage.removeItem("eidtor_bg_img");
-      fabric.Image.fromURL(bg_img, (img) => {
-        img.scaleToWidth(originalWidthRef);
-        img.scaleToHeight(originalHeightRef);
-        fabricCanvasRef.current.setBackgroundImage(img, () => {
-          fabricCanvasRef.current.requestRenderAll();
+          localStorage.setItem("original_tag", found.tag || "");
+          localStorage.setItem(
+            "original_tag_color",
+            found.tagColor || "#FF0000"
+          );
+          localStorage.setItem("current_canvas_id", found.id);
+
+          if (found.json) {
+            fabricCanvasRef.current.loadFromJSON(found.json, () => {
+              fabricCanvasRef.current.renderAll();
+            });
+          }
+        }
+      }
+    };
+
+    if (id !== "new") {
+      fetchCanvasData();
+    } else {
+      // If new canvas, check for background image from localStorage
+      const bg_img = localStorage.getItem("eidtor_bg_img");
+      if (bg_img) {
+        setBackgroundImage(bg_img);
+        localStorage.removeItem("eidtor_bg_img");
+        fabric.Image.fromURL(bg_img, (img) => {
+          img.scaleToWidth(originalWidthRef);
+          img.scaleToHeight(originalHeightRef);
+          fabricCanvasRef.current.setBackgroundImage(img, () => {
+            fabricCanvasRef.current.requestRenderAll();
+          });
         });
-      });
-    }
-  }
-
-  // Handlers for text selection style syncing
-  const handleStyleSelection = () => {
-    const activeTextObject = fabricCanvasRef.current.getActiveObject();
-    if (activeTextObject && activeTextObject.type === "textbox") {
-      setFontStyle({
-        bold: activeTextObject.fontWeight === "bold",
-        italic: activeTextObject.fontStyle === "italic",
-        underline: activeTextObject.underline === true,
-      });
-    } else {
-      setFontStyle({ bold: false, italic: false, underline: false });
-    }
-  };
-
-  const handleColorSelection = () => {
-    const activeTextObject = fabricCanvasRef.current.getActiveObject();
-    if (activeTextObject && activeTextObject.type === "textbox") {
-      setTextColor(activeTextObject.fill || "#000000");
-    } else {
-      setTextColor("#000000");
-    }
-  };
-
-  const handleHighlightSelection = () => {
-    const activeTextObject = fabricCanvasRef.current.getActiveObject();
-    if (activeTextObject && activeTextObject.type === "textbox") {
-      setTextBackgroundColor(activeTextObject.textBackgroundColor);
-    } else {
-      setTextBackgroundColor("");
-    }
-  };
-
-  // Register fabric canvas events
-  fabricCanvasRef.current.on("selection:created", handleStyleSelection);
-  fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
-  fabricCanvasRef.current.on("selection:cleared", () => {
-    setFontStyle({ bold: false, italic: false, underline: false });
-  });
-
-  fabricCanvasRef.current.on("selection:created", handleColorSelection);
-  fabricCanvasRef.current.on("selection:updated", handleColorSelection);
-  fabricCanvasRef.current.on("selection:cleared", () => {
-    setTextColor("#000000");
-  });
-
-  fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
-  fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
-  fabricCanvasRef.current.on("selection:cleared", () => {
-    setTextBackgroundColor("");
-  });
-
-  // Handle delete key for removing active objects
-  const handleKeyDown = (e) => {
-    if (e.key === "Delete" || e.key === "Backspace") {
-      const activeObject = fabricCanvasRef.current.getActiveObject();
-      if (activeObject && !activeObject.isEditing) {
-        fabricCanvasRef.current.remove(activeObject);
-        fabricCanvasRef.current.requestRenderAll();
       }
     }
-  };
 
-  // Click outside handlers for color pickers
-  const handleClickOutsideColorHighlightPick = (e) => {
-    if (
-      colorPickerHighlightRef.current &&
-      !colorPickerHighlightRef.current.contains(e.target)
-    ) {
-      setIsColorHighlightPickOpen(false);
-    }
-  };
+    // Handlers for text selection style syncing
+    const handleStyleSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setFontStyle({
+          bold: activeTextObject.fontWeight === "bold",
+          italic: activeTextObject.fontStyle === "italic",
+          underline: activeTextObject.underline === true,
+        });
+      } else {
+        setFontStyle({ bold: false, italic: false, underline: false });
+      }
+    };
 
-  const handleClickOutsideColorTextPick = (e) => {
-    if (
-      colorPickerTextRef.current &&
-      !colorPickerTextRef.current.contains(e.target)
-    ) {
-      setIsColorTextPickOpen(false);
-    }
-  };
+    const handleColorSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextColor(activeTextObject.fill || "#000000");
+      } else {
+        setTextColor("#000000");
+      }
+    };
 
-  const handleClickOutsideColorTag = (e) => {
-    if (colorTagRef.current && !colorTagRef.current.contains(e.target)) {
-      setIsColorTagOpen(false);
-    }
-  };
+    const handleHighlightSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextBackgroundColor(activeTextObject.textBackgroundColor);
+      } else {
+        setTextBackgroundColor("");
+      }
+    };
 
-  // Add event listeners
-  window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("keydown", handleKeyDown);
-  document.addEventListener("mousedown", handleClickOutsideColorHighlightPick);
-  document.addEventListener("mousedown", handleClickOutsideColorTextPick);
-  document.addEventListener("mousedown", handleClickOutsideColorTag);
+    // Register fabric canvas events
+    fabricCanvasRef.current.on("selection:created", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setFontStyle({ bold: false, italic: false, underline: false });
+    });
 
-  // Cleanup on unmount
-  return () => {
-    fabricCanvasRef.current.off("selection:created", handleStyleSelection);
-    fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
-    fabricCanvasRef.current.off("selection:cleared");
+    fabricCanvasRef.current.on("selection:created", handleColorSelection);
+    fabricCanvasRef.current.on("selection:updated", handleColorSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextColor("#000000");
+    });
 
-    fabricCanvasRef.current.off("selection:created", handleColorSelection);
-    fabricCanvasRef.current.off("selection:updated", handleColorSelection);
-    fabricCanvasRef.current.off("selection:cleared");
+    fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextBackgroundColor("");
+    });
 
-    fabricCanvasRef.current.off("selection:created", handleHighlightSelection);
-    fabricCanvasRef.current.off("selection:updated", handleHighlightSelection);
-    fabricCanvasRef.current.off("selection:cleared");
+    // Handle delete key for removing active objects
+    const handleKeyDown = (e) => {
+      if (e.key === "Delete" || e.key === "Backspace") {
+        const activeObject = fabricCanvasRef.current.getActiveObject();
+        if (activeObject && !activeObject.isEditing) {
+          fabricCanvasRef.current.remove(activeObject);
+          fabricCanvasRef.current.requestRenderAll();
+        }
+      }
+    };
 
-    window.removeEventListener("resize", resizeCanvas);
-    window.removeEventListener("keydown", handleKeyDown);
-    document.removeEventListener(
+    // Click outside handlers for color pickers
+    const handleClickOutsideColorHighlightPick = (e) => {
+      if (
+        colorPickerHighlightRef.current &&
+        !colorPickerHighlightRef.current.contains(e.target)
+      ) {
+        setIsColorHighlightPickOpen(false);
+      }
+    };
+
+    const handleClickOutsideColorTextPick = (e) => {
+      if (
+        colorPickerTextRef.current &&
+        !colorPickerTextRef.current.contains(e.target)
+      ) {
+        setIsColorTextPickOpen(false);
+      }
+    };
+
+    const handleClickOutsideColorTag = (e) => {
+      if (colorTagRef.current && !colorTagRef.current.contains(e.target)) {
+        setIsColorTagOpen(false);
+      }
+    };
+
+    // Add event listeners
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener(
       "mousedown",
       handleClickOutsideColorHighlightPick
     );
-    document.removeEventListener("mousedown", handleClickOutsideColorTextPick);
-    document.removeEventListener("mousedown", handleClickOutsideColorTag);
+    document.addEventListener("mousedown", handleClickOutsideColorTextPick);
+    document.addEventListener("mousedown", handleClickOutsideColorTag);
 
-    fabricCanvasRef.current.dispose();
-  };
-}, [backgroundImage, id, location.state]);
+    // Cleanup on unmount
+    return () => {
+      fabricCanvasRef.current.off("selection:created", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:cleared");
 
+      fabricCanvasRef.current.off("selection:created", handleColorSelection);
+      fabricCanvasRef.current.off("selection:updated", handleColorSelection);
+      fabricCanvasRef.current.off("selection:cleared");
+
+      fabricCanvasRef.current.off(
+        "selection:created",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off(
+        "selection:updated",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off("selection:cleared");
+
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutsideColorHighlightPick
+      );
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutsideColorTextPick
+      );
+      document.removeEventListener("mousedown", handleClickOutsideColorTag);
+
+      fabricCanvasRef.current.dispose();
+    };
+  }, [backgroundImage, id, location.state]);
 
   const handleTagInput = (e) => {
     const newTag = e.target.value;
@@ -623,126 +649,132 @@ useEffect(() => {
     link.click();
   };
 
-const saveCanvas = async (canvasId, tagValue, tagColor, backgroundImage) => {
-  const canvas = fabricCanvasRef.current;
-  if (!canvas) return;
+  const saveCanvas = async (canvasId, tagValue, tagColor, backgroundImage) => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
-  const currentWidth = canvas.getWidth();
-  const currentHeight = canvas.getHeight();
+    const currentWidth = canvas.getWidth();
+    const currentHeight = canvas.getHeight();
 
-  const active = canvas.getActiveObject();
-  canvas.discardActiveObject();
-  canvas.renderAll();
-
-  const thumbnailExportResolution = 2;
-
-  const thumbnailCanvas = document.createElement("canvas");
-  const thumbnailContext = thumbnailCanvas.getContext("2d");
-  thumbnailCanvas.width = currentWidth;
-  thumbnailCanvas.height = currentHeight;
-
-  thumbnailContext.drawImage(
-    canvas.lowerCanvasEl,
-    0,
-    0,
-    currentWidth,
-    currentHeight
-  );
-
-  // Fix: Correct toDataURL call, no options object; use format and quality params
-  const thumbnail = thumbnailCanvas.toDataURL("image/jpeg", 0.5);
-
-  if (active) {
-    canvas.setActiveObject(active);
+    const active = canvas.getActiveObject();
+    canvas.discardActiveObject();
     canvas.renderAll();
-  }
 
-  const json = canvas.toJSON();
-  const userId = parseInt(localStorage.getItem("userId"));
-  if (!userId) {
-    console.error("User ID missing");
-    return;
-  }
+    const thumbnailExportResolution = 2;
 
-  // Detect new canvas by comparing with unsaved_new_canvasId
-  const isNewCanvas = localStorage.getItem("unsaved_new_canvasId") === canvasId;
+    const thumbnailCanvas = document.createElement("canvas");
+    const thumbnailContext = thumbnailCanvas.getContext("2d");
+    thumbnailCanvas.width = currentWidth;
+    thumbnailCanvas.height = currentHeight;
 
-  try {
-    let res;
+    thumbnailContext.drawImage(
+      canvas.lowerCanvasEl,
+      0,
+      0,
+      currentWidth,
+      currentHeight
+    );
 
-    if (isNewCanvas) {
-      // POST new canvas, send backgroundImage only on create
-      res = await fetch("http://localhost:3000/post", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: canvasId,
-          userId,
-          tag: tagValue,
-          tagColor: tagColor,
-          thumbnail,
-          backgroundImage: backgroundImage,
-          json,
-        }),
-      });
-    } else {
-      // PATCH existing canvas (no backgroundImage update)
-      res = await fetch(`http://localhost:3000/post/${canvasId}`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: canvasId,
-          userId,
-          tag: tagValue,
-          tagColor,
-          thumbnail,
-          json,
-        }),
-      });
+    // Fix: Correct toDataURL call, no options object; use format and quality params
+    const thumbnail = thumbnailCanvas.toDataURL("image/jpeg", 0.5);
+
+    if (active) {
+      canvas.setActiveObject(active);
+      canvas.renderAll();
     }
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("Fail to save canvas", errorText);
+    const json = canvas.toJSON();
+    const userId = parseInt(localStorage.getItem("userId"));
+    if (!userId) {
+      console.error("User ID missing");
       return;
     }
 
-    const data = await res.json();
-    console.log("saved", data);
+    // Detect new canvas by comparing with unsaved_new_canvasId
+    const isNewCanvas =
+      localStorage.getItem("unsaved_new_canvasId") === canvasId;
 
-    localStorage.removeItem("unsaved_new_canvasId"); // Clear new canvas marker on save
+    try {
+      let res;
 
-    // Update localStorage canvases array with new or updated canvas
-    const saved = JSON.parse(localStorage.getItem("canvases") || "[]").filter(Boolean);
+      if (isNewCanvas) {
+        // POST new canvas, send backgroundImage only on create
+        res = await fetch("http://localhost:3000/post", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: canvasId,
+            userId,
+            tag: tagValue,
+            tagColor: tagColor,
+            thumbnail,
+            backgroundImg: backgroundImage,
+            json,
+          }),
+        });
+      } else {
+        // PATCH existing canvas (no backgroundImage update)
+        res = await fetch(`http://localhost:3000/post/${canvasId}`, {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: canvasId,
+            userId,
+            tag: tagValue,
+            tagColor,
+            thumbnail,
+            json,
+          }),
+        });
+      }
 
-    let updated = saved.map((c) =>
-      c?.id === canvasId
-        ? { ...c, tag: tagValue, tagColor, json, thumbnail }
-        : c
-    );
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Fail to save canvas", errorText);
+        return;
+      }
 
-    const exists = updated.some((c) => c?.id === canvasId);
+      const data = await res.json();
+      console.log("saved", data);
 
-    if (!exists) {
-      updated.push({ id: canvasId, tag: tagValue, tagColor, json, thumbnail });
+      localStorage.removeItem("unsaved_new_canvasId"); // Clear new canvas marker on save
+
+      // Update localStorage canvases array with new or updated canvas
+      const saved = JSON.parse(localStorage.getItem("canvases") || "[]").filter(
+        Boolean
+      );
+
+      let updated = saved.map((c) =>
+        c?.id === canvasId
+          ? { ...c, tag: tagValue, tagColor, json, thumbnail }
+          : c
+      );
+
+      const exists = updated.some((c) => c?.id === canvasId);
+
+      if (!exists) {
+        updated.push({
+          id: canvasId,
+          tag: tagValue,
+          tagColor,
+          json,
+          thumbnail,
+        });
+      }
+
+      localStorage.setItem("canvases", JSON.stringify(updated));
+
+      setUnsavedTag(false); // Reset unsaved flag in React state
+    } catch (error) {
+      console.error("Error while saving canvas", error);
     }
-
-    localStorage.setItem("canvases", JSON.stringify(updated));
-
-    setUnsavedTag(false); // Reset unsaved flag in React state
-
-  } catch (error) {
-    console.error("Error while saving canvas", error);
-  }
-};
-
-
+  };
 
   /*
     const saveCanvas = (canvasId, tagValue, tagColor) => {

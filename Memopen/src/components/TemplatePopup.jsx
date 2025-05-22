@@ -79,6 +79,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
 
 const handleChooseTemplate = async () => {
   const selectedTemplate = displayedTemplates[selectedId];
+  localStorage.setItem("eidtor_bg_img",selectedTemplate);
   if (selectedId !== null) {
     try {
       const colorOptions = [
@@ -103,7 +104,7 @@ const handleChooseTemplate = async () => {
       const initialJson = {
         version: "5.2.4",
         objects: [],
-        backgroundImage: selectedTemplate,
+        backgroundImg: selectedTemplate,
       };
 
       // Send POST to backend to create new canvas
@@ -117,9 +118,9 @@ const handleChooseTemplate = async () => {
           userId,
           tag: tagCreation,
           tagColor: tagColorCreation,
-          backgroundImage: selectedTemplate,
+          backgroundImg: selectedTemplate,
           json: initialJson,
-          thumbnail: selectedTemplate,  // or generate real thumbnail if needed
+          thumbnail: selectedTemplate,  
         }),
       });
 
@@ -135,8 +136,7 @@ const handleChooseTemplate = async () => {
       // Save marker in localStorage if needed
       localStorage.setItem("unsaved_new_canvasId", newId);
       localStorage.setItem("current_canvas_id", newId);
-
-      // Also update localStorage canvases array if you want
+      
       const saved = JSON.parse(localStorage.getItem("canvases") || "[]").filter(Boolean);
       saved.push({
         id: newId,
