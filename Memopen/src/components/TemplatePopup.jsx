@@ -74,10 +74,15 @@ export default function TemplatePopup({ onChoose, onClose }) {
   );
   let colorIndex = 0; // Declare at the top of your file
 
-  const handleChooseTemplate = async () => {
+
+
+
+const handleChooseTemplate = async () => {
   const selectedTemplate = displayedTemplates[selectedId];
   if (selectedId !== null) {
     const newId = Date.now().toString();
+    
+    
 
     const colorOptions = [
       { value: "#ff0000" },
@@ -93,7 +98,7 @@ export default function TemplatePopup({ onChoose, onClose }) {
     colorIndex = (colorIndex + 1) % colorOptions.length;
 
     const userId = parseInt(localStorage.getItem("userId"));
-    localStorage.setItem("eidtor_bg_img", selectedTemplate);
+
 
   
     const initialJson = {
@@ -101,8 +106,27 @@ export default function TemplatePopup({ onChoose, onClose }) {
       objects: [],
       backgroundImage: selectedTemplate,
     };
-
-    try {
+    localStorage.setItem("eidtor_bg_img", selectedTemplate);
+    localStorage.setItem("unsaved_new_canvasId" , newId);
+    localStorage.setItem("current_canvas_id", newId);
+    const tempCanvas = {
+      id:newId,
+      tag:tagCreation,
+      tagColor:tagColorCreation,
+      backgroundImg: selectedTemplate,
+      thumbnail: selectedTemplate,
+      json: initialJson,
+    }
+    const saved = JSON.parse(localStorage.getItem("canvases")||"[]");
+    saved.push(tempCanvas);
+    localStorage.setItem("canvases", JSON.stringify(saved));
+    edNavigate(`/editor/${newId}`);
+        
+  }
+};
+    /**
+     * 
+     * try {
       const res = await fetch("http://localhost:3000/post", {
         method: "POST",
         credentials:"include",
@@ -131,8 +155,11 @@ export default function TemplatePopup({ onChoose, onClose }) {
     } catch (error) {
       console.error("Network error", error);
     }
+    
+    
   }
 };
+
 
 
 

@@ -53,30 +53,11 @@ function Editor() {
   const colorTagRef = useRef(null);
   const { id } = useParams();
   const location = useLocation();
-
-  useEffect(() => {
+/**
+ * 
+ * useEffect(() => {
     const originalHeightRef = 450; //540 *1.2 -> 450
     const originalWidthRef = 800; //960 *1.2 -> 800
-    /*const resizeCanvas = () => {
-      const containerWidth = Math.min(
-        window.innerWidth * 0.75,
-        originalWidthRef
-      );
-      const scale = containerWidth / originalWidthRef;
-      const scaleWidth = originalWidthRef * scale;
-      const scaleHeight = originalHeightRef * scale;
-
-      const canvasRefSize = fabricCanvasRef.current;
-      if (canvasRefSize) {
-        canvasRefSize.setWidth(originalWidthRef);
-        canvasRefSize.setHeight(originalHeightRef);
-        canvasRefSize.setZoom(scale);
-        canvasRef.current.setWidth = scaleWidth;
-        canvasRef.current.setHeight = scaleHeight;
-        canvasRefSize.renderAll();
-        setCanvasWidth(scaleWidth);
-      }
-    };*/
 
     const resizeCanvas = () => {
       const containerWidth = Math.min(
@@ -106,6 +87,208 @@ function Editor() {
 
     resizeCanvas();
     //setFirstEditCanvas(fabricCanvasRef.current.toJSON());
+
+    const bg_img = localStorage.getItem("eidtor_bg_img");
+
+    if (bg_img) {
+      setBackgroundImage(bg_img);
+      localStorage.removeItem("eidtor_bg_img");
+    }
+
+
+    if (backgroundImage) {
+      fabric.Image.fromURL(backgroundImage, (img) => {
+        img.scaleToWidth(originalWidthRef);
+        img.scaleToHeight(originalHeightRef);
+        fabricCanvasRef.current.setBackgroundImage(img, () => {
+          fabricCanvasRef.current.requestRenderAll();
+        });
+      });
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const handleStyleSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setFontStyle({
+          bold: activeTextObject.fontWeight === "bold",
+          italic: activeTextObject.fontStyle === "italic",
+          underline: activeTextObject.underline === true,
+        });
+      } else {
+        setFontStyle({ bold: false, italic: false, underline: false });
+      }
+    };
+
+    const handleColorSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextColor(activeTextObject.fill || "#000000");
+      } else {
+        setTextColor("#000000");
+      }
+    };
+
+    const handleHighlightSelection = () => {
+      const activeTextObject = fabricCanvasRef.current.getActiveObject();
+      if (activeTextObject && activeTextObject.type === "textbox") {
+        setTextBackgroundColor(activeTextObject.textBackgroundColor);
+      } else {
+        setTextBackgroundColor("");
+      }
+    };
+
+    fabricCanvasRef.current.on("selection:created", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setFontStyle({ bold: false, italic: false, underline: false });
+    });
+
+    fabricCanvasRef.current.on("selection:created", handleColorSelection);
+    fabricCanvasRef.current.on("selection:updated", handleColorSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextColor("#000000");
+    });
+
+    fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
+    fabricCanvasRef.current.on("selection:cleared", () => {
+      setTextBackgroundColor("");
+    });
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Delete" || e.key === "Backspace") {
+        const activeObject = fabricCanvasRef.current.getActiveObject();
+        if (activeObject && !activeObject.isEditing) {
+          fabricCanvasRef.current.remove(activeObject);
+          fabricCanvasRef.current.requestRenderAll();
+        }
+      }
+    };
+
+    const handleClickOutsideColorHighlightPick = (e) => {
+      if (
+        colorPickerHighlightRef.current &&
+        !colorPickerHighlightRef.current.contains(e.target)
+      ) {
+        setIsColorHighlightPickOpen(false);
+      }
+    };
+
+    const handleClickOutsideColorTextPick = (e) => {
+      if (
+        colorPickerTextRef.current &&
+        !colorPickerTextRef.current.contains(e.target)
+      ) {
+        setIsColorTextPickOpen(false);
+      }
+    };
+
+    const handleClickOutsideColorTag = (e) => {
+      if (colorTagRef.current && !colorTagRef.current.contains(e.target)) {
+        setIsColorTagOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener(
+      "mousedown",
+      handleClickOutsideColorHighlightPick
+    );
+    document.addEventListener("mousedown", handleClickOutsideColorTextPick);
+    document.addEventListener("mousedown", handleClickOutsideColorTag);
+
+    const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
+    const found = saved.find((x) => x.id === id);
+    if (found) {
+      const tagValue = found.tag || "";
+      const tagColorValue = found.tagColor || "#FF0000";
+
+      setTag(tagValue);
+      setTagColor(tagColorValue);
+      setOriginalTag(tagValue);
+      setOriginalTagColor(tagColorValue);
+
+      localStorage.setItem("original_tag", tagValue);
+      localStorage.setItem("original_tag_color", tagColorValue);
+      localStorage.setItem("current_canvas_id", found.id);
+
+      if (found.json) {
+        fabricCanvasRef.current.loadFromJSON(found.json, () => {
+          fabricCanvasRef.current.renderAll();
+        });
+      }
+    }
+    return () => {
+      //run when component remove from page
+      fabricCanvasRef.current.off("selection:created", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
+      fabricCanvasRef.current.off("selection:cleared");
+
+      fabricCanvasRef.current.off("selection:created", handleColorSelection);
+      fabricCanvasRef.current.off("selection:updated", handleColorSelection);
+      fabricCanvasRef.current.off("selection:cleared");
+
+      fabricCanvasRef.current.off(
+        "selection:created",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off(
+        "selection:updated",
+        handleHighlightSelection
+      );
+      fabricCanvasRef.current.off("selection:cleared");
+
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutsideColorHighlightPick
+      ); //removeEventlistener when navigate to diffrent page
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutsideColorTextPick
+      ); //removeEventlistener when navigate to diffrent page
+      document.removeEventListener("mousedown", handleClickOutsideColorTag); //removeEventlistener when navigate to diffrent page
+      fabricCanvasRef.current.dispose(); //clean up canvas
+    };
+  }, [backgroundImage, id, location.state]);
+ * 
+ */
+  useEffect(() => {
+    const originalHeightRef = 450; //540 *1.2 -> 450
+    const originalWidthRef = 800; //960 *1.2 -> 800
+
+    const resizeCanvas = () => {
+      const containerWidth = Math.min(
+        window.innerWidth * 0.75,
+        originalWidthRef
+      );
+      const scale = containerWidth / originalWidthRef;
+      const scaleWidth = originalWidthRef * scale;
+      const scaleHeight = originalHeightRef * scale;
+
+      const canvasRefSize = fabricCanvasRef.current;
+      if (canvasRefSize) {
+        canvasRefSize.setWidth(scaleWidth);
+        canvasRefSize.setHeight(scaleHeight);
+        canvasRefSize.setZoom(scale);
+        canvasRefSize.renderAll();
+        setCanvasWidth(scaleWidth);
+      }
+    };
+
+    // useEffect run when component load
+    fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
+      width: originalHeightRef,
+      height: originalWidthRef,
+      backgroundColor: "#FFFFFF",
+    });
+
+    resizeCanvas();
+    //setFirstEditCanvas(fabricCanvasRef.current.toJSON());
+    const fetchCanvases = async ()=>{}
 
     const bg_img = localStorage.getItem("eidtor_bg_img");
 
@@ -408,99 +591,125 @@ function Editor() {
     link.click();
   };
 
- const saveCanvas = async (canvasId, tagValue, tagColor,backgroundImage) => {
-    const canvas = fabricCanvasRef.current;
-    if (!canvas) return;
+const saveCanvas = async (canvasId, tagValue, tagColor, backgroundImage) => {
+  const canvas = fabricCanvasRef.current;
+  if (!canvas) return;
 
-    const currentWidth = canvas.getWidth();
-    const currentHeight = canvas.getHeight();
+  const currentWidth = canvas.getWidth();
+  const currentHeight = canvas.getHeight();
 
-    const active = canvas.getActiveObject();
-    canvas.discardActiveObject();
+  const active = canvas.getActiveObject();
+  canvas.discardActiveObject();
+  canvas.renderAll();
+
+  const thumbnailExportResolution = 2;
+
+  const thumbnailCanvas = document.createElement("canvas");
+  const thumbnailContext = thumbnailCanvas.getContext("2d");
+  thumbnailCanvas.width = currentWidth;
+  thumbnailCanvas.height = currentHeight;
+
+  thumbnailContext.drawImage(
+    canvas.lowerCanvasEl,
+    0,
+    0,
+    currentWidth,
+    currentHeight
+  );
+
+  // Fix: Correct toDataURL call, no options object; use format and quality params
+  const thumbnail = thumbnailCanvas.toDataURL("image/jpeg", 0.5);
+
+  if (active) {
+    canvas.setActiveObject(active);
     canvas.renderAll();
+  }
 
-    const thumbnailExportResolution = 2;
+  const json = canvas.toJSON();
+  const userId = parseInt(localStorage.getItem("userId"));
+  if (!userId) {
+    console.error("User ID missing");
+    return;
+  }
 
-    const thumbnailCanvas = document.createElement("canvas");
-    const thumbnailContext = thumbnailCanvas.getContext("2d");
-    thumbnailCanvas.width = currentWidth;
-    thumbnailCanvas.height = currentHeight;
-    thumbnailContext.drawImage(
-      canvas.lowerCanvasEl,
-      0,
-      0,
-      currentWidth,
-      currentHeight
-    );
+  // Detect new canvas by comparing with unsaved_new_canvasId
+  const isNewCanvas = localStorage.getItem("unsaved_new_canvasId") === canvasId;
 
-    const thumbnail = thumbnailCanvas.toDataURL({
-      format: "jpeg",
-      quality: 0.5,
-      multiplier: thumbnailExportResolution,
-    });
+  try {
+    let res;
 
-    if (active) {
-      canvas.setActiveObject(active);
-      canvas.renderAll();
-    }
-
-    const json = canvas.toJSON();
-
-    try {
-      const userId = parseInt(localStorage.getItem("userId"));
-      const res = await fetch(`http://localhost:3000/post/${canvasId}`, {
-        method: "PATCH",
-        credentials:"include",
+    if (isNewCanvas) {
+      // POST new canvas, send backgroundImage only on create
+      res = await fetch("http://localhost:3000/post", {
+        method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        
         body: JSON.stringify({
-          tag: tagValue,
-          tagColor: tagColor,
-          
-          json,
-          thumbnail,
-          userId,
-        })
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Failed to save canvas:", errorText);
-        return;
-      }
-
-      const data = await res.json();
-      console.log("Canvas updated successfully:", data);
-
-      // Update local storage with the new data
-      const saved = JSON.parse(localStorage.getItem("canvases") || "[]");
-      let updated = saved
-        .filter(Boolean)
-        .map((c) =>
-          c.id === canvasId
-            ? { ...c, tag: tagValue, tagColor: tagColor, json, thumbnail }
-            : c
-        );
-
-      if (!updated.some((c) => c.id === canvasId)) {
-        updated.push({
           id: canvasId,
+          userId,
           tag: tagValue,
           tagColor: tagColor,
-          json,
           thumbnail,
-        });
-      }
-
-      localStorage.setItem("canvases", JSON.stringify(updated));
-      setUnsavedTag(false);
-
-    } catch (error) {
-      console.error("Error while saving canvas:", error);
+          backgroundImage: backgroundImage,
+          json,
+        }),
+      });
+    } else {
+      // PATCH existing canvas (no backgroundImage update)
+      res = await fetch(`http://localhost:3000/post/${canvasId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: canvasId,
+          userId,
+          tag: tagValue,
+          tagColor,
+          thumbnail,
+          json,
+        }),
+      });
     }
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Fail to save canvas", errorText);
+      return;
+    }
+
+    const data = await res.json();
+    console.log("saved", data);
+
+    localStorage.removeItem("unsaved_new_canvasId"); // Clear new canvas marker on save
+
+    // Update localStorage canvases array with new or updated canvas
+    const saved = JSON.parse(localStorage.getItem("canvases") || "[]").filter(Boolean);
+
+    let updated = saved.map((c) =>
+      c?.id === canvasId
+        ? { ...c, tag: tagValue, tagColor, json, thumbnail }
+        : c
+    );
+
+    const exists = updated.some((c) => c?.id === canvasId);
+
+    if (!exists) {
+      updated.push({ id: canvasId, tag: tagValue, tagColor, json, thumbnail });
+    }
+
+    localStorage.setItem("canvases", JSON.stringify(updated));
+
+    setUnsavedTag(false); // Reset unsaved flag in React state
+
+  } catch (error) {
+    console.error("Error while saving canvas", error);
+  }
 };
+
 
 
   /*

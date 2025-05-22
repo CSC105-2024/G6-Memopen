@@ -189,8 +189,10 @@ const handleDelete = async (id, tag, tagColor) => {
         ) : (
           <div className="flex justify-center items-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 lg:gap-15">
-              {filteredCanvas.map((canvas, index) => (
-                <div
+              {filteredCanvas.map((canvas, index) => {
+                const createAtTime = new Date(canvas.createAt).getTime();
+                return(
+                  <div
                   key={index}
                   className={`relative max-w-[450px] border p-4 rounded-lg transition duration-300 bg-white text-black ${
                     hoverIndex === index ? "border-black bg-gray-100" : ""
@@ -224,7 +226,9 @@ const handleDelete = async (id, tag, tagColor) => {
                     </button>
                   </div>
                 </div>
-              ))}
+                )
+            
+      })}
             </div>
           </div>
         )}

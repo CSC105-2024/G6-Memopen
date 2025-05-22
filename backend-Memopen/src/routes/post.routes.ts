@@ -8,5 +8,6 @@ postRouter.get('/',postController.getPost);
 postRouter.post('/', postController.createPost);
 postRouter.patch('/:id',postController.editPost);
 postRouter.delete('/:id', postController.deletedPost);
+postRouter.get('/:id', postController.getSinglePost);
 
 export { postRouter };

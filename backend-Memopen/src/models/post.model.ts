@@ -21,7 +21,7 @@ const addPost = async (
     tag:string,
     tagColor: string,
     thumbnail: string,
-    backgroundImg:string
+    backgroundImg:string,
   ) => {
     const user = await db.user.findUnique({
       where:{
@@ -64,6 +64,12 @@ const deletePost = async (id:string)=>{
         where:{id}
     })
     return deletedPost;
+}
+export const getPostById = async (id:string)=>{
+  const post = await db.post.findUnique({
+    where:{id},
+  })
+  return post
 }
 
 export { getPost, addPost, editPost, deletePost }

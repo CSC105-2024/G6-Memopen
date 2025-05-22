@@ -93,3 +93,31 @@ export const deletedPost =  async (c:Context) =>{
         )
     }
 }
+
+export const getSinglePost = async (c: Context) => {
+  try {
+    const postId = String(c.req.param("id"));
+
+    const post = await postModel.getPostById(postId);
+
+    if (!post) {
+      return c.json({
+        success: false,
+        data: null,
+        msg: "Post not found",
+      }, 404);
+    }
+
+    return c.json({
+      success: true,
+      data: post,
+      msg: "Post fetched successfully",
+    });
+  } catch (e) {
+    return c.json({
+      success: false,
+      data: null,
+      msg: `Internal Server Error: ${e instanceof Error ? e.message : e}`,
+    }, 500);
+  }
+};

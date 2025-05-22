@@ -112,3 +112,4 @@ export const updateProfileImage = async (c: Context) => {
     data: updatedUser,
   });
 };
+
