@@ -262,12 +262,11 @@ function Editor() {
 
   useEffect(() => {
     // Initialize fabric canvas
-    
+
     fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
       width: originalWidthRef,
       height: originalHeightRef,
       backgroundColor: "#FFFFFF",
-      
     });
 
     // Resize canvas function
@@ -312,20 +311,35 @@ function Editor() {
         localStorage.setItem("current_canvas_id", id);
 
         if (json) {
-        fabricCanvasRef.current.loadFromJSON(json, () => {
-        fabricCanvasRef.current.renderAll();
+          fabricCanvasRef.current.clear();
+          fabricCanvasRef.current.loadFromJSON(json, () => {
+          fabricCanvasRef.current.renderAll();
 
-      if (json.backgroundImg) {
-        fabric.Image.fromURL(json.backgroundImg, (img) => {
-          img.scaleToWidth(originalWidthRef);
-          img.scaleToHeight(originalHeightRef);
-          fabricCanvasRef.current.setBackgroundImage(img, () => {
-            fabricCanvasRef.current.requestRenderAll();
-          });
+    // Only set background if not present
+    if (!fabricCanvasRef.current.backgroundImage && backgroundImage) {
+      fabric.Image.fromURL(backgroundImage, (img) => {
+        img.scaleToWidth(originalWidthRef);
+        img.scaleToHeight(originalHeightRef);
+        fabricCanvasRef.current.setBackgroundImage(img, () => {
+          fabricCanvasRef.current.requestRenderAll();
         });
-      }
-    });
+      });
+    }
+
+    // Only add default textbox if new canvas AND no objects at all
+    const hasObjects = fabricCanvasRef.current.getObjects().length > 0;
+
+    if (!hasObjects && id === "new") {
+      const textbox = new fabric.Textbox("Type something", {
+        left: 100,
+        top: 100,
+        fontSize: 20,
+      });
+      fabricCanvasRef.current.add(textbox);
+    }
+  });
 }
+
         if (backgroundImage) {
           setBackgroundImage(backgroundImage);
           fabric.Image.fromURL(backgroundImage, (img) => {
@@ -336,51 +350,52 @@ function Editor() {
             });
           });
         }
-      }catch (err) {
-      console.error("Error loading canvas from backend", err);
-      const localJson = localStorage.getItem(`canvas_json_${id}`);
-      const localTag = localStorage.getItem("editor_tag");
-      const localTagColor = localStorage.getItem("editor_tag_color");
-      const localBgImg = localStorage.getItem("editor_bg_img");
+      } catch (err) {
+        console.error("Error loading canvas from backend", err);
+        const localJson = localStorage.getItem(`canvas_json_${id}`);
+        const localTag = localStorage.getItem("editor_tag");
+        const localTagColor = localStorage.getItem("editor_tag_color");
+        const localBgImg = localStorage.getItem("editor_bg_img");
 
-      if (localJson) {
-        try {
-          const parsedJson = JSON.parse(localJson);
+        if (localJson) {
+          try {
+            const parsedJson = JSON.parse(localJson);
 
-          setTag(localTag || "");
-          setTagColor(localTagColor || "#FF0000");
-          setOriginalTag(localTag || "");
-          setOriginalTagColor(localTagColor || "#FF0000");
-          localStorage.setItem("original_tag", localTag || "");
-          localStorage.setItem("original_tag_color", localTagColor || "#FF0000");
-          localStorage.setItem("current_canvas_id", id);
+            setTag(localTag || "");
+            setTagColor(localTagColor || "#FF0000");
+            setOriginalTag(localTag || "");
+            setOriginalTagColor(localTagColor || "#FF0000");
+            localStorage.setItem("original_tag", localTag || "");
+            localStorage.setItem(
+              "original_tag_color",
+              localTagColor || "#FF0000"
+            );
+            localStorage.setItem("current_canvas_id", id);
 
-          fabricCanvasRef.current.loadFromJSON(parsedJson, () => {
-            fabricCanvasRef.current.renderAll();
+            fabricCanvasRef.current.loadFromJSON(parsedJson, () => {
+              fabricCanvasRef.current.renderAll();
 
-            if (parsedJson.backgroundImg) {
-              fabric.Image.fromURL(parsedJson.backgroundImg, (img) => {
-                img.scaleToWidth(originalWidthRef);
-                img.scaleToHeight(originalHeightRef);
-                fabricCanvasRef.current.setBackgroundImage(img, () => {
-                  fabricCanvasRef.current.requestRenderAll();
+              if (parsedJson.backgroundImg) {
+                fabric.Image.fromURL(parsedJson.backgroundImg, (img) => {
+                  img.scaleToWidth(originalWidthRef);
+                  img.scaleToHeight(originalHeightRef);
+                  fabricCanvasRef.current.setBackgroundImage(img, () => {
+                    fabricCanvasRef.current.requestRenderAll();
+                  });
                 });
-              });
+              }
+            });
+
+            if (localBgImg) {
+              setBackgroundImage(localBgImg);
             }
-          });
 
-          if (localBgImg) {
-            setBackgroundImage(localBgImg);
+            return;
+          } catch (jsonError) {
+            console.error("Failed to parse local canvas JSON", jsonError);
           }
-
-          return;
-        } catch (jsonError) {
-          console.error("Failed to parse local canvas JSON", jsonError);
         }
       }
-
-}
-
     };
 
     if (id !== "new") {
