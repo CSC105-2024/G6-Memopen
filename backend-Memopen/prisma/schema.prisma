@@ -20,6 +20,7 @@ model User {
   password  String
   pfpURL    String?
   posts     Post[]
+  manualTag ManualTag[]
 }
 
 model Post {
@@ -34,3 +35,11 @@ model Post {
   user User @relation(fields: [userId], references: [id])
 }
 
+model ManualTag {
+  id Int @id @default(autoincrement())
+  tagManual String
+  tagColorManual String
+  userId Int
+  createAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+}

@@ -135,6 +135,14 @@ exports.Prisma.PostScalarFieldEnum = {
   createAt: 'createAt'
 };
 
+exports.Prisma.ManualTagScalarFieldEnum = {
+  id: 'id',
+  tagManual: 'tagManual',
+  tagColorManual: 'tagColorManual',
+  userId: 'userId',
+  createAt: 'createAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -164,7 +172,8 @@ exports.Prisma.QueryMode = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Post: 'Post'
+  Post: 'Post',
+  ManualTag: 'ManualTag'
 };
 
 /**

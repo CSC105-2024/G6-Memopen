@@ -15,20 +15,31 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
-  password String
-  pfpURL   String?
-  posts    Post[]
+  id        Int         @id @default(autoincrement())
+  username  String      @unique
+  password  String
+  pfpURL    String?
+  posts     Post[]
+  manualTag ManualTag[]
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  userId    Int
-  json      Json?
-  tag       String
-  tagColor  String
-  thumbnail String
-  createAt  DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  id            String   @id @default(cuid())
+  userId        Int
+  json          Json?
+  tag           String
+  tagColor      String
+  thumbnail     String
+  backgroundImg String?
+  createAt      DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model ManualTag {
+  id             Int      @id @default(autoincrement())
+  tagManual      String
+  tagColorManual String
+  userId         Int
+  createAt       DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
 }

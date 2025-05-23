@@ -23,6 +23,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
+/**
+ * Model ManualTag
+ * 
+ */
+export type ManualTag = $Result.DefaultSelection<Prisma.$ManualTagPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -168,6 +173,16 @@ export class PrismaClient<
     * ```
     */
   get post(): Prisma.PostDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.manualTag`: Exposes CRUD operations for the **ManualTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ManualTags
+    * const manualTags = await prisma.manualTag.findMany()
+    * ```
+    */
+  get manualTag(): Prisma.ManualTagDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -609,7 +624,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    Post: 'Post'
+    Post: 'Post',
+    ManualTag: 'ManualTag'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -628,7 +644,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "post"
+      modelProps: "user" | "post" | "manualTag"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -780,6 +796,80 @@ export namespace Prisma {
           }
         }
       }
+      ManualTag: {
+        payload: Prisma.$ManualTagPayload<ExtArgs>
+        fields: Prisma.ManualTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ManualTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ManualTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          findFirst: {
+            args: Prisma.ManualTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ManualTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          findMany: {
+            args: Prisma.ManualTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>[]
+          }
+          create: {
+            args: Prisma.ManualTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          createMany: {
+            args: Prisma.ManualTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ManualTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>[]
+          }
+          delete: {
+            args: Prisma.ManualTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          update: {
+            args: Prisma.ManualTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.ManualTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ManualTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ManualTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.ManualTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ManualTagPayload>
+          }
+          aggregate: {
+            args: Prisma.ManualTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateManualTag>
+          }
+          groupBy: {
+            args: Prisma.ManualTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ManualTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ManualTagCountArgs<ExtArgs>
+            result: $Utils.Optional<ManualTagCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -866,6 +956,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     post?: PostOmit
+    manualTag?: ManualTagOmit
   }
 
   /* Types for Logging */
@@ -961,10 +1052,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     posts: number
+    manualTag: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | UserCountOutputTypeCountPostsArgs
+    manualTag?: boolean | UserCountOutputTypeCountManualTagArgs
   }
 
   // Custom InputTypes
@@ -983,6 +1076,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PostWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountManualTagArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ManualTagWhereInput
   }
 
 
@@ -1181,6 +1281,7 @@ export namespace Prisma {
     password?: boolean
     pfpURL?: boolean
     posts?: boolean | User$postsArgs<ExtArgs>
+    manualTag?: boolean | User$manualTagArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1208,6 +1309,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "pfpURL", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | User$postsArgs<ExtArgs>
+    manualTag?: boolean | User$manualTagArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1217,6 +1319,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       posts: Prisma.$PostPayload<ExtArgs>[]
+      manualTag: Prisma.$ManualTagPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1618,6 +1721,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     posts<T extends User$postsArgs<ExtArgs> = {}>(args?: Subset<T, User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    manualTag<T extends User$manualTagArgs<ExtArgs> = {}>(args?: Subset<T, User$manualTagArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2058,6 +2162,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+  }
+
+  /**
+   * User.manualTag
+   */
+  export type User$manualTagArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    where?: ManualTagWhereInput
+    orderBy?: ManualTagOrderByWithRelationInput | ManualTagOrderByWithRelationInput[]
+    cursor?: ManualTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ManualTagScalarFieldEnum | ManualTagScalarFieldEnum[]
   }
 
   /**
@@ -3205,6 +3333,1100 @@ export namespace Prisma {
 
 
   /**
+   * Model ManualTag
+   */
+
+  export type AggregateManualTag = {
+    _count: ManualTagCountAggregateOutputType | null
+    _avg: ManualTagAvgAggregateOutputType | null
+    _sum: ManualTagSumAggregateOutputType | null
+    _min: ManualTagMinAggregateOutputType | null
+    _max: ManualTagMaxAggregateOutputType | null
+  }
+
+  export type ManualTagAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type ManualTagSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type ManualTagMinAggregateOutputType = {
+    id: number | null
+    tagManual: string | null
+    tagColorManual: string | null
+    userId: number | null
+    createAt: Date | null
+  }
+
+  export type ManualTagMaxAggregateOutputType = {
+    id: number | null
+    tagManual: string | null
+    tagColorManual: string | null
+    userId: number | null
+    createAt: Date | null
+  }
+
+  export type ManualTagCountAggregateOutputType = {
+    id: number
+    tagManual: number
+    tagColorManual: number
+    userId: number
+    createAt: number
+    _all: number
+  }
+
+
+  export type ManualTagAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type ManualTagSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type ManualTagMinAggregateInputType = {
+    id?: true
+    tagManual?: true
+    tagColorManual?: true
+    userId?: true
+    createAt?: true
+  }
+
+  export type ManualTagMaxAggregateInputType = {
+    id?: true
+    tagManual?: true
+    tagColorManual?: true
+    userId?: true
+    createAt?: true
+  }
+
+  export type ManualTagCountAggregateInputType = {
+    id?: true
+    tagManual?: true
+    tagColorManual?: true
+    userId?: true
+    createAt?: true
+    _all?: true
+  }
+
+  export type ManualTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ManualTag to aggregate.
+     */
+    where?: ManualTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManualTags to fetch.
+     */
+    orderBy?: ManualTagOrderByWithRelationInput | ManualTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ManualTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManualTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManualTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ManualTags
+    **/
+    _count?: true | ManualTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ManualTagAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ManualTagSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ManualTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ManualTagMaxAggregateInputType
+  }
+
+  export type GetManualTagAggregateType<T extends ManualTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateManualTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateManualTag[P]>
+      : GetScalarType<T[P], AggregateManualTag[P]>
+  }
+
+
+
+
+  export type ManualTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ManualTagWhereInput
+    orderBy?: ManualTagOrderByWithAggregationInput | ManualTagOrderByWithAggregationInput[]
+    by: ManualTagScalarFieldEnum[] | ManualTagScalarFieldEnum
+    having?: ManualTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ManualTagCountAggregateInputType | true
+    _avg?: ManualTagAvgAggregateInputType
+    _sum?: ManualTagSumAggregateInputType
+    _min?: ManualTagMinAggregateInputType
+    _max?: ManualTagMaxAggregateInputType
+  }
+
+  export type ManualTagGroupByOutputType = {
+    id: number
+    tagManual: string
+    tagColorManual: string
+    userId: number
+    createAt: Date
+    _count: ManualTagCountAggregateOutputType | null
+    _avg: ManualTagAvgAggregateOutputType | null
+    _sum: ManualTagSumAggregateOutputType | null
+    _min: ManualTagMinAggregateOutputType | null
+    _max: ManualTagMaxAggregateOutputType | null
+  }
+
+  type GetManualTagGroupByPayload<T extends ManualTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ManualTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ManualTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ManualTagGroupByOutputType[P]>
+            : GetScalarType<T[P], ManualTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ManualTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tagManual?: boolean
+    tagColorManual?: boolean
+    userId?: boolean
+    createAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["manualTag"]>
+
+  export type ManualTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tagManual?: boolean
+    tagColorManual?: boolean
+    userId?: boolean
+    createAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["manualTag"]>
+
+  export type ManualTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tagManual?: boolean
+    tagColorManual?: boolean
+    userId?: boolean
+    createAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["manualTag"]>
+
+  export type ManualTagSelectScalar = {
+    id?: boolean
+    tagManual?: boolean
+    tagColorManual?: boolean
+    userId?: boolean
+    createAt?: boolean
+  }
+
+  export type ManualTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tagManual" | "tagColorManual" | "userId" | "createAt", ExtArgs["result"]["manualTag"]>
+  export type ManualTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ManualTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ManualTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ManualTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ManualTag"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      tagManual: string
+      tagColorManual: string
+      userId: number
+      createAt: Date
+    }, ExtArgs["result"]["manualTag"]>
+    composites: {}
+  }
+
+  type ManualTagGetPayload<S extends boolean | null | undefined | ManualTagDefaultArgs> = $Result.GetResult<Prisma.$ManualTagPayload, S>
+
+  type ManualTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ManualTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ManualTagCountAggregateInputType | true
+    }
+
+  export interface ManualTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ManualTag'], meta: { name: 'ManualTag' } }
+    /**
+     * Find zero or one ManualTag that matches the filter.
+     * @param {ManualTagFindUniqueArgs} args - Arguments to find a ManualTag
+     * @example
+     * // Get one ManualTag
+     * const manualTag = await prisma.manualTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ManualTagFindUniqueArgs>(args: SelectSubset<T, ManualTagFindUniqueArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ManualTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ManualTagFindUniqueOrThrowArgs} args - Arguments to find a ManualTag
+     * @example
+     * // Get one ManualTag
+     * const manualTag = await prisma.manualTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ManualTagFindUniqueOrThrowArgs>(args: SelectSubset<T, ManualTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ManualTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagFindFirstArgs} args - Arguments to find a ManualTag
+     * @example
+     * // Get one ManualTag
+     * const manualTag = await prisma.manualTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ManualTagFindFirstArgs>(args?: SelectSubset<T, ManualTagFindFirstArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ManualTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagFindFirstOrThrowArgs} args - Arguments to find a ManualTag
+     * @example
+     * // Get one ManualTag
+     * const manualTag = await prisma.manualTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ManualTagFindFirstOrThrowArgs>(args?: SelectSubset<T, ManualTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ManualTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ManualTags
+     * const manualTags = await prisma.manualTag.findMany()
+     * 
+     * // Get first 10 ManualTags
+     * const manualTags = await prisma.manualTag.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const manualTagWithIdOnly = await prisma.manualTag.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ManualTagFindManyArgs>(args?: SelectSubset<T, ManualTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ManualTag.
+     * @param {ManualTagCreateArgs} args - Arguments to create a ManualTag.
+     * @example
+     * // Create one ManualTag
+     * const ManualTag = await prisma.manualTag.create({
+     *   data: {
+     *     // ... data to create a ManualTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends ManualTagCreateArgs>(args: SelectSubset<T, ManualTagCreateArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ManualTags.
+     * @param {ManualTagCreateManyArgs} args - Arguments to create many ManualTags.
+     * @example
+     * // Create many ManualTags
+     * const manualTag = await prisma.manualTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ManualTagCreateManyArgs>(args?: SelectSubset<T, ManualTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ManualTags and returns the data saved in the database.
+     * @param {ManualTagCreateManyAndReturnArgs} args - Arguments to create many ManualTags.
+     * @example
+     * // Create many ManualTags
+     * const manualTag = await prisma.manualTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ManualTags and only return the `id`
+     * const manualTagWithIdOnly = await prisma.manualTag.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ManualTagCreateManyAndReturnArgs>(args?: SelectSubset<T, ManualTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ManualTag.
+     * @param {ManualTagDeleteArgs} args - Arguments to delete one ManualTag.
+     * @example
+     * // Delete one ManualTag
+     * const ManualTag = await prisma.manualTag.delete({
+     *   where: {
+     *     // ... filter to delete one ManualTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ManualTagDeleteArgs>(args: SelectSubset<T, ManualTagDeleteArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ManualTag.
+     * @param {ManualTagUpdateArgs} args - Arguments to update one ManualTag.
+     * @example
+     * // Update one ManualTag
+     * const manualTag = await prisma.manualTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ManualTagUpdateArgs>(args: SelectSubset<T, ManualTagUpdateArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ManualTags.
+     * @param {ManualTagDeleteManyArgs} args - Arguments to filter ManualTags to delete.
+     * @example
+     * // Delete a few ManualTags
+     * const { count } = await prisma.manualTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ManualTagDeleteManyArgs>(args?: SelectSubset<T, ManualTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ManualTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ManualTags
+     * const manualTag = await prisma.manualTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ManualTagUpdateManyArgs>(args: SelectSubset<T, ManualTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ManualTags and returns the data updated in the database.
+     * @param {ManualTagUpdateManyAndReturnArgs} args - Arguments to update many ManualTags.
+     * @example
+     * // Update many ManualTags
+     * const manualTag = await prisma.manualTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ManualTags and only return the `id`
+     * const manualTagWithIdOnly = await prisma.manualTag.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ManualTagUpdateManyAndReturnArgs>(args: SelectSubset<T, ManualTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ManualTag.
+     * @param {ManualTagUpsertArgs} args - Arguments to update or create a ManualTag.
+     * @example
+     * // Update or create a ManualTag
+     * const manualTag = await prisma.manualTag.upsert({
+     *   create: {
+     *     // ... data to create a ManualTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ManualTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ManualTagUpsertArgs>(args: SelectSubset<T, ManualTagUpsertArgs<ExtArgs>>): Prisma__ManualTagClient<$Result.GetResult<Prisma.$ManualTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ManualTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagCountArgs} args - Arguments to filter ManualTags to count.
+     * @example
+     * // Count the number of ManualTags
+     * const count = await prisma.manualTag.count({
+     *   where: {
+     *     // ... the filter for the ManualTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends ManualTagCountArgs>(
+      args?: Subset<T, ManualTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ManualTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ManualTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ManualTagAggregateArgs>(args: Subset<T, ManualTagAggregateArgs>): Prisma.PrismaPromise<GetManualTagAggregateType<T>>
+
+    /**
+     * Group by ManualTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ManualTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ManualTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ManualTagGroupByArgs['orderBy'] }
+        : { orderBy?: ManualTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ManualTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetManualTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ManualTag model
+   */
+  readonly fields: ManualTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ManualTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ManualTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ManualTag model
+   */
+  interface ManualTagFieldRefs {
+    readonly id: FieldRef<"ManualTag", 'Int'>
+    readonly tagManual: FieldRef<"ManualTag", 'String'>
+    readonly tagColorManual: FieldRef<"ManualTag", 'String'>
+    readonly userId: FieldRef<"ManualTag", 'Int'>
+    readonly createAt: FieldRef<"ManualTag", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ManualTag findUnique
+   */
+  export type ManualTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ManualTag to fetch.
+     */
+    where: ManualTagWhereUniqueInput
+  }
+
+  /**
+   * ManualTag findUniqueOrThrow
+   */
+  export type ManualTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ManualTag to fetch.
+     */
+    where: ManualTagWhereUniqueInput
+  }
+
+  /**
+   * ManualTag findFirst
+   */
+  export type ManualTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ManualTag to fetch.
+     */
+    where?: ManualTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManualTags to fetch.
+     */
+    orderBy?: ManualTagOrderByWithRelationInput | ManualTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ManualTags.
+     */
+    cursor?: ManualTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManualTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManualTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ManualTags.
+     */
+    distinct?: ManualTagScalarFieldEnum | ManualTagScalarFieldEnum[]
+  }
+
+  /**
+   * ManualTag findFirstOrThrow
+   */
+  export type ManualTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ManualTag to fetch.
+     */
+    where?: ManualTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManualTags to fetch.
+     */
+    orderBy?: ManualTagOrderByWithRelationInput | ManualTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ManualTags.
+     */
+    cursor?: ManualTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManualTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManualTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ManualTags.
+     */
+    distinct?: ManualTagScalarFieldEnum | ManualTagScalarFieldEnum[]
+  }
+
+  /**
+   * ManualTag findMany
+   */
+  export type ManualTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter, which ManualTags to fetch.
+     */
+    where?: ManualTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ManualTags to fetch.
+     */
+    orderBy?: ManualTagOrderByWithRelationInput | ManualTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ManualTags.
+     */
+    cursor?: ManualTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ManualTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ManualTags.
+     */
+    skip?: number
+    distinct?: ManualTagScalarFieldEnum | ManualTagScalarFieldEnum[]
+  }
+
+  /**
+   * ManualTag create
+   */
+  export type ManualTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ManualTag.
+     */
+    data: XOR<ManualTagCreateInput, ManualTagUncheckedCreateInput>
+  }
+
+  /**
+   * ManualTag createMany
+   */
+  export type ManualTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ManualTags.
+     */
+    data: ManualTagCreateManyInput | ManualTagCreateManyInput[]
+  }
+
+  /**
+   * ManualTag createManyAndReturn
+   */
+  export type ManualTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many ManualTags.
+     */
+    data: ManualTagCreateManyInput | ManualTagCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ManualTag update
+   */
+  export type ManualTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ManualTag.
+     */
+    data: XOR<ManualTagUpdateInput, ManualTagUncheckedUpdateInput>
+    /**
+     * Choose, which ManualTag to update.
+     */
+    where: ManualTagWhereUniqueInput
+  }
+
+  /**
+   * ManualTag updateMany
+   */
+  export type ManualTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ManualTags.
+     */
+    data: XOR<ManualTagUpdateManyMutationInput, ManualTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ManualTags to update
+     */
+    where?: ManualTagWhereInput
+    /**
+     * Limit how many ManualTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ManualTag updateManyAndReturn
+   */
+  export type ManualTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * The data used to update ManualTags.
+     */
+    data: XOR<ManualTagUpdateManyMutationInput, ManualTagUncheckedUpdateManyInput>
+    /**
+     * Filter which ManualTags to update
+     */
+    where?: ManualTagWhereInput
+    /**
+     * Limit how many ManualTags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ManualTag upsert
+   */
+  export type ManualTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ManualTag to update in case it exists.
+     */
+    where: ManualTagWhereUniqueInput
+    /**
+     * In case the ManualTag found by the `where` argument doesn't exist, create a new ManualTag with this data.
+     */
+    create: XOR<ManualTagCreateInput, ManualTagUncheckedCreateInput>
+    /**
+     * In case the ManualTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ManualTagUpdateInput, ManualTagUncheckedUpdateInput>
+  }
+
+  /**
+   * ManualTag delete
+   */
+  export type ManualTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+    /**
+     * Filter which ManualTag to delete.
+     */
+    where: ManualTagWhereUniqueInput
+  }
+
+  /**
+   * ManualTag deleteMany
+   */
+  export type ManualTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ManualTags to delete
+     */
+    where?: ManualTagWhereInput
+    /**
+     * Limit how many ManualTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ManualTag without action
+   */
+  export type ManualTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ManualTag
+     */
+    select?: ManualTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ManualTag
+     */
+    omit?: ManualTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ManualTagInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3237,6 +4459,17 @@ export namespace Prisma {
   };
 
   export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+  export const ManualTagScalarFieldEnum: {
+    id: 'id',
+    tagManual: 'tagManual',
+    tagColorManual: 'tagColorManual',
+    userId: 'userId',
+    createAt: 'createAt'
+  };
+
+  export type ManualTagScalarFieldEnum = (typeof ManualTagScalarFieldEnum)[keyof typeof ManualTagScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3339,6 +4572,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     pfpURL?: StringNullableFilter<"User"> | string | null
     posts?: PostListRelationFilter
+    manualTag?: ManualTagListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3347,6 +4581,7 @@ export namespace Prisma {
     password?: SortOrder
     pfpURL?: SortOrderInput | SortOrder
     posts?: PostOrderByRelationAggregateInput
+    manualTag?: ManualTagOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3358,6 +4593,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     pfpURL?: StringNullableFilter<"User"> | string | null
     posts?: PostListRelationFilter
+    manualTag?: ManualTagListRelationFilter
   }, "id" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -3454,11 +4690,69 @@ export namespace Prisma {
     createAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
 
+  export type ManualTagWhereInput = {
+    AND?: ManualTagWhereInput | ManualTagWhereInput[]
+    OR?: ManualTagWhereInput[]
+    NOT?: ManualTagWhereInput | ManualTagWhereInput[]
+    id?: IntFilter<"ManualTag"> | number
+    tagManual?: StringFilter<"ManualTag"> | string
+    tagColorManual?: StringFilter<"ManualTag"> | string
+    userId?: IntFilter<"ManualTag"> | number
+    createAt?: DateTimeFilter<"ManualTag"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ManualTagOrderByWithRelationInput = {
+    id?: SortOrder
+    tagManual?: SortOrder
+    tagColorManual?: SortOrder
+    userId?: SortOrder
+    createAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ManualTagWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ManualTagWhereInput | ManualTagWhereInput[]
+    OR?: ManualTagWhereInput[]
+    NOT?: ManualTagWhereInput | ManualTagWhereInput[]
+    tagManual?: StringFilter<"ManualTag"> | string
+    tagColorManual?: StringFilter<"ManualTag"> | string
+    userId?: IntFilter<"ManualTag"> | number
+    createAt?: DateTimeFilter<"ManualTag"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ManualTagOrderByWithAggregationInput = {
+    id?: SortOrder
+    tagManual?: SortOrder
+    tagColorManual?: SortOrder
+    userId?: SortOrder
+    createAt?: SortOrder
+    _count?: ManualTagCountOrderByAggregateInput
+    _avg?: ManualTagAvgOrderByAggregateInput
+    _max?: ManualTagMaxOrderByAggregateInput
+    _min?: ManualTagMinOrderByAggregateInput
+    _sum?: ManualTagSumOrderByAggregateInput
+  }
+
+  export type ManualTagScalarWhereWithAggregatesInput = {
+    AND?: ManualTagScalarWhereWithAggregatesInput | ManualTagScalarWhereWithAggregatesInput[]
+    OR?: ManualTagScalarWhereWithAggregatesInput[]
+    NOT?: ManualTagScalarWhereWithAggregatesInput | ManualTagScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ManualTag"> | number
+    tagManual?: StringWithAggregatesFilter<"ManualTag"> | string
+    tagColorManual?: StringWithAggregatesFilter<"ManualTag"> | string
+    userId?: IntWithAggregatesFilter<"ManualTag"> | number
+    createAt?: DateTimeWithAggregatesFilter<"ManualTag"> | Date | string
+  }
+
   export type UserCreateInput = {
     username: string
     password: string
     pfpURL?: string | null
     posts?: PostCreateNestedManyWithoutUserInput
+    manualTag?: ManualTagCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3467,6 +4761,7 @@ export namespace Prisma {
     password: string
     pfpURL?: string | null
     posts?: PostUncheckedCreateNestedManyWithoutUserInput
+    manualTag?: ManualTagUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3474,6 +4769,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
     posts?: PostUpdateManyWithoutUserNestedInput
+    manualTag?: ManualTagUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3482,6 +4778,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
     posts?: PostUncheckedUpdateManyWithoutUserNestedInput
+    manualTag?: ManualTagUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3580,6 +4877,58 @@ export namespace Prisma {
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ManualTagCreateInput = {
+    tagManual: string
+    tagColorManual: string
+    createAt?: Date | string
+    user: UserCreateNestedOneWithoutManualTagInput
+  }
+
+  export type ManualTagUncheckedCreateInput = {
+    id?: number
+    tagManual: string
+    tagColorManual: string
+    userId: number
+    createAt?: Date | string
+  }
+
+  export type ManualTagUpdateInput = {
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutManualTagNestedInput
+  }
+
+  export type ManualTagUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManualTagCreateManyInput = {
+    id?: number
+    tagManual: string
+    tagColorManual: string
+    userId: number
+    createAt?: Date | string
+  }
+
+  export type ManualTagUpdateManyMutationInput = {
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManualTagUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -3625,12 +4974,22 @@ export namespace Prisma {
     none?: PostWhereInput
   }
 
+  export type ManualTagListRelationFilter = {
+    every?: ManualTagWhereInput
+    some?: ManualTagWhereInput
+    none?: ManualTagWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type PostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ManualTagOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3821,6 +5180,40 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type ManualTagCountOrderByAggregateInput = {
+    id?: SortOrder
+    tagManual?: SortOrder
+    tagColorManual?: SortOrder
+    userId?: SortOrder
+    createAt?: SortOrder
+  }
+
+  export type ManualTagAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type ManualTagMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tagManual?: SortOrder
+    tagColorManual?: SortOrder
+    userId?: SortOrder
+    createAt?: SortOrder
+  }
+
+  export type ManualTagMinOrderByAggregateInput = {
+    id?: SortOrder
+    tagManual?: SortOrder
+    tagColorManual?: SortOrder
+    userId?: SortOrder
+    createAt?: SortOrder
+  }
+
+  export type ManualTagSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
   export type PostCreateNestedManyWithoutUserInput = {
     create?: XOR<PostCreateWithoutUserInput, PostUncheckedCreateWithoutUserInput> | PostCreateWithoutUserInput[] | PostUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostCreateOrConnectWithoutUserInput | PostCreateOrConnectWithoutUserInput[]
@@ -3828,11 +5221,25 @@ export namespace Prisma {
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
   }
 
+  export type ManualTagCreateNestedManyWithoutUserInput = {
+    create?: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput> | ManualTagCreateWithoutUserInput[] | ManualTagUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ManualTagCreateOrConnectWithoutUserInput | ManualTagCreateOrConnectWithoutUserInput[]
+    createMany?: ManualTagCreateManyUserInputEnvelope
+    connect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+  }
+
   export type PostUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PostCreateWithoutUserInput, PostUncheckedCreateWithoutUserInput> | PostCreateWithoutUserInput[] | PostUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostCreateOrConnectWithoutUserInput | PostCreateOrConnectWithoutUserInput[]
     createMany?: PostCreateManyUserInputEnvelope
     connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  }
+
+  export type ManualTagUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput> | ManualTagCreateWithoutUserInput[] | ManualTagUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ManualTagCreateOrConnectWithoutUserInput | ManualTagCreateOrConnectWithoutUserInput[]
+    createMany?: ManualTagCreateManyUserInputEnvelope
+    connect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3857,6 +5264,20 @@ export namespace Prisma {
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
   }
 
+  export type ManualTagUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput> | ManualTagCreateWithoutUserInput[] | ManualTagUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ManualTagCreateOrConnectWithoutUserInput | ManualTagCreateOrConnectWithoutUserInput[]
+    upsert?: ManualTagUpsertWithWhereUniqueWithoutUserInput | ManualTagUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ManualTagCreateManyUserInputEnvelope
+    set?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    disconnect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    delete?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    connect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    update?: ManualTagUpdateWithWhereUniqueWithoutUserInput | ManualTagUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ManualTagUpdateManyWithWhereWithoutUserInput | ManualTagUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ManualTagScalarWhereInput | ManualTagScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -3879,6 +5300,20 @@ export namespace Prisma {
     deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
   }
 
+  export type ManualTagUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput> | ManualTagCreateWithoutUserInput[] | ManualTagUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ManualTagCreateOrConnectWithoutUserInput | ManualTagCreateOrConnectWithoutUserInput[]
+    upsert?: ManualTagUpsertWithWhereUniqueWithoutUserInput | ManualTagUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ManualTagCreateManyUserInputEnvelope
+    set?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    disconnect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    delete?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    connect?: ManualTagWhereUniqueInput | ManualTagWhereUniqueInput[]
+    update?: ManualTagUpdateWithWhereUniqueWithoutUserInput | ManualTagUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ManualTagUpdateManyWithWhereWithoutUserInput | ManualTagUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ManualTagScalarWhereInput | ManualTagScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPostsInput = {
     create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPostsInput
@@ -3895,6 +5330,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPostsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type UserCreateNestedOneWithoutManualTagInput = {
+    create?: XOR<UserCreateWithoutManualTagInput, UserUncheckedCreateWithoutManualTagInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManualTagInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutManualTagNestedInput = {
+    create?: XOR<UserCreateWithoutManualTagInput, UserUncheckedCreateWithoutManualTagInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManualTagInput
+    upsert?: UserUpsertWithoutManualTagInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutManualTagInput, UserUpdateWithoutManualTagInput>, UserUncheckedUpdateWithoutManualTagInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -4080,6 +5529,28 @@ export namespace Prisma {
     data: PostCreateManyUserInput | PostCreateManyUserInput[]
   }
 
+  export type ManualTagCreateWithoutUserInput = {
+    tagManual: string
+    tagColorManual: string
+    createAt?: Date | string
+  }
+
+  export type ManualTagUncheckedCreateWithoutUserInput = {
+    id?: number
+    tagManual: string
+    tagColorManual: string
+    createAt?: Date | string
+  }
+
+  export type ManualTagCreateOrConnectWithoutUserInput = {
+    where: ManualTagWhereUniqueInput
+    create: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput>
+  }
+
+  export type ManualTagCreateManyUserInputEnvelope = {
+    data: ManualTagCreateManyUserInput | ManualTagCreateManyUserInput[]
+  }
+
   export type PostUpsertWithWhereUniqueWithoutUserInput = {
     where: PostWhereUniqueInput
     update: XOR<PostUpdateWithoutUserInput, PostUncheckedUpdateWithoutUserInput>
@@ -4110,10 +5581,38 @@ export namespace Prisma {
     createAt?: DateTimeFilter<"Post"> | Date | string
   }
 
+  export type ManualTagUpsertWithWhereUniqueWithoutUserInput = {
+    where: ManualTagWhereUniqueInput
+    update: XOR<ManualTagUpdateWithoutUserInput, ManualTagUncheckedUpdateWithoutUserInput>
+    create: XOR<ManualTagCreateWithoutUserInput, ManualTagUncheckedCreateWithoutUserInput>
+  }
+
+  export type ManualTagUpdateWithWhereUniqueWithoutUserInput = {
+    where: ManualTagWhereUniqueInput
+    data: XOR<ManualTagUpdateWithoutUserInput, ManualTagUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ManualTagUpdateManyWithWhereWithoutUserInput = {
+    where: ManualTagScalarWhereInput
+    data: XOR<ManualTagUpdateManyMutationInput, ManualTagUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ManualTagScalarWhereInput = {
+    AND?: ManualTagScalarWhereInput | ManualTagScalarWhereInput[]
+    OR?: ManualTagScalarWhereInput[]
+    NOT?: ManualTagScalarWhereInput | ManualTagScalarWhereInput[]
+    id?: IntFilter<"ManualTag"> | number
+    tagManual?: StringFilter<"ManualTag"> | string
+    tagColorManual?: StringFilter<"ManualTag"> | string
+    userId?: IntFilter<"ManualTag"> | number
+    createAt?: DateTimeFilter<"ManualTag"> | Date | string
+  }
+
   export type UserCreateWithoutPostsInput = {
     username: string
     password: string
     pfpURL?: string | null
+    manualTag?: ManualTagCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPostsInput = {
@@ -4121,6 +5620,7 @@ export namespace Prisma {
     username: string
     password: string
     pfpURL?: string | null
+    manualTag?: ManualTagUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPostsInput = {
@@ -4143,6 +5643,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
+    manualTag?: ManualTagUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostsInput = {
@@ -4150,6 +5651,53 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
+    manualTag?: ManualTagUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutManualTagInput = {
+    username: string
+    password: string
+    pfpURL?: string | null
+    posts?: PostCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutManualTagInput = {
+    id?: number
+    username: string
+    password: string
+    pfpURL?: string | null
+    posts?: PostUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutManualTagInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutManualTagInput, UserUncheckedCreateWithoutManualTagInput>
+  }
+
+  export type UserUpsertWithoutManualTagInput = {
+    update: XOR<UserUpdateWithoutManualTagInput, UserUncheckedUpdateWithoutManualTagInput>
+    create: XOR<UserCreateWithoutManualTagInput, UserUncheckedCreateWithoutManualTagInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutManualTagInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutManualTagInput, UserUncheckedUpdateWithoutManualTagInput>
+  }
+
+  export type UserUpdateWithoutManualTagInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
+    posts?: PostUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutManualTagInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    pfpURL?: NullableStringFieldUpdateOperationsInput | string | null
+    posts?: PostUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PostCreateManyUserInput = {
@@ -4159,6 +5707,13 @@ export namespace Prisma {
     tagColor: string
     thumbnail: string
     backgroundImg?: string | null
+    createAt?: Date | string
+  }
+
+  export type ManualTagCreateManyUserInput = {
+    id?: number
+    tagManual: string
+    tagColorManual: string
     createAt?: Date | string
   }
 
@@ -4189,6 +5744,26 @@ export namespace Prisma {
     tagColor?: StringFieldUpdateOperationsInput | string
     thumbnail?: StringFieldUpdateOperationsInput | string
     backgroundImg?: NullableStringFieldUpdateOperationsInput | string | null
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManualTagUpdateWithoutUserInput = {
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManualTagUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
+    createAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ManualTagUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tagManual?: StringFieldUpdateOperationsInput | string
+    tagColorManual?: StringFieldUpdateOperationsInput | string
     createAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
