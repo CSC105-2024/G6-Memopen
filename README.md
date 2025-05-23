@@ -58,7 +58,7 @@ Memopen is a web application that works like a personal diary, it is designed to
 - jsonwebtoken
 
 ### :electric_plug: API Endpoints
-- Authentication\
+- Authentication
   
 |Method|Endpoint |Description                |
 |------|---------|---------------------------|
