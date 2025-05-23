@@ -167,6 +167,9 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
                 onChange={(e) => updateTag(index, e.target.value, tag.color)}
                 className="p-1 flex-grow bg-transparent border-none outline-none w-[60%] text-sm"
               />
+              {tag.isManual && (
+                <span className="text-[9px]  text-gray-500 mr-2">(manually)</span>
+                )}
               <button onClick={() => removeTag(index)} className="text-red-500">
                 <FontAwesomeIcon icon={faTrash} style={{ color: "#ff0000" }} size="sm" />
               </button>

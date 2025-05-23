@@ -39,14 +39,16 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
   ...manualTag.map(tag => ({
     id: tag.id,
     name: tag.tagManual.trim(),
-    color: tag.tagColorManual
+    color: tag.tagColorManual,
+    isManual: true
   })),
   ...canvases
     .filter(canvas => canvas.tag && canvas.tagColor)
     .map(canvas => ({
       id: canvas.id || `${canvas.tag}_${canvas.tagColor}`, // fallback if no id
       name: canvas.tag.trim(),
-      color: canvas.tagColor
+      color: canvas.tagColor,
+      isManual:false
     }))
 ];
 
