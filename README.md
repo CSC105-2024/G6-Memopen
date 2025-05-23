@@ -32,5 +32,17 @@ Memopen is a web application that works like a personal diary, it is designed to
 - @tailwindcss/vite/
 
 ### :rocket:  Getting Started - React Client
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 ---
 
