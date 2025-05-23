@@ -8,8 +8,7 @@ Memopen is a web application that works like a personal diary, it is designed to
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   
    ```
 
 ---
