@@ -75,5 +75,12 @@ Memopen is a web application that works like a personal diary, it is designed to
 |PATCH  |post/:id| Update canvas by ID |
 |DELETE  |post/:id| Delete canvas by ID |
 
-
+- Manual Tags
+|Method|Endpoint |Description                |
+|------|---------|---------------------------|
+|GET  |post/| Fetch all canvases  |
+|GET  |post/:id| Fetch a specific canvas by ID |
+|POST  |post/| Create new canvas |
+|PATCH  |post/:id| Update canvas by ID |
+|DELETE  |post/:id| Delete canvas by ID |
 
