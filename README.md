@@ -1,5 +1,4 @@
 # G6-Memopen
-----
 
 **CRUD features (still in progess)**\
 -Posts (can create, update and delete)\
