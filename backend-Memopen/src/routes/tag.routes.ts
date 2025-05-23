@@ -6,5 +6,5 @@ tagRouter.use('*',authMiddleware);
 tagRouter.get('/',TagController.getTags);
 tagRouter.post('/',TagController.createManualTag);
 tagRouter.patch('/:id',TagController.editTag);
-tagRouter.patch('/:id',TagController.deletedPost);
+tagRouter.delete('/:id',TagController.deletedPost);
 export default tagRouter;

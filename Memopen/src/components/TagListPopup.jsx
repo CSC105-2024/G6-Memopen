@@ -17,41 +17,32 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
   const [newColor, setNewColor] = useState(colors[0].value);
   const [colorPickerIndex, setColorPickerIndex] = useState(null);
 
-  const handleTagRemoval = (tagToRemove) => {
-    const updatedTags = tags.filter(
-      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
-    );
-    setTags(updatedTags);
-
-    const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
-    const updatedManual = manualTags.filter(
-      (t) => !(t.name === tagToRemove.name && t.color === tagToRemove.color)
-    );
-    localStorage.setItem("manualTags", JSON.stringify(updatedManual));
-
-    const updatedCanvases = canvases.filter(
-      (canvas) => canvas.tag !== tagToRemove.name || canvas.tagColor !== tagToRemove.color
-    );
-    setCanvases(updatedCanvases);
+  const handleTagRemoval = async (tagToRemove) => {
+    try{
+      const res = await fetch(`http://localhost:3000/tag/${tagToRemove.id}`,{
+        method:"DELETE",
+        credentials:"include",
+      })
+      if(!res.ok){
+        const errorText = await res.text();
+        console.error("Failed to delete tag:", errorText);
+        return;
+      }
+      const updatedTags = tags.filter(t => t.id !== tagToRemove.id);
+      setTags(updatedTags);
+      if (setCanvases) {
+      const updatedCanvases = canvases.filter(
+        canvas => canvas.tag !== tagToRemove.name || canvas.tagColor !== tagToRemove.color
+      );
+      setCanvases(updatedCanvases);
+    }
+    }catch(e){
+      console.error("Error deleting tag:", e);
+    }
+    
   };
 
   const addTag = async () => {
-    /**
-     * if (newTag.trim()) {
-      const newTagObj = { name: newTag.trim(), color: newColor };
-      const updatedTags = [...tags, newTagObj];
-
-      setTags(updatedTags);
-
-      const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
-      localStorage.setItem("manualTags", JSON.stringify([...manualTags, newTagObj]));
-
-      setNewTag("");
-      setNewColor(colors[0].value);
-    }
-     * 
-     * 
-     */
     if(!newTag.trim()) return;
     try{
       const res = await fetch("http://localhost:3000/tag",{
@@ -73,6 +64,7 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
       const data = await res.json();
       console.log("Created tag:", data);
       setTags((prev)=> [...prev,{
+          id:data.data.id,
          name:newTag.trim(),
          color:newColor
       }])
@@ -89,8 +81,10 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
     handleTagRemoval(tagToRemove); // Remove the tag and associated canvases
   };
 
-  const updateTag = (index, newName, newColor) => {
-    const updatedTags = [...tags];
+  const updateTag = async (index, newName, newColor) => {
+    /**
+     * 
+     * const updatedTags = [...tags];
     updatedTags[index] = { name: newName, color: newColor };
     setTags(updatedTags);
 
@@ -103,6 +97,33 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
         : tag
     );
     localStorage.setItem("manualTags", JSON.stringify(updatedManual));
+     */
+    const tagToUpdate = tags[index];
+    try{
+      const res = await fetch(`http://localhost:3000/tag/${tagToUpdate.id}`,{
+        method:"PATCH",
+        credentials:"include",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify({
+          tagManual:newName,
+          tagColorManual:newColor 
+        })
+
+      })
+      if(!res.ok){
+        const errorText = await res.text();
+        console.error("Failed to update tag:", errorText);
+        return;
+      }
+      const updatedTags = [...tags];
+      updatedTags[index] = {...tagToUpdate, name:newName, color:newColor}
+      setTags(updatedTags);
+    }catch (e) {
+    console.error("Error updating tag:", e);
+  }
+    
   };
 
   return (

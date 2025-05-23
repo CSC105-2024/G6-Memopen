@@ -35,10 +35,21 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
             tagMap.set(tag.tagManual.trim(), tag.tagColorManual);
           }
         })
-        const combinedTags = Array.from(tagMap.entries()).map(([name, color]) => ({
-        name,
-        color,
-    }));
+        const combinedTags = [
+  ...manualTag.map(tag => ({
+    id: tag.id,
+    name: tag.tagManual.trim(),
+    color: tag.tagColorManual
+  })),
+  ...canvases
+    .filter(canvas => canvas.tag && canvas.tagColor)
+    .map(canvas => ({
+      id: canvas.id || `${canvas.tag}_${canvas.tagColor}`, // fallback if no id
+      name: canvas.tag.trim(),
+      color: canvas.tagColor
+    }))
+];
+
     setTags(combinedTags);
 
         
