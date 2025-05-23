@@ -65,6 +65,12 @@ Memopen is a web application that works like a personal diary, it is designed to
 |POST  |/register| Sign up new user account  |
 |POST  |/login| Login using username and password  |
 |POST  |/profile-image/:id| Update user's profile image  |
+- Authentication
+|Method|Endpoint |Description                |
+|------|---------|---------------------------|
+|POST  |/register| Sign up new user account  |
+|POST  |/login| Login using username and password  |
+|POST  |/profile-image/:id| Update user's profile image  |
 
 
 
