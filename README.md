@@ -58,7 +58,7 @@ Memopen is a web application that works like a personal diary, it is designed to
 - jsonwebtoken
 
 ### :electric_plug: API Endpoints
-- Authentication
+- Authentication\
   
 |Method|Endpoint |Description                |
 |------|---------|---------------------------|
@@ -86,20 +86,20 @@ Memopen is a web application that works like a personal diary, it is designed to
 
 \
 :rocket: Getting Started - Node.js Server
-1. Navigate to the frontend directory:
+1. Navigate to the frontend directory:\
    ```bash
    cd backend
    ```
-2. Install dependencies:
+2. Install dependencies:\
    ```bash
    npm install
    ```
-3. Create a .env file and configure the following variables
+3. Create a .env file and configure the following variables\
    ```bash
    DATABASE_URL="file:./dev.db"
    JWT_SECRET=your_jwt_secret_here
    ```
-4. Start the development server:
+4. Start the development server:\
     ```bash
     npm run dev
    ```
