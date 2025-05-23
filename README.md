@@ -31,6 +31,7 @@ Memopen is a web application that works like a personal diary, it is designed to
 - @hookform/resolvers
 - @tailwindcss/vite
 
-   :rocket: Getting Started - React Client
+
+  :rocket:  Getting Started - React Client
 ---
 
