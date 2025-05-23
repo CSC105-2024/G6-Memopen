@@ -18,16 +18,17 @@ Memopen is a web application that works like a personal diary, it is designed to
 - React
 - Axios
 - React Router DOM
-- React-hook-form
-- React-icons
-- React-pick-color
-- tailwindcss
-- zod
+- React Hook Form
+- React icons
+- React Pick Color
+- Tailwind Css
+- Zod
 - Fabric - Currently using version ```^5.5.1``` (not the latest)
 - Font Awesome
-  - fortawesome/fontawesome-svg-core
+  - @fortawesome/fontawesome-svg-core
   - @fortawesome/free-solid-svg-icons
   - @fortawesome/react-fontawesome
-  -  @hookform/resolvers
+- @hookform/resolvers
 - @tailwindcss/vite
+---
 
