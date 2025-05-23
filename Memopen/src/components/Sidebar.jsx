@@ -85,20 +85,7 @@ const Sidebar = ({ handleFilterClickAgain, activeFilter, onLogout }) => {
    */
 
   const handleLogout = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("userTags");
-    localStorage.removeItem("profileImage");
-    localStorage.removeItem("canvases");
-    localStorage.removeItem("manualTags");
-    setUsername("Guest");
-    setTags([]);
-    setImage(null);
-    setCanvases([]);
-    setManualTag([]);
-
-    if (onLogout) {
-      onLogout();
-    }
+    localStorage.clear();
     navigate("/");
   };
 
