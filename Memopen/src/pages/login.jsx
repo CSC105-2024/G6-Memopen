@@ -10,7 +10,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [username,setUsername] = useState("");
   const [password, setPassword] =  useState("");
-
+  const [loginFailText , IsLoginFailText] = useState(false);
 
     const handleLogin = async () => {
       try {
@@ -46,7 +46,7 @@ function Login() {
           }
           navigateLogin("/HomePage");
         } else {
-          alert(data.message || "Login failed");
+          IsLoginFailText(true);
         }
       } catch (error) {
         alert("Network error: " + error.message);
@@ -95,6 +95,7 @@ function Login() {
               placeholder="ex.mewInwZa007"
               className="bg-white w-full p-3 2xl:p-5 border rounded-2xl mb-4"
             />
+            
 
             {/* Password */}
             <div className="relative">
@@ -113,8 +114,12 @@ function Login() {
               >
                 {showPassword ? openEye : closeEye}
               </button>
+              
             </div>
-
+            {loginFailText && (
+              <p className="text-center text-red-500 mb-3">These credentials do not match our records.</p>
+            )}
+            
             {/* Login Button */}
             <button
               onClick={handleLogin}
