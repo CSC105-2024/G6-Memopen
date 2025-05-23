@@ -9,56 +9,68 @@ const TagList = ({handleFilterClickAgain, activeFilter}) => {
   const showPopup = queryParams.get("popup");
 
   const [tags, setTags] = useState([]);
-  const fetchTags = async ()=>{
-    const Canvasres = await fetch("http://localhost:3000/post",{
-        method: "GET",
-        credentials:"include"
-      })
-    const manualRes = await fetch("http://localhost:3000/tag",{
-      method: "GET",
-      credentials:"include"
-    })
+  const fetchTags = async () => {
+  const Canvasres = await fetch("http://localhost:3000/post", {
+    method: "GET",
+    credentials: "include"
+  });
+  const manualRes = await fetch("http://localhost:3000/tag", {
+    method: "GET",
+    credentials: "include"
+  });
 
-      if(Canvasres.ok && manualRes.ok){
-        const canvasesData = await Canvasres.json();
-        const manualData = await manualRes.json();
-        const manualTag = manualData.data || [];
-        const canvases = canvasesData.data || [];
-        const tagMap = new Map();
-        canvases.forEach((canvas)=>{
-          if(canvas.tag && canvas.tag.trim() && canvas.tagColor){
-            tagMap.set(canvas.tag.trim(), canvas.tagColor);
-          }
-        })
-        manualTag.forEach((tag)=>{
-          if(tag.tagManual && tag.tagManual.trim() && tag.tagColorManual){
-            tagMap.set(tag.tagManual.trim(), tag.tagColorManual);
-          }
-        })
-        const combinedTags = [
-  ...manualTag.map(tag => ({
-    id: tag.id,
-    name: tag.tagManual.trim(),
-    color: tag.tagColorManual,
-    isManual: true
-  })),
-  ...canvases
-    .filter(canvas => canvas.tag && canvas.tagColor)
-    .map(canvas => ({
-      id: canvas.id || `${canvas.tag}_${canvas.tagColor}`, // fallback if no id
-      name: canvas.tag.trim(),
-      color: canvas.tagColor,
-      isManual:false
-    }))
-];
+  if (Canvasres.ok && manualRes.ok) {
+    const canvasesData = await Canvasres.json();
+    const manualData = await manualRes.json();
+    const manualTags = manualData.data || [];
+    const canvases = canvasesData.data || [];
 
-    setTags(combinedTags);
+    const tagMap = new Map();
+    canvases.forEach((canvas) => {
+      const tag = canvas.tag?.trim();
+      const color = canvas.tagColor;
+      if (!tag || !color) return;
 
-        
-      }else{
-         console.error("failed to fetch tags");
+      const key = `${tag}|${color}`;
+      if (!tagMap.has(key)) {
+        tagMap.set(key, {
+          id: canvas.id,
+          name: tag,
+          color,
+          isManual: false,
+          isCanvas: true,
+        });
+      } else {
+        tagMap.get(key).isCanvas = true;
       }
+    });
+    manualTags.forEach((tag) => {
+      const name = tag.tagManual?.trim();
+      const color = tag.tagColorManual;
+      if (!name || !color) return;
+
+      const key = `${name}|${color}`;
+      if (!tagMap.has(key)) {
+        tagMap.set(key, {
+          id: tag.id,
+          name,
+          color,
+          isManual: true,
+          isCanvas: false,
+        });
+      } else {
+        const entry = tagMap.get(key);
+        entry.isManual = true;
+        entry.id = tag.id; 
+      }
+    });
+
+    setTags([...tagMap.values()]);
+  } else {
+    console.error("Failed to fetch tags");
   }
+};
+
 
   useEffect(() => {
     fetchTags();
