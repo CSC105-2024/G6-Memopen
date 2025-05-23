@@ -44,5 +44,19 @@ Memopen is a web application that works like a personal diary, it is designed to
    ```bash
    npm run dev
    ```
+4. The client will be running on [http://localhost:5173](http://localhost:5173) (or similar, depending on your setup).
 ---
+## :wrench: Backend - Node.js
+
+### :hammer_and_wrench: Tech Stack
+
+- @hono/node-server
+- @prisma/client
+- Bcrypt
+- Dotenv
+- Hono
+- jsonwebtoken
+
+### :electric_plug: API Endpoints
+
 
