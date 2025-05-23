@@ -22,10 +22,10 @@ export const getTags = async (c:Context)=>{
     }
 }
 export const createManualTag = async(c:Context)=>{
+    const userId = c.get('userId');
     try{
         const body = await c.req.json();
         const {
-            userId,
             tagManual,
             tagColorManual,
         } = body;

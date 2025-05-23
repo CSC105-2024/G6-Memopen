@@ -35,8 +35,9 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
     setCanvases(updatedCanvases);
   };
 
-  const addTag = () => {
-    if (newTag.trim()) {
+  const addTag = async () => {
+    /**
+     * if (newTag.trim()) {
       const newTagObj = { name: newTag.trim(), color: newColor };
       const updatedTags = [...tags, newTagObj];
 
@@ -48,6 +49,39 @@ const TagListPopup = ({ tags, setTags, onClose, canvases, setCanvases }) => {
       setNewTag("");
       setNewColor(colors[0].value);
     }
+     * 
+     * 
+     */
+    if(!newTag.trim()) return;
+    try{
+      const res = await fetch("http://localhost:3000/tag",{
+        method:"POST",
+        credentials:"include",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          tagManual: newTag.trim(),
+          tagColorManual: newColor
+        })
+      })
+      if(!res.ok){
+         const errorText = await res.text();
+      console.error("Failed to create tag:", errorText);
+      return;
+      }
+      const data = await res.json();
+      console.log("Created tag:", data);
+      setTags((prev)=> [...prev,{
+         name:newTag.trim(),
+         color:newColor
+      }])
+      setNewTag("");
+      setNewColor(colors[0].value);
+    }catch(e){
+      console.error("Error creating tag:", e);
+    }
+    
   };
 
   const removeTag = (index) => {
