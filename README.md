@@ -84,5 +84,5 @@ Memopen is a web application that works like a personal diary, it is designed to
 |PATCH  |tag/:id| Update tag by ID |
 |DELETE  |tag/:id| Delete tag by ID |
 
-
+\
 :rocket: Getting Started - Node.js Server
