@@ -23,10 +23,11 @@ Memopen is a web application that works like a personal diary, it is designed to
 - React-pick-color
 - tailwindcss
 - zod
-- Fabric - Currently using version ```^5.5.1```
-- @fortawesome/fontawesome-svg-core
-- @fortawesome/free-solid-svg-icons
-- @fortawesome/react-fontawesome
-- @hookform/resolvers
+- Fabric - Currently using version ```^5.5.1``` (not the latest)
+- Font Awesome
+  - fortawesome/fontawesome-svg-core
+  - @fortawesome/free-solid-svg-icons
+  - @fortawesome/react-fontawesome
+  -  @hookform/resolvers
 - @tailwindcss/vite
 
