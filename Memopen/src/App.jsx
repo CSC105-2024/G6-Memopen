@@ -14,6 +14,7 @@ import Home from "./pages/homepage";
 import Editor from "./pages/editor";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedLayout from "./components/protectedLayout";
+import NotFoundPageInHome from "./pages/notFoundPageIngLogin";
 const router = createBrowserRouter([
   {
     path:"/",
@@ -28,8 +29,13 @@ const router = createBrowserRouter([
     element:<ProtectedLayout/>,
     children:[
       {path:"HomePage", element:<Home/>},
-      {path:"editor/:id?", element:<Editor/>}
+      {path:"editor/:id?", element:<Editor/>},
+      {path:"*", element:<NotFoundPageInHome/>}
     ]
+  },
+  {
+    path:"*",
+    element:<Login/>
   }
 ])
 function App() {
