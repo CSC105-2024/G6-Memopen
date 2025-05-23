@@ -1,4 +1,4 @@
-# G6-Memopen\
+# G6-Memopen
 ----
 
 **CRUD features (still in progess)**\
