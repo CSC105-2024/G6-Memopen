@@ -95,5 +95,14 @@ Memopen is a web application that works like a personal diary, it is designed to
    npm install
    ```
 3. Create a .env file and configure the following variables
+   ```bash
+   DATABASE_URL="file:./dev.db"
+   JWT_SECRET=your_jwt_secret_here
+   ```
+4. Start the development server:
+    ```bash
+    npm run dev
+   ```
+5. The server will be running on [http://localhost:3000](http://localhost:3000)
 
 
