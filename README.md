@@ -13,3 +13,5 @@ Memopen is a web application that works like a personal diary, it is designed to
    ```
 ---
 ## :hammer: Frontend - React
+:wrench: Tech Stack
+-React
