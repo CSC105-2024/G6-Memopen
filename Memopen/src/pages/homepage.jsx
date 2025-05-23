@@ -5,6 +5,7 @@ import { useNavigate, useLocation, data } from "react-router-dom";
 import TemplatePopup from "../components/TemplatePopup";
 import Sidebar from "../components/Sidebar";
 
+
 function Home() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,35 +32,9 @@ function Home() {
       }
       
     }
-    /**
-     * 
-     * const fetchCanvases = async () =>{
-      const res = await fetch("http://localhost:3000/post",{
-        credentials:"include"
-      })
-      if(res.ok){
-        const data = await res.json();
-        console.log(data);
-        setCanvases(data.data);
-        console.log(canvases);
-      }else{
-        console.error("failed to fetch canvases");
-      }
-      
-    }
-     * 
-     */
-
+    
   useEffect(() => {
     fetchCanvases();
-    /**
-     * 
-     * const storedCanvases = localStorage.getItem("canvases");
-    if (storedCanvases) {
-      setCanvases(JSON.parse(storedCanvases));
-    }
-     * 
-     */
     const storedTags = localStorage.getItem("tags");
     if (storedTags) {
       setTags(JSON.parse(storedTags));
@@ -93,34 +68,6 @@ const handleDelete = async (id, tag, tagColor) => {
   }
 };
 
-/**const handleDelete = async (id, tag, tagColor) => {
-  try {
-    const res = await fetch(`http://localhost:3000/post/${id}`, {
-      method: "DELETE",
-    });
-
-    if (res.ok) {
-      setCanvases((prev) => prev.filter((c) => c.id !== id));
-      if (tag) {
-        const updatedTags = tags.filter(
-          (t) => !(t.name === tag && t.color === tagColor)
-        );
-        setTags(updatedTags);
-        const manualTags = JSON.parse(localStorage.getItem("manualTags")) || [];
-        const updatedManualTags = manualTags.filter(
-          (t) => !(t.name === tag && t.color === tagColor)
-        );
-        localStorage.setItem("manualTags", JSON.stringify(updatedManualTags));
-      }
-    } else {
-      const error = await res.text();
-      console.error("Delete failed:", error);
-    }
-  } catch (e) {
-    console.error("Error deleting post:", e);
-  }
-}; */
-
 
 
   const handleChooseTemplate = (template) => {
@@ -147,10 +94,7 @@ const handleDelete = async (id, tag, tagColor) => {
     }
   }
 
-  const hangleLogout = ()=>{
-    localStorage.removeItem("canvases");
-    setCanvases([]);
-  }
+  
 
   
 
