@@ -2,10 +2,10 @@ import { Hono } from 'hono';
 import { PrismaClient } from './generated/prisma/index.js';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
-import mainRouter from './routes/index.routes.ts';
 import authRouter from './routes/auth.routes.ts';
 import cookiesRouter from './routes/cookies.ts';
 import tagRouter from './routes/tag.routes.ts';
+import { postRouter } from './routes/post.routes.ts';
 const app = new Hono()
 
 app.use(
@@ -18,7 +18,6 @@ app.use(
   })
 )
 export const db = new PrismaClient()
-app.route("/",mainRouter);
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
@@ -44,3 +43,4 @@ db.$connect()
 app.route('/cookies',cookiesRouter);
 app.route('/auth', authRouter);
 app.route('/tag',tagRouter);
+app.route('/post', postRouter)
