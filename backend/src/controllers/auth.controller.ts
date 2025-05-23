@@ -73,25 +73,6 @@ export const login = async (c: Context) => {
 };
 
 
-export const getAllUsers = async (c: Context) => {
-    try {
-        const users = await authModel.getAllUser();
-        return c.json({
-            success: true,
-            data: users,
-            msg: "Fetched all users"
-        });
-    } catch (e) {
-        return c.json({
-            success: false,
-            data: null,
-            msg: "Failed to fetch users"
-        }, 500);
-    }
-};
-
-
-
 export const updateProfileImage = async (c: Context) => {
   const userId = Number(c.req.param("id")); 
   const formData = await c.req.formData();

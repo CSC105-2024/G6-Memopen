@@ -19,14 +19,6 @@ export const validatePassword = async (input:string, hash:string)=>{
     return compare(input,hash);
 }
 
-
-export const getAllUser = async ()=>{
-    const user = await db.user.findMany();
-    return user;
-}
-
-
-
 export const updateUserProfileImage = async (id: number, imageBase64: string) => {
   return db.user.update({
     where: { id },

@@ -1,5 +1,5 @@
 {
-  "name": "backend-Memopen",
+  "name": "memopen",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
