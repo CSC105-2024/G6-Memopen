@@ -260,88 +260,72 @@ function Editor() {
   const originalWidthRef = 800; // you had these reversed in your snippet, fixed here
   const originalHeightRef = 450;
 
-  useEffect(() => {
-    // Initialize fabric canvas
+ useEffect(() => {
 
-    fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
-      width: originalWidthRef,
-      height: originalHeightRef,
-      backgroundColor: "#FFFFFF",
-    });
+  fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
+    width: originalWidthRef,
+    height: originalHeightRef,
+    backgroundColor: "#FFFFFF",
+  });
 
-    // Resize canvas function
-    const resizeCanvas = () => {
-      const containerWidth = Math.min(
-        window.innerWidth * 0.75,
-        originalWidthRef
-      );
-      const scale = containerWidth / originalWidthRef;
-      const scaleWidth = originalWidthRef * scale;
-      const scaleHeight = originalHeightRef * scale;
 
-      const canvasInstance = fabricCanvasRef.current;
-      if (canvasInstance) {
-        canvasInstance.setWidth(scaleWidth);
-        canvasInstance.setHeight(scaleHeight);
-        canvasInstance.setZoom(scale);
-        canvasInstance.renderAll();
-        setCanvasWidth(scaleWidth);
-      }
-    };
+  const resizeCanvas = () => {
+    const containerWidth = Math.min(window.innerWidth * 0.75, originalWidthRef);
+    const scale = containerWidth / originalWidthRef;
+    const scaleWidth = originalWidthRef * scale;
+    const scaleHeight = originalHeightRef * scale;
 
-    resizeCanvas();
-    // Fetch canvas data from backend
-    const fetchCanvasData = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/post/${id}`, {
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Failed to fetch canvas");
+    const canvasInstance = fabricCanvasRef.current;
+    if (canvasInstance) {
+      canvasInstance.setWidth(scaleWidth);
+      canvasInstance.setHeight(scaleHeight);
+      canvasInstance.setZoom(scale);
+      canvasInstance.renderAll();
+      setCanvasWidth(scaleWidth);
+    }
+  };
 
-        const data = await res.json();
-        const { json, tag, tagColor, backgroundImage } = data.data || {};
+  resizeCanvas();
 
-        setTag(tag || "");
-        setTagColor(tagColor || "#FF0000");
-        setOriginalTag(tag || "");
-        setOriginalTagColor(tagColor || "#FF0000");
 
-        localStorage.setItem("original_tag", tag || "");
-        localStorage.setItem("original_tag_color", tagColor || "#FF0000");
-        localStorage.setItem("current_canvas_id", id);
+  const fetchCanvasData = async () => {
+    try {
+      const res = await fetch(`http://localhost:3000/post/${id}`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch canvas");
 
-        if (json) {
-          fabricCanvasRef.current.clear();
-          fabricCanvasRef.current.loadFromJSON(json, () => {
+      const data = await res.json();
+      const { json, tag, tagColor, backgroundImage } = data.data || {};
+
+      setTag(tag || "");
+      setTagColor(tagColor || "#FF0000");
+      setOriginalTag(tag || "");
+      setOriginalTagColor(tagColor || "#FF0000");
+
+      localStorage.setItem("original_tag", tag || "");
+      localStorage.setItem("original_tag_color", tagColor || "#FF0000");
+      localStorage.setItem("current_canvas_id", id);
+
+      fabricCanvasRef.current.clear();
+
+      if (json) {
+        fabricCanvasRef.current.loadFromJSON(json, () => {
           fabricCanvasRef.current.renderAll();
 
-    // Only set background if not present
-    if (!fabricCanvasRef.current.backgroundImage && backgroundImage) {
-      fabric.Image.fromURL(backgroundImage, (img) => {
-        img.scaleToWidth(originalWidthRef);
-        img.scaleToHeight(originalHeightRef);
-        fabricCanvasRef.current.setBackgroundImage(img, () => {
-          fabricCanvasRef.current.requestRenderAll();
+          if (backgroundImage) {
+            fabric.Image.fromURL(backgroundImage, (img) => {
+              img.scaleToWidth(originalWidthRef);
+              img.scaleToHeight(originalHeightRef);
+              fabricCanvasRef.current.setBackgroundImage(img, () => {
+                fabricCanvasRef.current.requestRenderAll();
+              });
+            });
+          }
         });
-      });
-    }
-
-    // Only add default textbox if new canvas AND no objects at all
-    const hasObjects = fabricCanvasRef.current.getObjects().length > 0;
-
-    if (!hasObjects && id === "new") {
-      const textbox = new fabric.Textbox("Type something", {
-        left: 100,
-        top: 100,
-        fontSize: 20,
-      });
-      fabricCanvasRef.current.add(textbox);
-    }
-  });
-}
-
+      } else {
+      
         if (backgroundImage) {
-          setBackgroundImage(backgroundImage);
           fabric.Image.fromURL(backgroundImage, (img) => {
             img.scaleToWidth(originalWidthRef);
             img.scaleToHeight(originalHeightRef);
@@ -350,62 +334,17 @@ function Editor() {
             });
           });
         }
-      } catch (err) {
-        console.error("Error loading canvas from backend", err);
-        const localJson = localStorage.getItem(`canvas_json_${id}`);
-        const localTag = localStorage.getItem("editor_tag");
-        const localTagColor = localStorage.getItem("editor_tag_color");
-        const localBgImg = localStorage.getItem("editor_bg_img");
-
-        if (localJson) {
-          try {
-            const parsedJson = JSON.parse(localJson);
-
-            setTag(localTag || "");
-            setTagColor(localTagColor || "#FF0000");
-            setOriginalTag(localTag || "");
-            setOriginalTagColor(localTagColor || "#FF0000");
-            localStorage.setItem("original_tag", localTag || "");
-            localStorage.setItem(
-              "original_tag_color",
-              localTagColor || "#FF0000"
-            );
-            localStorage.setItem("current_canvas_id", id);
-
-            fabricCanvasRef.current.loadFromJSON(parsedJson, () => {
-              fabricCanvasRef.current.renderAll();
-
-              if (parsedJson.backgroundImg) {
-                fabric.Image.fromURL(parsedJson.backgroundImg, (img) => {
-                  img.scaleToWidth(originalWidthRef);
-                  img.scaleToHeight(originalHeightRef);
-                  fabricCanvasRef.current.setBackgroundImage(img, () => {
-                    fabricCanvasRef.current.requestRenderAll();
-                  });
-                });
-              }
-            });
-
-            if (localBgImg) {
-              setBackgroundImage(localBgImg);
-            }
-
-            return;
-          } catch (jsonError) {
-            console.error("Failed to parse local canvas JSON", jsonError);
-          }
-        }
       }
-    };
 
-    if (id !== "new") {
-      fetchCanvasData();
-    } else {
-      // If new canvas, check for background image from localStorage
+      setBackgroundImage(backgroundImage || "");
+    } catch (err) {
+      console.error("Error loading canvas from backend", err);
+
+      fabricCanvasRef.current.clear();
+
       const bg_img = localStorage.getItem("editor_bg_img");
       if (bg_img) {
         setBackgroundImage(bg_img);
-        localStorage.removeItem("editor_bg_img");
         fabric.Image.fromURL(bg_img, (img) => {
           img.scaleToWidth(originalWidthRef);
           img.scaleToHeight(originalHeightRef);
@@ -415,139 +354,137 @@ function Editor() {
         });
       }
     }
+  };
 
-    // Handlers for text selection style syncing
-    const handleStyleSelection = () => {
-      const activeTextObject = fabricCanvasRef.current.getActiveObject();
-      if (activeTextObject && activeTextObject.type === "textbox") {
-        setFontStyle({
-          bold: activeTextObject.fontWeight === "bold",
-          italic: activeTextObject.fontStyle === "italic",
-          underline: activeTextObject.underline === true,
-        });
-      } else {
-        setFontStyle({ bold: false, italic: false, underline: false });
-      }
-    };
-
-    const handleColorSelection = () => {
-      const activeTextObject = fabricCanvasRef.current.getActiveObject();
-      if (activeTextObject && activeTextObject.type === "textbox") {
-        setTextColor(activeTextObject.fill || "#000000");
-      } else {
-        setTextColor("#000000");
-      }
-    };
-
-    const handleHighlightSelection = () => {
-      const activeTextObject = fabricCanvasRef.current.getActiveObject();
-      if (activeTextObject && activeTextObject.type === "textbox") {
-        setTextBackgroundColor(activeTextObject.textBackgroundColor);
-      } else {
-        setTextBackgroundColor("");
-      }
-    };
-
-    // Register fabric canvas events
-    fabricCanvasRef.current.on("selection:created", handleStyleSelection);
-    fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
-    fabricCanvasRef.current.on("selection:cleared", () => {
-      setFontStyle({ bold: false, italic: false, underline: false });
-    });
-
-    fabricCanvasRef.current.on("selection:created", handleColorSelection);
-    fabricCanvasRef.current.on("selection:updated", handleColorSelection);
-    fabricCanvasRef.current.on("selection:cleared", () => {
-      setTextColor("#000000");
-    });
-
-    fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
-    fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
-    fabricCanvasRef.current.on("selection:cleared", () => {
-      setTextBackgroundColor("");
-    });
-
-    // Handle delete key for removing active objects
-    const handleKeyDown = (e) => {
-      if (e.key === "Delete" || e.key === "Backspace") {
-        const activeObject = fabricCanvasRef.current.getActiveObject();
-        if (activeObject && !activeObject.isEditing) {
-          fabricCanvasRef.current.remove(activeObject);
+  if (id !== "new") {
+    fetchCanvasData();
+  } else {  
+    const bg_img = localStorage.getItem("editor_bg_img");
+    if (bg_img) {
+      setBackgroundImage(bg_img);
+      fabric.Image.fromURL(bg_img, (img) => {
+        img.scaleToWidth(originalWidthRef);
+        img.scaleToHeight(originalHeightRef);
+        fabricCanvasRef.current.setBackgroundImage(img, () => {
           fabricCanvasRef.current.requestRenderAll();
-        }
+        });
+      });
+    }
+  }
+
+  const handleStyleSelection = () => {
+    const activeTextObject = fabricCanvasRef.current.getActiveObject();
+    if (activeTextObject && activeTextObject.type === "textbox") {
+      setFontStyle({
+        bold: activeTextObject.fontWeight === "bold",
+        italic: activeTextObject.fontStyle === "italic",
+        underline: activeTextObject.underline === true,
+      });
+    } else {
+      setFontStyle({ bold: false, italic: false, underline: false });
+    }
+  };
+
+  const handleColorSelection = () => {
+    const activeTextObject = fabricCanvasRef.current.getActiveObject();
+    if (activeTextObject && activeTextObject.type === "textbox") {
+      setTextColor(activeTextObject.fill || "#000000");
+    } else {
+      setTextColor("#000000");
+    }
+  };
+
+  const handleHighlightSelection = () => {
+    const activeTextObject = fabricCanvasRef.current.getActiveObject();
+    if (activeTextObject && activeTextObject.type === "textbox") {
+      setTextBackgroundColor(activeTextObject.textBackgroundColor);
+    } else {
+      setTextBackgroundColor("");
+    }
+  };
+
+  fabricCanvasRef.current.on("selection:created", handleStyleSelection);
+  fabricCanvasRef.current.on("selection:updated", handleStyleSelection);
+  fabricCanvasRef.current.on("selection:cleared", () => {
+    setFontStyle({ bold: false, italic: false, underline: false });
+  });
+
+  fabricCanvasRef.current.on("selection:created", handleColorSelection);
+  fabricCanvasRef.current.on("selection:updated", handleColorSelection);
+  fabricCanvasRef.current.on("selection:cleared", () => {
+    setTextColor("#000000");
+  });
+
+  fabricCanvasRef.current.on("selection:created", handleHighlightSelection);
+  fabricCanvasRef.current.on("selection:updated", handleHighlightSelection);
+  fabricCanvasRef.current.on("selection:cleared", () => {
+    setTextBackgroundColor("");
+  });
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Delete" || e.key === "Backspace") {
+      const activeObject = fabricCanvasRef.current.getActiveObject();
+      if (activeObject && !activeObject.isEditing) {
+        fabricCanvasRef.current.remove(activeObject);
+        fabricCanvasRef.current.requestRenderAll();
       }
-    };
+    }
+  };
 
-    // Click outside handlers for color pickers
-    const handleClickOutsideColorHighlightPick = (e) => {
-      if (
-        colorPickerHighlightRef.current &&
-        !colorPickerHighlightRef.current.contains(e.target)
-      ) {
-        setIsColorHighlightPickOpen(false);
-      }
-    };
+  const handleClickOutsideColorHighlightPick = (e) => {
+    if (
+      colorPickerHighlightRef.current &&
+      !colorPickerHighlightRef.current.contains(e.target)
+    ) {
+      setIsColorHighlightPickOpen(false);
+    }
+  };
 
-    const handleClickOutsideColorTextPick = (e) => {
-      if (
-        colorPickerTextRef.current &&
-        !colorPickerTextRef.current.contains(e.target)
-      ) {
-        setIsColorTextPickOpen(false);
-      }
-    };
+  const handleClickOutsideColorTextPick = (e) => {
+    if (
+      colorPickerTextRef.current &&
+      !colorPickerTextRef.current.contains(e.target)
+    ) {
+      setIsColorTextPickOpen(false);
+    }
+  };
 
-    const handleClickOutsideColorTag = (e) => {
-      if (colorTagRef.current && !colorTagRef.current.contains(e.target)) {
-        setIsColorTagOpen(false);
-      }
-    };
+  const handleClickOutsideColorTag = (e) => {
+    if (colorTagRef.current && !colorTagRef.current.contains(e.target)) {
+      setIsColorTagOpen(false);
+    }
+  };
 
-    // Add event listeners
-    window.addEventListener("resize", resizeCanvas);
-    window.addEventListener("keydown", handleKeyDown);
-    document.addEventListener(
-      "mousedown",
-      handleClickOutsideColorHighlightPick
-    );
-    document.addEventListener("mousedown", handleClickOutsideColorTextPick);
-    document.addEventListener("mousedown", handleClickOutsideColorTag);
 
-    // Cleanup on unmount
-    return () => {
-      fabricCanvasRef.current.off("selection:created", handleStyleSelection);
-      fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
-      fabricCanvasRef.current.off("selection:cleared");
+  window.addEventListener("resize", resizeCanvas);
+  window.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("mousedown", handleClickOutsideColorHighlightPick);
+  document.addEventListener("mousedown", handleClickOutsideColorTextPick);
+  document.addEventListener("mousedown", handleClickOutsideColorTag);
 
-      fabricCanvasRef.current.off("selection:created", handleColorSelection);
-      fabricCanvasRef.current.off("selection:updated", handleColorSelection);
-      fabricCanvasRef.current.off("selection:cleared");
+  return () => {
+    fabricCanvasRef.current.off("selection:created", handleStyleSelection);
+    fabricCanvasRef.current.off("selection:updated", handleStyleSelection);
+    fabricCanvasRef.current.off("selection:cleared");
 
-      fabricCanvasRef.current.off(
-        "selection:created",
-        handleHighlightSelection
-      );
-      fabricCanvasRef.current.off(
-        "selection:updated",
-        handleHighlightSelection
-      );
-      fabricCanvasRef.current.off("selection:cleared");
+    fabricCanvasRef.current.off("selection:created", handleColorSelection);
+    fabricCanvasRef.current.off("selection:updated", handleColorSelection);
+    fabricCanvasRef.current.off("selection:cleared");
 
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutsideColorHighlightPick
-      );
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutsideColorTextPick
-      );
-      document.removeEventListener("mousedown", handleClickOutsideColorTag);
+    fabricCanvasRef.current.off("selection:created", handleHighlightSelection);
+    fabricCanvasRef.current.off("selection:updated", handleHighlightSelection);
+    fabricCanvasRef.current.off("selection:cleared");
 
-      fabricCanvasRef.current.dispose();
-    };
-  }, [backgroundImage, id, location.state]);
+    window.removeEventListener("resize", resizeCanvas);
+    window.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("mousedown", handleClickOutsideColorHighlightPick);
+    document.removeEventListener("mousedown", handleClickOutsideColorTextPick);
+    document.removeEventListener("mousedown", handleClickOutsideColorTag);
+
+    fabricCanvasRef.current.dispose();
+  };
+}, [backgroundImage, id]);
+
 
   const handleTagInput = (e) => {
     const newTag = e.target.value;
