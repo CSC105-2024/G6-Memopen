@@ -87,7 +87,7 @@ Memopen is a web application that works like a personal diary, it is designed to
 \
 :rocket: Getting Started - Node.js Server
 1. Navigate to the frontend directory:
-   \
+   
    ```bash
    cd backend
    ```
@@ -95,7 +95,7 @@ Memopen is a web application that works like a personal diary, it is designed to
    ```bash
    npm install
    ```
-4. Create a .env file and configure the following variables\
+4. Create a .env file and configure the following variables
    ```bash
    DATABASE_URL="file:./dev.db"
    JWT_SECRET=your_jwt_secret_here
